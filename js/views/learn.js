@@ -104,95 +104,212 @@ function renderTopicLesson(el, args) {
   }
   const ls = learningStatus(topicId);
   const skillMap = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
+  const diffClass = { beginner: 'badge-easy', intermediate: 'badge-medium', advanced: 'badge-hard' };
+  const levelLabel = skillMap[topic.level] || topic.level;
+  const sec = curriculum.sections.find(s => s.topics.some(t => t.id === topicId));
+  const secName = sec ? sec.name : '';
+  const qCount = curriculum.questionsForTopic(topic.id).length;
+
+  const toc = [];
+  toc.push(['lesson-overview', '🧠 Overview']);
+  if (topic.formulas.length) toc.push(['lesson-formulas', '🧮 Formulas']);
+  if (topic.strategies.length) toc.push(['lesson-strategies', '💡 Strategies']);
+  if (topic.traps.length) toc.push(['lesson-traps', '⚠️ Traps']);
+  toc.push(['lesson-examples', '✍️ Examples']);
+  toc.push(['lesson-check', '🎯 Quick Check']);
 
   el.innerHTML = `
+    <div class="lesson-progress-fixed" id="lessonProgressBar" aria-hidden="true"></div>
     <div class="lesson-container">
       <div class="row row-wrap" style="align-items:center">
         <a class="btn btn-sm btn-ghost" href="#/learn">← Curriculum</a>
         ${ls.status === 'mastered' ? '<span class="badge badge-success" style="margin-left:auto">Mastered ✅</span>' : ''}
       </div>
 
-      <div class="page-header">
+      <div class="lesson-header">
         <h1>${esc(topic.name)}</h1>
-        <p class="text-muted">${skillMap[topic.level]} · ${curriculum.questionsForTopic(topic.id).length} practice questions available</p>
+        <div class="lesson-meta">
+          <span class="badge ${diffClass[topic.level]}">${levelLabel}</span>
+          ${secName ? `<span class="text-muted">${esc(secName)}</span>` : ''}
+          <span class="text-muted">·</span>
+          <span class="text-muted">${qCount} practice questions available</span>
+        </div>
       </div>
 
-      <div class="lesson-section">
-        <h3>Overview</h3>
-        ${topic.overview.map(p => `<p>${esc(p)}</p>`).join('')}
+      <nav class="lesson-toc" aria-label="Lesson outline">
+        <div class="lesson-toc-title">In this lesson</div>
+        <div class="lesson-toc-list">
+          ${toc.map(function (item) { return `<button type="button" class="lesson-toc-link" data-target="${item[0]}">${item[1]}</button>`; }).join('')}
+        </div>
+      </nav>
+
+      <div class="lesson-section lesson-overview" id="lesson-overview">
+        <h3>🧠 <span>Overview &amp; Key Concepts</span></h3>
+        ${topic.overview.map(function (p, i) { return i === 0 ? '<p class="lesson-lead">' + esc(p) + '</p>' : lessonPara(p); }).join('')}
       </div>
 
       ${topic.formulas.length ? `
-        <div class="lesson-section">
-          <h3>Formulas &amp; Rules</h3>
-          <table class="formula-table">
-            <thead><tr><th>Term</th><th>Definition</th></tr></thead>
-            <tbody>${topic.formulas.map(f => `<tr><td><strong>${esc(f.term)}</strong></td><td>${esc(f.def)}</td></tr>`).join('')}</tbody>
-          </table>
+        <div class="lesson-section" id="lesson-formulas">
+          <h3>🧮 <span>Formulas &amp; Core Rules</span></h3>
+          <div class="formula-grid">
+            ${topic.formulas.map(function (f) { return `<div class="formula-card"><div class="formula-term">${esc(f.term)}</div><div class="formula-def">${esc(f.def)}</div></div>`; }).join('')}
+          </div>
         </div>` : ''}
 
       ${topic.strategies.length ? `
-        <div class="lesson-section">
-          <h3>Strategies</h3>
-          ${topic.strategies.map(s => `<div class="lesson-box lesson-box-tip"><p style="margin:0">💡 ${esc(s)}</p></div>`).join('')}
+        <div class="lesson-section" id="lesson-strategies">
+          <h3>💡 <span>Strategies That Score</span></h3>
+          ${topic.strategies.map(function (s, i) { return `<div class="lesson-step"><span class="lesson-step-num">${i + 1}</span><div class="lesson-step-body">${esc(s)}</div></div>`; }).join('')}
         </div>` : ''}
 
       ${topic.traps.length ? `
-        <div class="lesson-section">
-          <h3>Common Traps</h3>
-          ${topic.traps.map(s => `<div class="lesson-box lesson-box-danger"><p style="margin:0">⚠️ ${esc(s)}</p></div>`).join('')}
+        <div class="lesson-section" id="lesson-traps">
+          <h3>⚠️ <span>Common Traps</span></h3>
+          ${topic.traps.map(function (s, i) { return `<div class="lesson-step lesson-trap"><span class="lesson-step-num">${i + 1}</span><div class="lesson-step-body">${esc(s)}</div></div>`; }).join('')}
         </div>` : ''}
 
-      <div class="lesson-section">
-        <h3>Worked Examples</h3>
-        ${topic.examples.map((e, i) => exampleBlock(e, i, topicId)).join('')}
+      <div class="lesson-section" id="lesson-examples">
+        <h3>✍️ <span>Worked Examples</span> <span class="text-muted">(${topic.examples.length})</span></h3>
+        ${topic.examples.map(function (e, i) { return exampleBlock(e, i, topicId); }).join('')}
       </div>
 
-      <div class="lesson-section">
-        <div class="row" style="align-items:center">
-          <h3 style="margin:0">Quick Check <span class="text-muted fs-small">(5 questions)</span></h3>
-          <span class="badge badge-accent" style="margin-left:auto" id="quickStatus">Not attempted</span>
+      <div class="lesson-section" id="lesson-check">
+        <div class="row" style="align-items:center;gap:.5rem;flex-wrap:wrap">
+          <h3 style="margin:0">🎯 <span>Quick Check</span> <span class="text-muted fs-small">(5 questions)</span></h3>
+          <div class="row" style="align-items:center;gap:.5rem;margin-left:auto">
+            <span class="quickcheck-progress" id="qcProgress">0/${topic.check.length} answered</span>
+            <span class="badge badge-accent" id="quickStatus">Not attempted</span>
+          </div>
         </div>
         <p class="text-muted">Complete the quick check to mark this topic as mastered.</p>
         <div id="quickCheck"></div>
       </div>
 
-      <div class="lesson-section" id="practiceLink">
+      <div class="lesson-practice-cta">
+        <div>
+          <div class="lesson-nav-label">Feeling sharp?</div>
+          <div class="lesson-nav-title">Apply it now with a real practice set.</div>
+        </div>
         <button class="btn btn-primary" onclick="location.hash='#/practice/topic/${topicId}'">Practice this topic →</button>
       </div>
+
+      <div id="lessonNav"></div>
     </div>`;
 
-  el.querySelectorAll('.example-block button[id$="-toggle"]').forEach(btn => {
+  el.querySelectorAll('.lesson-toc-link').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      const base = this.id.replace('-toggle', '');
-      const ans = el.querySelector('#' + base + '-answer');
-      const reason = el.querySelector('#' + base + '-reason');
-      const show = ans.style.display === 'none';
-      ans.style.display = show ? '' : 'none';
-      reason.style.display = show ? '' : 'none';
-      this.textContent = show ? 'Hide answer' : 'Show answer';
+      const target = document.getElementById(this.getAttribute('data-target'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 
+  bindExampleToggles(el);
+  renderLessonNav(el, topicId);
   initQuickCheck(el, topic);
+  initLessonScroll(el);
+}
+
+function lessonPara(p) {
+  const trimmed = p.trim();
+  const m = trimmed.match(/^Test[\s-]?day[\s]*insight[:.]?\s*/i);
+  if (m) {
+    return '<div class="lesson-insight"><span aria-hidden="true">💡</span><div><p><b>Test-day insight.</b> ' + esc(trimmed.slice(m[0].length)) + '</p></div></div>';
+  }
+  return '<p>' + esc(p) + '</p>';
 }
 
 function exampleBlock(e, idx, topicId) {
   const letters = ['A', 'B', 'C', 'D', 'E'];
   return `
     <div class="example-block">
-      <div class="example-question">Example ${idx + 1} — ${esc(e.question)}</div>
+      <div class="example-head">
+        <span class="example-pill">Example ${idx + 1}</span>
+        <span class="text-muted fs-small">${idx === 0 ? 'Cover the options and try it before revealing.' : ''}</span>
+      </div>
+      <div class="example-question">${esc(e.question)}</div>
       <div>
-        ${e.options.map((o, oi) => `
+        ${e.options.map(function (o, oi) { return `
           <div class="option disabled" id="${topicId}-ex${idx}-opt${oi}">
             <span class="option-letter">${letters[oi]}</span>
             <span>${esc(o)}</span>
-          </div>`).join('')}
+          </div>`; }).join('')}
       </div>
-      <div class="example-answer" style="display:none" id="${topicId}-ex${idx}-answer">✔ Answer: ${esc(e.answer)}</div>
+      <div class="example-controls">
+        <button class="btn btn-sm btn-outline" id="${topicId}-ex${idx}-toggle" data-answer="${e.answer}">Reveal answer</button>
+      </div>
+      <div class="example-answer" style="display:none" id="${topicId}-ex${idx}-answer">✔ Correct answer: ${esc(e.answer)}</div>
       <div class="example-reason" style="display:none" id="${topicId}-ex${idx}-reason">${esc(e.reasoning)}</div>
-      <button class="btn btn-sm btn-outline mt-1" id="${topicId}-ex${idx}-toggle" style="margin-top:.6rem">Show answer</button>
     </div>`;
+}
+
+function bindExampleToggles(el) {
+  el.querySelectorAll('.example-block button[id$="-toggle"]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const base = this.id.replace('-toggle', '');
+      const ans = el.querySelector('#' + base + '-answer');
+      const reason = el.querySelector('#' + base + '-reason');
+      if (!ans) return;
+      const show = ans.style.display === 'none';
+      ans.style.display = show ? '' : 'none';
+      reason.style.display = show ? '' : 'none';
+      this.textContent = show ? 'Hide answer' : 'Reveal answer';
+      if (show && this.dataset.answer) {
+        const opt = el.querySelector('#' + base + '-opt' + (this.dataset.answer.charCodeAt(0) - 65));
+        if (opt) opt.classList.add('correct-answer');
+      }
+    });
+  });
+}
+
+function renderLessonNav(el, topicId) {
+  const order = [];
+  curriculum.sections.forEach(function (s) { s.topics.forEach(function (t) { order.push(t.id); }); });
+  const i = order.indexOf(topicId);
+  const topicName = function (id) {
+    const t = curriculum.topics.find(function (x) { return x.id === id; });
+    return t ? t.name : '';
+  };
+  const prev = i > 0 ? order[i - 1] : null;
+  const next = i < order.length - 1 ? order[i + 1] : null;
+  const cardPrev = prev
+    ? '<a class="lesson-nav-card" href="#/learn/' + prev + '"><div class="lesson-nav-label">← Previous lesson</div><div class="lesson-nav-title">' + esc(topicName(prev)) + '</div></a>'
+    : '<div class="lesson-nav-card disabled"><div class="lesson-nav-label">← Previous lesson</div><div class="lesson-nav-title">Start of the course</div></div>';
+  const cardNext = next
+    ? '<a class="lesson-nav-card" href="#/learn/' + next + '"><div class="lesson-nav-label" style="text-align:right">Next lesson →</div><div class="lesson-nav-title">' + esc(topicName(next)) + '</div></a>'
+    : '<div class="lesson-nav-card disabled"><div class="lesson-nav-label" style="text-align:right">Next lesson →</div><div class="lesson-nav-title">Course complete 🎉</div></div>';
+  const nav = el.querySelector('#lessonNav');
+  if (nav) nav.innerHTML = '<div class="lesson-nav">' + cardPrev + cardNext + '</div>';
+}
+
+function initLessonScroll(el) {
+  if (window.__lessonScrollHandler) {
+    window.removeEventListener('scroll', window.__lessonScrollHandler, true);
+    window.__lessonScrollHandler = null;
+  }
+  const handler = function () {
+    if (!document.body.contains(el)) {
+      window.removeEventListener('scroll', handler, true);
+      if (window.__lessonScrollHandler === handler) window.__lessonScrollHandler = null;
+      return;
+    }
+    const doc = document.documentElement;
+    const winH = window.innerHeight || doc.clientHeight;
+    const max = Math.max(0, doc.scrollHeight - winH);
+    const bar = document.getElementById('lessonProgressBar');
+    if (bar) bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0).toFixed(1) + '%';
+    const ids = ['lesson-overview', 'lesson-formulas', 'lesson-strategies', 'lesson-traps', 'lesson-examples', 'lesson-check'];
+    let cur = ids[0];
+    ids.forEach(function (id) {
+      const node = document.getElementById(id);
+      if (node && node.getBoundingClientRect().top <= 116) cur = id;
+    });
+    document.querySelectorAll('.lesson-toc-link').forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('data-target') === cur);
+    });
+  };
+  window.__lessonScrollHandler = handler;
+  window.addEventListener('scroll', handler, { passive: true, capture: true });
+  handler();
 }
 
 function initQuickCheck(el, topic) {
@@ -248,6 +365,8 @@ function initQuickCheck(el, topic) {
         answers[qi] = ci === q.a;
         answered += 1;
       }
+      const prog = el.querySelector('#qcProgress');
+      if (prog) prog.textContent = answered + '/' + topic.check.length + ' answered';
       if (answered === topic.check.length) {
         const score = Object.values(answers).filter(Boolean).length;
         statusEl.textContent = score + '/5 correct';

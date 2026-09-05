@@ -864,3 +864,224 @@ button { font-family: var(--font-body); cursor: pointer; }
   .app-view { padding: 1rem 0.9rem 4rem; }
   .brand-mark { font-size: 1.1rem; }
 }
+
+/* =====================================================================
+   Lessons v1.1 — study-optimized layout, structure & typography
+   All new rules are additive; shared classes (example-*, lesson-box-*,
+   formula-table) used by practice/simulator/analytics are tuned only
+   under the .lesson-container scope.
+   ===================================================================== */
+:root { --font-reading: 'Source Serif 4', Georgia, 'Times New Roman', serif; }
+[data-theme="dark"] { --font-reading: 'Source Serif 4', Georgia, 'Times New Roman', serif; }
+
+/* Reading progress bar pinned to the very top of the viewport */
+.lesson-progress-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  z-index: 400;
+  border-radius: 0 2px 2px 0;
+  transition: width 90ms linear;
+  pointer-events: none;
+}
+
+.lesson-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 1.1rem 0 0.45rem;
+  letter-spacing: -0.01em;
+}
+.lesson-meta { display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: center; font-size: 0.9rem; }
+
+/* Outline / table of contents */
+.lesson-toc {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin: 1.3rem 0 2.2rem;
+  box-shadow: var(--shadow-card);
+}
+.lesson-toc-title {
+  font-weight: 800;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-muted);
+  margin-bottom: 0.7rem;
+}
+.lesson-toc-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.lesson-toc-link {
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.lesson-toc-link:hover { border-color: var(--color-secondary); color: var(--color-secondary); }
+.lesson-toc-link.active { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-bg); }
+
+[id^="lesson-"] { scroll-margin-top: 88px; }
+
+/* Section scaffolding */
+.lesson-section { margin-bottom: 2.6rem; }
+.lesson-section > h3 {
+  font-size: 1.28rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.lesson-section > h3 .text-muted { font-size: 0.95rem; font-weight: 600; }
+
+/* Overview reading column: larger serif type, drop cap for focus */
+.lesson-overview p {
+  font-size: 1.13rem;
+  line-height: 1.78;
+  margin: 0 0 1.15rem;
+  color: var(--color-text);
+}
+.lesson-overview p.lesson-lead { font-size: 1.2rem; }
+.lesson-overview > p:first-of-type::first-letter {
+  font-family: var(--font-reading);
+  font-weight: 700;
+  font-size: 3.1em;
+  line-height: 0.85;
+  float: left;
+  padding: 0.05em 0.1em 0 0;
+  color: var(--color-primary);
+}
+.lesson-insight {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(13, 71, 161, 0.06), rgba(255, 111, 0, 0.05));
+  border: 1px solid rgba(13, 71, 161, 0.22);
+  border-left: 4px solid var(--color-secondary);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.15rem;
+  margin: 1.35rem 0;
+}
+.lesson-insight p { margin: 0; font-size: 1rem; line-height: 1.65; color: var(--color-text); }
+.lesson-insight b { color: var(--color-secondary); }
+
+/* Formulas as scannable cards (replaces the dense table) */
+.formula-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 0.9rem; margin: 1rem 0; }
+.formula-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-secondary);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.05rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: var(--shadow-card);
+}
+.formula-card .formula-term { font-weight: 700; font-size: 0.93rem; color: var(--color-primary); letter-spacing: 0.01em; }
+.formula-card .formula-def { font-family: var(--font-reading); font-size: 0.98rem; line-height: 1.6; color: var(--color-text); }
+
+/* Numbered strategy / trap steps */
+.lesson-step { display: flex; gap: 0.8rem; align-items: flex-start; margin: 0.7rem 0; }
+.lesson-step-num {
+  flex-shrink: 0;
+  width: 27px;
+  height: 27px;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.15rem;
+}
+.lesson-step-body { font-size: 1.02rem; line-height: 1.7; color: var(--color-text); }
+.lesson-trap .lesson-step-num { background: var(--color-danger); }
+
+/* Worked examples */
+.example-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.55rem; }
+.example-pill {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.22rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+.lesson-container .example-question {
+  font-family: var(--font-reading);
+  font-size: 1.08rem;
+  line-height: 1.7;
+  font-weight: 500;
+  white-space: pre-line;
+  margin-bottom: 0.7rem;
+}
+.lesson-container .option { font-size: 0.98rem; }
+.lesson-container .option.disabled { cursor: default; }
+.lesson-container .option.disabled:hover { border-color: var(--color-border); background: var(--color-card); }
+.option.correct-answer { border-color: var(--color-success); background: rgba(46, 125, 50, 0.09); }
+.option.correct-answer .option-letter { background: var(--color-success); color: #fff; border-color: var(--color-success); }
+.example-controls { margin-top: 0.45rem; }
+.lesson-container .example-answer { color: var(--color-success); font-weight: 800; margin-top: 0.85rem; }
+.lesson-container .example-reason {
+  border-left: 3px solid var(--color-border);
+  padding: 0.35rem 0 0.35rem 0.95rem;
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+/* Quick check */
+.quickcheck-progress { font-size: 0.8rem; font-weight: 700; color: var(--color-muted); white-space: nowrap; }
+
+/* Practice CTA + prev/next course navigation */
+.lesson-practice-cta {
+  margin-top: 2.2rem;
+  background: linear-gradient(135deg, rgba(13, 71, 161, 0.06), rgba(255, 111, 0, 0.04));
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.15rem 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.lesson-nav { display: flex; gap: 0.8rem; margin: 1.5rem 0 1rem; }
+.lesson-nav-card {
+  flex: 1;
+  display: block;
+  padding: 0.95rem 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-card);
+  transition: all 0.18s;
+  text-decoration: none;
+}
+a.lesson-nav-card:hover { border-color: var(--color-secondary); box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
+.lesson-nav-card.disabled { opacity: 0.5; pointer-events: none; }
+.lesson-nav-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 800; color: var(--color-muted); }
+.lesson-nav-title { font-weight: 700; color: var(--color-text); margin-top: 0.25rem; font-size: 0.95rem; line-height: 1.35; }
+
+@media (max-width: 768px) {
+  .formula-grid { grid-template-columns: 1fr; }
+  .lesson-overview p { font-size: 1.06rem; line-height: 1.7; }
+  .lesson-header h1 { font-size: 1.6rem; }
+  .lesson-nav { flex-direction: column; }
+}
