@@ -162,6 +162,18 @@ function renderTopicLesson(el, args) {
       </div>
     </div>`;
 
+  el.querySelectorAll('.example-block button[id$="-toggle"]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const base = this.id.replace('-toggle', '');
+      const ans = el.querySelector('#' + base + '-answer');
+      const reason = el.querySelector('#' + base + '-reason');
+      const show = ans.style.display === 'none';
+      ans.style.display = show ? '' : 'none';
+      reason.style.display = show ? '' : 'none';
+      this.textContent = show ? 'Hide answer' : 'Show answer';
+    });
+  });
+
   initQuickCheck(el, topic);
 }
 

@@ -42,1134 +42,2298 @@ const curriculum = (function () {
      QUANT
      ================================================================ */
   const quantTopics = [
-    topic('quant-pct', 'Percentages', 'quant', 'beginner', {
-      overview: [
-        'Percentages are the single most tested arithmetic concept on the GMAT Focus. A percentage is a fraction with denominator 100: 25% means 25/100 = 1/4.',
-        'Three classic operations recur: finding a percent OF a number, expressing one number AS a percent of another, and percent increase/decrease. Always identify which value is the "base" — the thing that is 100%.',
-        'On the GMAT, changes are applied successively — a 25% increase followed by a 20% decrease is NOT a 5% net change. Compute each step on the running total: 100 → 125 → 100 (a net 0% change).'
-      ],
-      formulas: [
-        { term: 'Percent of', def: 'x% of y = (x/100) × y' },
-        { term: 'Percent change', def: '(new − old) / old × 100' },
-        { term: 'Actual change, % to find', def: 'increase ÷ original weight/price' },
-        { term: 'Multiplier form', def: 'increase by p% → ×(1 + p/100); decrease by p% → ×(1 − p/100)' },
-        { term: 'Consecutive changes', def: 'Multiply multipliers: ×(1+a/100)(1+b/100)(1+c/100)' }
-      ],
-      strategies: [
-        'Use the number 100 as a base to make percentage problems concrete and avoid calculator dependence.',
-        'On percent increase, the base is ALWAYS the starting (original) value, not the final value.',
-        'Translate word problems: "is" → =, "of" → ×, "what percent" → x/100.',
-        'Successive percent changes: pick 100, apply each multiplier step by step. Percentages do not simply add or subtract.'
-      ],
-      traps: [
-        'Taking 20% off AFTER a 25% increase — the discount applies to the increased price, not the original.',
-        'Confusing "percent increase" with "percent of". A number increases from 80 to 100: that is a 25% increase, but 100 is 125% of 80.',
-        'Adding or subtracting percentage points instead of multiplying multipliers.',
-        'Misidentifying the base in "x is what percent greater/less than y" — the base is y.'
-      ],
-      examples: examplesFor([
-        { q: 'A price of $80 is increased by 25% and then decreased by 20%. What is the final price?',
-          o: ['$76', '$80', '$84', '$88', '$96'],
-          a: 'B',
-          r: 'Apply multipliers: 80 × 1.25 = 100, then 100 × 0.80 = 80. The two changes cancel out because 1.25 and 0.80 multiply to exactly 1.' },
-        { q: 'If 40% of x is 12, what is 60% of x?',
-          o: ['16', '18', '20', '24', '30'],
-          a: 'B',
-          r: 'x = 12/0.40 = 30. Then 60% of 30 = 18. Quicker: 60% is 1.5 × 40%, so 12 × 1.5 = 18.' },
-        { q: 'A number decreases from 150 to 120. What is the percent decrease?',
-          o: ['15%', '20%', '25%', '30%', '33⅓%'],
-          a: 'B',
-          r: 'Change = 150 − 120 = 30. Base is the original 150. Decrease = 30/150 = 20%.' },
-        { q: 'Last year a store\'s revenue was $200,000. This year it rose 10% and next year it is expected to rise another 10%. Expected revenue?',
-          o: ['$220,000', '$240,000', '$242,000', '$244,000', '$260,000'],
-          a: 'C',
-          r: 'Successive multipliers: 200,000 × 1.10 × 1.10 = 200,000 × 1.21 = $242,000.' },
-        { q: 'If $A is 5% of $B and $C is 20% of $B, then $A is what percent of $C?',
-          o: ['20%', '25%', '40%', '75%', '400%'],
-          a: 'B',
-          r: 'A = 0.05B, C = 0.20B, so A/C = 0.05/0.20 = 0.25 = 25%.' }
-      ]),
-      check: [
-        { q: '30% of 70 = ?', o: ['18', '21', '24', '27', '2100'], a: 1 },
-        { q: 'Increase 50 by 40%: result is?', o: ['60', '70', '80', '90', '100'], a: 1 },
-        { q: 'Decrease 60 by 15%: result is?', o: ['45', '48', '51', '54', '57'], a: 2 },
-        { q: '24 is what percent of 96?', o: ['20%', '25%', '30%', '33⅓%', '40%'], a: 1 },
-        { q: 'A 20% increase followed by a 20% decrease is a net change of:', o: ['0%', '+4%', '−4%', '+2%', '−2%'], a: 2 }
-      ]
-    }),
-
-    topic('quant-ratios', 'Ratios', 'quant', 'beginner', {
-      overview: [
-        'A ratio is a comparison of two or more quantities, written a:b or a/b. A ratio gives no absolute sizes — only relative sizes. The same ratio 1:2 describes 1 and 2 oranges, or 10 and 20 oranges.',
-        'Ratios behave like fractions: you can scale both terms by the same factor. The key GMAT move is to introduce a common multiplier k: if the ratio of apples to oranges is 2:3, write apples = 2k, oranges = 3k.',
-        'When a ratio relates to a total, divide the total by the sum of the parts to find k, then multiply back to each part.'
-      ],
-      formulas: [
-        { term: 'Split by ratio', def: 'a:b with total T → share of a = [a/(a+b)] × T' },
-        { term: 'Combined ratios', def: 'a:b and b:c → make b equal in both to form a:b:c' },
-        { term: 'Proportion solve', def: 'a/b = c/d → ad = bc (cross multiply)' }
-      ],
-      strategies: [
-        'Introduce a multiplier k for each part of the ratio whenever totals or differences are given.',
-        'For three-plus quantities ("x:y:z = 1:2:3 and x+y+z = 60"), shares are k, 2k, 3k with 6k = 60.',
-        'Cross-multiply proportions only after scaling ratios to a common unit.'
-      ],
-      traps: [
-        'Assuming a ratio gives actual quantities — 2:3 could be 2 & 3 or 20 & 30.',
-        'Adding/subtracting ratio terms directly without the multiplier.',
-        'Mixing ratios with different bases (e.g., juice:water in two different containers).'
-      ],
-      examples: examplesFor([
-        { q: 'In a class the ratio of boys to girls is 3:5, and there are 40 students. How many boys?',
-          o: ['12', '15', '18', '20', '24'],
-          a: 'B',
-          r: 'Total parts = 3 + 5 = 8, so k = 40/8 = 5. Boys = 3k = 15.' },
-        { q: 'If the ratio 4:7 equals the ratio x:28, what is x?',
-          o: ['12', '14', '16', '18', '20'],
-          a: 'C',
-          r: '4/7 = x/28 → x = 4 × 28/7 = 16.' },
-        { q: 'A sum of $400 is split in the ratio 1:3:4. What is the largest share?',
-          o: ['$50', '$100', '$150', '$200', '$300'],
-          a: 'D',
-          r: 'Parts total 8, k = 400/8 = 50. Largest = 4k = $200.' },
-        { q: 'The ratio of women to men in an office is 5:2. If 10 more women were hired the new ratio would be 3:1. How many men are there?',
-          o: ['10', '20', '30', '40', '50'],
-          a: 'C',
-          r: 'women = 5k, men = 2k. After: (5k + 10)/2k = 3 → 5k + 10 = 6k → k = 10, so men = 20.' },
-        { q: 'If a:b = 2:3 and b:c = 4:5, what is a:c?',
-          o: ['8:15', '2:5', '3:4', '8:5', '5:8'],
-          a: 'A',
-          r: 'Combine: a:b:c = 8:12:15, so a:c = 8:15.' }
-      ]),
-      check: [
-        { q: 'Ratio 2:5, total 35 → the second quantity is?', o: ['10', '15', '20', '25', '30'], a: 3 },
-        { q: 'x:y = 6:9 reduces to?', o: ['2:3', '3:2', '6:9', '1:1.5', '4:6'], a: 0 },
-        { q: 'If a/b = 3/5 and a = 12, then b = ?', o: ['15', '20', '25', '30', '36'], a: 1 },
-        { q: 'Ratio 7:9, difference is 6 → smaller part is?', o: ['14', '18', '21', '27', '42'], a: 2 },
-        { q: 'Sum of ratio parts 1:2:3 with total 24 → middle part is?', o: ['4', '6', '8', '10', '12'], a: 2 }
-      ]
-    }),
-
-    topic('quant-fracdec', 'Fractions & Decimals', 'quant', 'beginner', {
-      overview: [
-        'Fluency with fractions and decimals underpins most quantitative questions. The GMAT rewards knowing common fraction–decimal–percent equivalencies cold: 1/8 = 0.125 = 12.5%, 1/3 ≈ 0.333, 2/5 = 0.4, and so on.',
-        'Operation rules: to add/subtract fractions, use a common denominator. To divide by a fraction, multiply by its reciprocal. Compare fractions by cross-multiplying or using a common denominator.',
-        'Terminating decimals come only from fractions whose reduced denominator has no prime factors other than 2 and 5.'
-      ],
-      formulas: [
-        { term: 'a/b + c/d', def: '(ad + cb) / bd' },
-        { term: 'a/b ÷ c/d', def: '(a/b) × (d/c)' },
-        { term: 'Reciprocal', def: 'n → 1/n; sign preserved for negatives' },
-        { term: 'Repeat decimals', def: '1/6 = 0.1̄6̄, 1/7 = 0.142857̄ (period 6)' }
-      ],
-      strategies: [
-        'Memorize benchmark conversions: 1/4 = 0.25, 1/5 = 0.2, 1/8 = 0.125, 3/8 = 0.375, 1/16 = 0.0625, 2/3 ≈ 0.667.',
-        'To compare fractions quickly, cross-multiply: a/b vs c/d ⟺ ad vs cb.',
-        'Use 10^k (e.g., 100, 1000) denominators to turn decimals into fractions for exact arithmetic.'
-      ],
-      traps: [
-        'Forgetting that dividing by a fraction multiplies by its reciprocal.',
-        'Comparing decimals like 0.7 and 0.699 incorrectly — align decimal places.',
-        'Assuming 0.333 = 1/3 exactly — use 1/3 for exact work, 0.333 for estimation.'
-      ],
-      examples: examplesFor([
-        { q: '1/4 + 1/6 = ?',
-          o: ['1/10', '5/12', '2/5', '1/3', '1/2'],
-          a: 'B',
-          r: 'Common denominator 12: 3/12 + 2/12 = 5/12.' },
-        { q: 'Which is greatest: 2/3, 7/9, 5/6, 9/11, 11/15?',
-          o: ['2/3', '7/9', '5/6', '9/11', '11/15'],
-          a: 'C',
-          r: 'Convert to denominator 99: 66/99, 77/99, 82.5/99, 81/99, 72.6/99 → 5/6 is greatest.' },
-        { q: '(3/5) ÷ (4/7) = ?',
-          o: ['12/35', '7/5', '21/20', '35/12', '20/21'],
-          a: 'C',
-          r: '(3/5) × (7/4) = 21/20.' },
-        { q: '0.125 written as a fraction in lowest terms:',
-          o: ['1/8', '1/9', '12/100', '1/4', '125/100'],
-          a: 'A',
-          r: '0.125 = 125/1000 = 1/8.' },
-        { q: 'Which fraction has a terminating decimal:',
-          o: ['1/3', '1/6', '1/8', '1/7', '1/9'],
-          a: 'C',
-          r: 'Only 1/8 has denominator (8 = 2³) with no factors other than 2 and 5.' }
-      ]),
-      check: [
-        { q: '1/3 + 1/9 = ?', o: ['1/12', '2/9', '4/9', '4/12', '3/9'], a: 2 },
-        { q: '2/5 × 15/4 = ?', o: ['1/2', '3/2', '5/3', '30/20', '2'], a: 1 },
-        { q: '5/6 − 1/2 = ?', o: ['1/3', '1/2', '2/3', '5/12', '7/12'], a: 0 },
-        { q: '0.75 + 0.125 = ?', o: ['0.800', '0.825', '0.865', '0.875', '0.885'], a: 3 },
-        { q: '1/8 of 2/3 = ?', o: ['1/24', '1/12', '3/16', '2/11', '1/6'], a: 1 }
-      ]
-    }),
-
-    topic('quant-numprops', 'Number Properties', 'quant', 'intermediate', {
-      overview: [
-        'Number properties tests your command of integers: parity (odd/even), primes, factors, multiples, divisibility, and remainders. A small number of powerful rules carries you through nearly all items.',
-        'Even × even = even; odd × odd = odd; even ± odd = odd. Also: the product of any k consecutive integers is divisible by k! (k-factorial), because consecutive integers contain every residue class modulo k.',
-        'Prime factorization (the "prime tree") is the master tool. Divisibility by 2, 3, 5, 9, 11 has quick digit tests.'
-      ],
-      formulas: [
-        { term: 'Prime factorization', def: 'Write n as product of primes, e.g., 60 = 2²·3·5' },
-        { term: 'Number of factors', def: 'If n = p^a q^b r^c → (a+1)(b+1)(c+1) factors' },
-        { term: 'Sum of factors', def: '((p^(a+1)−1)/(p−1)) × ((q^(b+1)−1)/(q−1)) ...' },
-        { term: 'GCD & LCM', def: 'GCD: min exponents; LCM: max exponents. GCD×LCM = a×b' },
-        { term: 'Digits divisibility', def: '3/9: digit sum divisible by 3/9; 11: alternating sum multiple of 11' }
-      ],
-      strategies: [
-        'On "must be true" items, test one counterexample with small numbers before accepting.',
-        'Factor everything. Products like 72 = 8 × 9 hide factors of 2³ and 3².',
-        'Remainders: if n = dq + r with 0 ≤ r < d, use small representations like n = 7k + 3.',
-        'For divisibility by composite k, check coprime prime-power factors separately (6 → 2 and 3).'
-      ],
-      traps: [
-        '"Divided by 3" vs "3 divided into" — set up n = 3q + r correctly.',
-        'GCD of even numbers always includes a factor of 2.',
-        '0 and 1 are special: 1 is neither prime nor composite; 0 is even but has no prime factors.',
-        'Number of factors formula requires PRIME factorization — do not use composite bases.'
-      ],
-      examples: examplesFor([
-        { q: 'How many distinct prime factors does 90 have?',
-          o: ['2', '3', '4', '5', '6'],
-          a: 'B',
-          r: '90 = 2 × 3² × 5. Distinct primes: 2, 3, 5 → three.' },
-        { q: 'How many positive divisors does 48 have?',
-          o: ['8', '10', '12', '15', '16'],
-          a: 'B',
-          r: '48 = 2⁴ × 3. Divisors = (4+1)(1+1) = 10.' },
-        { q: 'What is the remainder when 2⁴ is divided by 5?',
-          o: ['0', '1', '2', '3', '4'],
-          a: 'B',
-          r: '2⁴ = 16 = 5×3 + 1 → remainder 1.' },
-        { q: 'If n is divisible by both 4 and 6, n must be divisible by:',
-          o: ['8', '12', '18', '24', '36'],
-          a: 'B',
-          r: 'LCM(4,6) = 12. Divisible by both means divisible by their LCM = 12. (n = 12 works but 24 need not, e.g., n = 12.)' },
-        { q: 'For how many integers between 1 and 100 inclusive is n³ divisible by 8?',
-          o: ['12', '25', '50', '62', '75'],
-          a: 'C',
-          r: 'n³ divisible by 8 = 2³ means n divisible by 2. There are 50 even integers from 1 to 100.' }
-      ]),
-      check: [
-        { q: 'Which is prime: 21, 37, 49, 51, 77?', o: ['21', '37', '49', '51', '77'], a: 1 },
-        { q: 'Number of positive divisors of 36 = ?', o: ['6', '8', '9', '12', '15'], a: 2 },
-        { q: 'LCM of 8 and 12 = ?', o: ['4', '24', '48', '72', '96'], a: 1 },
-        { q: 'Remainder when 13 is divided by 4:?', o: ['0', '1', '2', '3', '4'], a: 1 },
-        { q: 'Is the sum of two odd integers:', o: ['always even', 'always odd', 'even only if equal', 'odd only if different', 'depends'], a: 0 }
-      ]
-    }),
-
-    topic('quant-alg', 'Algebra: Linear & Quadratic Equations', 'quant', 'intermediate', {
-      overview: [
-        'Algebra items ask you to solve, interpret, and manipulate equations and expressions. Linear equations (ax + b = c) and quadratic equations (ax² + bx + c = 0) are the staples.',
-        'A quadratic with roots r and s factors as (x − r)(x − s) = x² − (r+s)x + rs. The sum of roots is −b/a and the product is c/a — useful shortcuts.',
-        'Systems of two linear equations are solved by substitution or elimination. Adding/subtracting the equations can reveal useful expressions like x + y directly.',
-        'Set up answer-friendly manipulations: if the question asks for x + y from a system, try adding the equations before solving fully.'
-      ],
-      formulas: [
-        { term: 'Quadratic formula', def: 'x = [−b ± √(b² − 4ac)] / 2a' },
-        { term: 'Sum of roots', def: '−b/a; product of roots = c/a' },
-        { term: 'Perfect squares', def: '(a±b)² = a² ± 2ab + b²' },
-        { term: 'Difference of squares', def: 'a² − b² = (a−b)(a+b)' },
-        { term: 'Systems', def: 'Solve by elimination or substitution' }
-      ],
-      strategies: [
-        'Before solving a system, check what the question wants: sometimes adding the equations yields it directly.',
-        'For quadratics, look for factorization before the quadratic formula.',
-        'Check your solution by plugging back into the original equation.',
-        'When only one root has been given, the other is forced by the sum or product of roots.'
-      ],
-      traps: [
-        'Losing a root by "dividing by x" instead of factoring: x² = x ⟹ x=0 or x=1 (never divide by a variable that could be 0).',
-        'Sign errors in factoring (x + 3)(x − 2) = x² + x − 6.',
-        'Applying the quadratic formula without putting the equation in standard form (zero on one side).'
-      ],
-      examples: examplesFor([
-        { q: 'If 4x + 3 = 19, x = ?',
-          o: ['3', '4', '5', '6', '8'],
-          a: 'B',
-          r: '4x = 16 → x = 4.' },
-        { q: 'x² − x − 6 = 0. The larger root is?',
-          o: ['−3', '−2', '2', '3', '6'],
-          a: 'D',
-          r: '(x − 3)(x + 2) = 0 → roots 3 and −2; larger is 3.' },
-        { q: '2x + 3y = 11 and 3x + 2y = 9. What is x + y?',
-          o: ['2', '3', '4', '5', '6'],
-          a: 'C',
-          r: 'Add: 5x + 5y = 20 → x + y = 4.' },
-        { q: 'If x(x − 1) = 0, which is NOT a solution?',
-          o: ['0', '1', '−1', '0 and 1', 'none'],
-          a: 'C',
-          r: 'Solutions are 0 and 1; −1 is not a solution.' },
-        { q: '(x + 2)(x − 5) = 0. Sum of the two solutions?',
-          o: ['−3', '−2', '3', '5', '7'],
-          a: 'C',
-          r: 'Solutions −2 and 5, sum 3. (Or sum of roots = −b/a = −(−3)/1 = 3.)' }
-      ]),
-      check: [
-        { q: '3x − 7 = 2x + 5 → x = ?', o: ['10', '12', '−12', '14', '6'], a: 1 },
-        { q: 'x² − 9 = 0 → solutions?', o: ['3 only', '−3 only', '3 and −3', '9', '±9'], a: 2 },
-        { q: 'Sum of roots of x² − 7x + 10 = 0', o: ['7', '10', '−7', '−10', '3'], a: 0 },
-        { q: 'x − y = 5 and x + y = 11 → x = ?', o: ['3', '6', '8', '9', '11'], a: 2 },
-        { q: '(x + 4)² expanded = ?', o: ['x² + 16', 'x² + 8x + 16', 'x² + 4x + 16', 'x² − 8x + 16', 'x² + 8x + 8'], a: 1 }
-      ]
-    }),
-
-    topic('quant-ineq', 'Inequalities & Absolute Values', 'quant', 'intermediate', {
-      overview: [
-        'Inequalities behave like equations, with one major warning: multiplying or dividing by a negative number flips the direction of the inequality.',
-        'Absolute value is a distance: |x| ≤ a means −a ≤ x ≤ a; |x| ≥ a means x ≤ −a or x ≥ a. On the GMAT, strip absolute values into two cases (the inside can be positive or negative).',
-        'Ranges that overlap can be combined into a single interval; "and" intersects, "or" unions.'
-      ],
-      formulas: [
-        { term: '|x| definition', def: '|x| = x if x ≥ 0, −x if x < 0' },
-        { term: '|x| ≤ a', def: '−a ≤ x ≤ a' },
-        { term: '|x| ≥ a', def: 'x ≤ −a or x ≥ a' },
-        { term: 'Flip rule', def: 'Multiply/divide both sides by a negative → reverse the sign' }
-      ],
-      strategies: [
-        'When |expression| = k, write two equations: expression = k and expression = −k. For inequalities, write the compound interval.',
-        'On the number line, |x − c| is the distance from x to c.',
-        'Keep variables positive where possible to avoid sign flips.',
-        'Test endpoints with a candidate value to confirm boundaries are correct.'
-      ],
-      traps: [
-        'Multiplying an inequality by a negative without flipping the sign.',
-        'Only considering one sign case for absolute values.',
-        'Conflating ≤ boundaries (inclusive) with < boundaries (exclusive) — matters for integer problems.'
-      ],
-      examples: examplesFor([
-        { q: 'If −6 < 2x < 8, then x lies between:',
-          o: ['−3 and 4', '−4 and 3', '−12 and 16', '0 and 4', '−6 and 8'],
-          a: 'A',
-          r: 'Divide by 2: −3 < x < 4.' },
-        { q: 'Solutions of |x − 2| = 5:',
-          o: ['{3, 7}', '{−3, 7}', '{−7, 3}', '{−7, −3}', '{2, 5}'],
-          a: 'B',
-          r: 'x − 2 = 5 → x = 7, or x − 2 = −5 → x = −3.' },
-        { q: '|x| ≥ 3 is equivalent to:',
-          o: ['−3 ≤ x ≤ 3', 'x ≥ 3', 'x ≤ −3', 'x ≤ −3 or x ≥ 3', 'x > 3 or x < −3'],
-          a: 'D',
-          r: 'Distance from 0 at least 3: x ≤ −3 or x ≥ 3. Answer D (inclusive of ±3).' },
-        { q: 'Which of these satisfies −2x + 5 > 11?',
-          o: ['−2', '−3', '−4', '1', '2'],
-          a: 'C',
-          r: '−2x > 6 → x < −3 (divide by −2, flip). Only −4 < −3.' },
-        { q: 'For how many integers k does |k| < 4 hold?',
-          o: ['4', '6', '7', '8', '9'],
-          a: 'C',
-          r: '−4 < k < 4 → integers −3, −2, −1, 0, 1, 2, 3 → 7 integers.' }
-      ]),
-      check: [
-        { q: 'x/4 ≥ 3 → x ≥ ?', o: ['6', '8', '12', '3/4', '12 or less'], a: 2 },
-        { q: '|x + 1| = 3 → solutions?', o: ['2 and −2', '2 and −4', '−2 and 4', '3 and −3', '4 only'], a: 1 },
-        { q: 'Number of integers with |x| ≤ 2:', o: ['3', '4', '5', '6', '7'], a: 2 },
-        { q: 'If −3 ≤ x ≤ 5 and x is even, how many values?', o: ['2', '3', '4', '5', '6'], a: 2 },
-        { q: 'Solve −2x − 6 > 0:', o: ['x > −3', 'x < −3', 'x < 3', 'x > 3', 'x = −3'], a: 1 }
-      ]
-    }),
-
-    topic('quant-exponents', 'Functions & Exponents', 'quant', 'intermediate', {
-      overview: [
-        'Exponent rules turn otherwise hairy expressions into tidy ones. The core laws: x^a · x^b = x^(a+b); x^a / x^b = x^(a−b); (x^a)^b = x^(ab); x^0 = 1; x^(−a) = 1/x^a.',
-        'When exponents have the same base, equate exponents to solve. With different bases, convert one side to match (e.g., 8 = 2³, 27 = 3³, 81 = 3⁴).',
-        'Function questions define a rule f(x) and ask for values or for which functions obey a property. "Linear, no constant term" functions satisfy f(a+b) = f(a) + f(b) — a signature GMAT pattern.'
-      ],
-      formulas: [
-        { term: 'Product', def: 'x^a · x^b = x^(a+b)' },
-        { term: 'Quotient', def: 'x^a / x^b = x^(a−b)' },
-        { term: 'Power of power', def: '(x^a)^b = x^(ab)' },
-        { term: 'Negative exponent', def: 'x^(−a) = 1/x^a' },
-        { term: 'Fractional exponent', def: 'x^(1/n) = ⁿ√x' }
-      ],
-      strategies: [
-        'Reduce every base to a prime first: 4 = 2², 8 = 2³, 16 = 2⁴, 9 = 3², 25 = 5².',
-        'For f(a+b) = f(a) + f(b), only linear functions without constant terms qualify.',
-        'When an exponent expression equals a power, get the same base on both sides, then set exponents equal.',
-        'Beware of even powers: (−2)⁴ = 16, and x⁴ = 16 has two real roots (±2).'
-      ],
-      traps: [
-        'Multiplying bases when you must add exponents: 2³ × 2⁴ = 2⁷, not 4⁷.',
-        'Forgetting (ab)^n = a^n b^n but (a + b)^n ≠ a^n + b^n.',
-        'Zero exponents: any nonzero base to the 0 is 1; 0⁰ is undefined.'
-      ],
-      examples: examplesFor([
-        { q: '2⁵ × 2³ ÷ 2⁴ = ?',
-          o: ['2⁰', '2²', '2³', '2⁴', '2⁵'],
-          a: 'D',
-          r: 'Exponents add on multiply: 5 + 3 − 4 = 4 → 2⁴.' },
-        { q: 'If 2^x = 32, x = ?',
-          o: ['3', '4', '5', '6', '8'],
-          a: 'C',
-          r: '32 = 2⁵, so x = 5.' },
-        { q: 'Which is greater: 4⁵ or 2⁹?',
-          o: ['4⁵', '2⁹', 'equal', 'cannot compare', 'depends on base'],
-          a: 'A',
-          r: '4⁵ = (2²)⁵ = 2¹⁰ > 2⁹.' },
-        { q: 'If f(x) = x² + 2, f(3) = ?',
-          o: ['9', '10', '11', '13', '17'],
-          a: 'C',
-          r: '3² + 2 = 11.' },
-        { q: 'For which of the following functions does f(a) + f(b) = f(a + b) hold for all real values of a and b?',
-          o: ['f(x) = x²', 'f(x) = 2x + 3', 'f(x) = −3x', 'f(x) = |x|', 'f(x) = 1/x'],
-          a: 'C',
-          r: 'Linear functions with no constant term work: f(a)+f(b) = −3a − 3b = −3(a+b) = f(a+b). f(x) = 2x + 3 fails: 2a+3 + 2b+3 ≠ 2(a+b)+3. This is the signature GMAT linearity test.' }
-      ]),
-      check: [
-        { q: '3² × 3³ = ?', o: ['3⁵', '3⁶', '9⁵', '3¹²', '9⁶'], a: 0 },
-        { q: '6⁰ = ?', o: ['0', '1', '6', 'undefined', '−6'], a: 1 },
-        { q: 'If 9^x = 27, x = ?', o: ['1', '1.5', '2', '3', '4'], a: 1 },
-        { q: '(2³)² = ?', o: ['2⁵', '2⁶', '2⁹', '2¹²', '2ᶠ'], a: 1 },
-        { q: 'f(x) = 3x − 2; f(4) = ?', o: ['9', '10', '12', '14', '−2'], a: 1 }
-      ]
-    }),
-
-    topic('quant-wordprobs', 'Word Problems: Rate, Work, Mixtures', 'quant', 'intermediate', {
-      overview: [
-        'Word problems translate English situations into equations. The workhorse structure is rate × time = quantity. For work problems, the "rate" is the fraction of the job done per unit time, and combined rates add.',
-        'Travel problems use distance = rate × time. Opposite directions add speeds (relative speed when pulling apart); same direction subtracts.',
-        'Mixture problems are weighted average structures: amount₁ × concentration₁ + amount₂ × concentration₂ = total × target concentration.',
-        'The universal technique is to define variables for every unknown, then write one equation per independent condition.'
-      ],
-      formulas: [
-        { term: 'Distance', def: 'd = r × t; time = d/r' },
-        { term: 'Work rate', def: 'rate = 1/(time to finish alone); combined = sum of rates' },
-        { term: 'Mixture', def: 'a·c₁ + b·c₂ = (a+b)·c_target' },
-        { term: 'Relative speed', def: 'opposite → add; same direction → subtract' }
-      ],
-      strategies: [
-        'In work problems use rates (fraction per hour), not times. A alone in 6 h → rate 1/6.',
-        'Draw a simple table (Rate × Time = Distance/Work) for travel and work items.',
-        'For mixtures, write one equation for the total amount and one for the conserved ingredient (alcohol, solute).',
-        'Watch units: hours vs minutes must match on both sides of the equation.'
-      ],
-      traps: [
-        'Adding times instead of rates for combined work — they do NOT add.',
-        'Forgetting to account for work already completed when a helper joins.',
-        'Using the wrong relative speed sign (adding when trains should subtract).'
-      ],
-      examples: examplesFor([
-        { q: 'A pump fills a tank in 4 hours; a hose empties it in 6 hours. With both running, how long to fill?',
-          o: ['2 h', '8 h', '12 h', '24 h', '5 h'],
-          a: 'C',
-          r: 'Net rate = 1/4 − 1/6 = 1/12 tank/hour → 12 hours.' },
-        { q: 'A car travels 240 miles in 4 hours. At the same average speed, how far in 90 minutes?',
-          o: ['60 mi', '80 mi', '90 mi', '100 mi', '120 mi'],
-          a: 'C',
-          r: 'Speed = 60 mph. 90 min = 1.5 h → 60 × 1.5 = 90 miles.' },
-        { q: 'How many liters of a 60% acid solution mixed with 10 L of 30% to produce 40%?',
-          o: ['2', '3', '5', '6', '10'],
-          a: 'C',
-          r: '0.6x + 0.3(10) = 0.4(x + 10) → 0.6x + 3 = 0.4x + 4 → 0.2x = 1 → x = 5 L.' },
-        { q: 'Bob can paint a room in 4 hours, Ann in 6 hours. Bob paints alone for 1 hour, then they finish together. Total time to finish:',
-          o: ['2 h', '2.2 h', '2.8 h', '3 h', '4 h'],
-          a: 'C',
-          r: 'Bob\'s rate = 1/4, Ann\'s = 1/6. After 1 hour Bob has done 1/4, leaving 3/4. Combined rate = 1/4 + 1/6 = 5/12 per hour. Remaining time = (3/4) ÷ (5/12) = 9/5 = 1.8 h. Total = 1 + 1.8 = 2.8 hours.' },
-        { q: 'Two cars start 300 miles apart and drive toward each other at 50 and 70 mph. When will they meet?',
-          o: ['2 h', '2.5 h', '3 h', '3.5 h', '4 h'],
-          a: 'B',
-          r: 'Relative closing = 120 mph. Time = 300/120 = 2.5 hours.' }
-      ]),
-      check: [
-        { q: 'Rate 40 mph for 2.5 h → distance?', o: ['80', '90', '100', '110', '120'], a: 2 },
-        { q: 'A does job in 2 h, B in 2 h. Combined rate (per hour) = ?', o: ['1/4', '1/2', '1', '2', '4/1'], a: 2 },
-        { q: 'Mixture: 10 L of 50% + 10 L of 30% → final %?', o: ['30%', '38%', '40%', '45%', '50%'], a: 2 },
-        { q: 'Moving toward each other at 30 and 50 mph, 160 miles apart → meet in?', o: ['2 h', '3 h', '4 h', '5 h', '8 h'], a: 0 },
-        { q: 'Ratio of speeds 3:4, same time → distances ratio?', o: ['4:3', '3:4', '1:1', '9:16', '16:9'], a: 1 }
-      ]
-    }),
-
-    topic('quant-mixavg', 'Mixtures, Weighted Averages, Profit & Interest', 'quant', 'intermediate', {
-      overview: [
-        'Weighted averages extend ordinary averages by giving each group\'s mean a weight proportional to its size. If 20 boys average 70 and 30 girls average 80, the class average is (20×70 + 30×80)/50 = 76 — closer to the girls\' mean because they are more numerous.',
-        'Profit and interest problems use percentage arithmetic in business clothing: profit = revenue − cost; percent profit is profit ÷ cost. Simple interest = P·r·t; compound interest multiplies the principal by (1 + r) each period.',
-        'Discount problems: a 30% discount means pay 70%. Multiple discounts multiply: two successive 10% discounts give 0.9 × 0.9 = 0.81, a 19% effective discount.'
-      ],
-      formulas: [
-        { term: 'Weighted mean', def: '(n₁m₁ + n₂m₂)/(n₁+n₂)' },
-        { term: 'Profit', def: 'profit = revenue − cost; %profit = profit/cost × 100' },
-        { term: 'Simple interest', def: 'I = P·r·t' },
-        { term: 'Compound interest', def: 'A = P(1 + r/n)^(nt)' },
-        { term: 'Discount', def: 'final = original × (1 − d₁)(1 − d₂)...' }
-      ],
-      strategies: [
-        'Estimate weighted averages between the two extremes before computing: the result sits between the means, tilted toward the group with more members.',
-        'For successive discounts/interest, always multiply multipliers — never add percentages.',
-        'In profit problems, "percent profit" uses COST as the base. "Markup on price" uses price.',
-        'When two quantities have equal weight, the weighted average is the plain average.'
-      ],
-      traps: [
-        'Using simple interest for compounding questions (and vice versa).',
-        'Percent profit on cost vs. margin on sales price: 20% profit = price is 120% of cost.',
-        'Averaging averages directly without weighting by group sizes.'
-      ],
-      examples: examplesFor([
-        { q: 'Weighted average: girls\' scores 24 average 70, boys 16 average 85. Class average?',
-          o: ['74', '75', '76', '77.5', '78'],
-          a: 'C',
-          r: '(24×70 + 16×85)/40 = (1680 + 1360)/40 = 3040/40 = 76.' },
-        { q: 'A trader buys at $50 and sells at $65. Percent profit on cost?',
-          o: ['15%', '20%', '25%', '30%', '40%'],
-          a: 'D',
-          r: 'Profit = 15; 15/50 = 30%.' },
-        { q: 'An item marked $80 is discounted 10% then a further 10% off. Final price?',
-          o: ['$64', '$64.80', '$64.90', '$72', '$70'],
-          a: 'B',
-          r: '80 × 0.9 × 0.9 = 80 × 0.81 = $64.80.' },
-        { q: 'Principal $1,000 at 5% simple interest for 3 years: total?',
-          o: ['$1,050', '$1,100', '$1,150', '$1,157.63', '$1,500'],
-          a: 'C',
-          r: 'I = 1000 × 0.05 × 3 = 150; total = $1,150. (D is the compound figure.)' },
-        { q: 'Average of 10 numbers is 20; 6 of them average 24. The rest\'s average?',
-          o: ['10', '12', '14', '15', '16'],
-          a: 'C',
-          r: 'Total = 200, six-sum = 144, remaining four sum = 56 → avg 14.' }
-      ]),
-      check: [
-        { q: 'Weighted avg: 5 × 10 + 5 × 30 → average?', o: ['15', '20', '25', '30', '40'], a: 1 },
-        { q: 'Cost 20, sold 25 → profit %?', o: ['20%', '25%', '5%', '125%', '80%'], a: 1 },
-        { q: 'Compound: $200 at 10% for 2 years → amount?', o: ['$220', '$240', '$242', '$260', '$440'], a: 2 },
-        { q: 'Discount 25% off $60 → price?', o: ['$40', '$42', '$45', '$50', '$55'], a: 2 },
-        { q: 'Simple interest on $500 at 4% for 5 years → interest?', o: ['$20', '$100', '$120', '$130', '$200'], a: 1 }
-      ]
-    }),
-
-    topic('quant-statprob', 'Statistics: Mean, Median, SD & Probability', 'quant', 'advanced', {
-      overview: [
-        'Descriptive statistics on the GMAT: mean (total ÷ count), median (middle of ordered data), mode (most frequent), range (max − min), and standard deviation (a measure of spread).',
-        'The median is robust to outliers; the mean is not. Adding a constant to every value shifts mean, median, and mode but leaves the standard deviation and range unchanged. Multiplying every value by a positive constant scales both mean and SD.',
-        'Probability is favorable outcomes ÷ total outcomes. Count outcomes systematically (trees, combinations, complementary counting). "At least one" problems are often easiest via the complement: P(at least one) = 1 − P(none).',
-        'Independent events multiply: P(A and B) = P(A)·P(B). Mutually exclusive events add: P(A or B) = P(A) + P(B). The additive rule with overlap subtracts P(A and B).'
-      ],
-      formulas: [
-        { term: 'Mean', def: 'sum / count' },
-        { term: 'Median', def: 'middle value of an ordered set (average of two middles if even count)' },
-        { term: 'Range', def: 'max − min' },
-        { term: 'P(event)', def: 'favorable / total' },
-        { term: 'P(A at least one)', def: '1 − P(none)' },
-        { term: 'P(A or B)', def: 'P(A) + P(B) − P(A and B)' }
-      ],
-      strategies: [
-        'For evenly spaced data sets, mean = median.',
-        'Use deviations from the mean to test which set spreads more (larger deviations → larger SD).',
-        'On "average of groups" questions, work in sums, not averages.',
-        'Simplify probability counting with complements and symmetry.'
-      ],
-      traps: [
-        'Forgetting the even-count median averages the two middle values.',
-        'Assuming mean = median for skewed data.',
-        'Adding probabilities of overlapping events without subtracting the overlap.',
-        '"Without replacement" changes denominators — compute step by step.'
-      ],
-      examples: examplesFor([
-        { q: 'Mean of {2, 4, 6, 8, 10} is 6. If 10 increases to 20, new mean?',
-          o: ['7', '8', '9', '10', '12'],
-          a: 'B',
-          r: 'Sum increases by 10 → mean increases by 10/5 = 2 → new mean 8.' },
-        { q: 'Median of {3, 1, 7, 2, 5}:',
-          o: ['2', '3', '3.5', '5', '7'],
-          a: 'B',
-          r: 'Order: 1, 2, 3, 5, 7 → median (3rd of 5) = 3.' },
-        { q: 'Probability of rolling a prime number on a standard die:',
-          o: ['1/2', '1/3', '2/3', '1/6', '5/6'],
-          a: 'A',
-          r: 'Primes on a die: 2, 3, 5 → 3 of 6 = 1/2.' },
-        { q: 'P(at least one 6) when rolling two dice:',
-          o: ['1/6', '1/3', '11/36', '1/36', '5/6'],
-          a: 'C',
-          r: 'P(none) = (5/6)² = 25/36. P(at least one) = 1 − 25/36 = 11/36.' },
-        { q: 'If every number in a list increases by 5, the standard deviation:',
-          o: ['increases by 5', 'increases by 25', 'stays the same', 'decreases by 5', 'becomes undefined'],
-          a: 'C',
-          r: 'Adding a constant shifts the center but not the spread. SD unchanged.' }
-      ]),
-      check: [
-        { q: 'Median of even count {2,4,6,8} = ?', o: ['4', '5', '6', '7', '10'], a: 1 },
-        { q: 'P(tails on a fair coin) = ?', o: ['1/3', '1/2', '2/3', '1/4', '1'], a: 1 },
-        { q: 'Range of {5, 9, 3, 12} = ?', o: ['6', '7', '8', '9', '12'], a: 2 },
-        { q: 'Two coins: P(at least one heads)?', o: ['1/4', '1/2', '3/4', '1/3', '2/3'], a: 2 },
-        { q: 'If total = 200 and count = 25, mean = ?', o: ['4', '6', '8', '10', '12'], a: 2 }
-      ]
-    }),
-
-    topic('quant-dstonly', 'Data Sufficiency fundamentals (Quant side)', 'quant', 'advanced', {
-      overview: [
-        'Data Sufficiency appears in the Data Insights section, but its core logic is quant thinking: determine whether the given statements, alone or together, are sufficient to answer the question — WITHOUT necessarily solving.',
-        'The answer choices never change: (A) (1) alone sufficient; (B) (2) alone sufficient; (C) together but neither alone; (D) each alone sufficient; (E) not sufficient even together.',
-        'Practice the AD/BCE elimination drill: evaluate (1) first. If insufficient, the answer is B, C, or E. If sufficient, it is A or D. This halves the work.',
-        'Beware of "sufficiency traps": a statement that gives a definite YES or a definite NO is sufficient either way. Sufficiency means UNIQUE answer, not necessarily an affirmative one.'
-      ],
-      formulas: [
-        { term: 'Sufficiency', def: 'Unique value or unique YES/NO answer', },
-        { term: 'Elimination', def: '(1) sufficient → A or D; not → B, C, or E', },
-        { term: 'Value vs Yes/No', def: 'Value: unique number. Yes/No: consistent YES or consistent NO' }
-      ],
-      strategies: [
-        'Before evaluating statements, mark what the question needs (a number, a relation, a remainder...).',
-        'Test statement (1) in isolation first; only combine after both fail alone.',
-        'Look for counterexamples with small integers: if you can find two assignments satisfying the statement with different answers, it is insufficient.',
-        'Recalibrate: for yes/no questions, "No, because all cases are No" is still sufficient.'
-      ],
-      traps: [
-        'Assuming a statement is insufficient because it seems incomplete — you only need uniqueness.',
-        'Failing to consider negative numbers, zero, and fractions as values.',
-        'Borrowing facts across statements when evaluating each alone.',
-        'Concluding insufficiency from one case without searching for a counterexample.'
-      ],
-      examples: examplesFor([
-        { q: 'DS: What is x?\n(1) x = 3 or x = 5\n(2) x is odd',
-          o: ['A', 'B', 'C', 'D', 'E'],
-          a: 'E',
-          r: '(1) gives two values — insufficient. (2) alone — x could be anything odd. Together: 3 or 5, still two — insufficient. E.' },
-        { q: 'DS: Is n even?\n(1) n² is even\n(2) n³ is even',
-          o: ['A', 'B', 'C', 'D', 'E'],
-          a: 'D',
-          r: 'If n² even → n even. If n³ even → n even. Either statement alone forces n even (a definite YES even though never stated explicitly). D.' },
-        { q: 'DS: What is p + q?\n(1) 3p + 3q = 24\n(2) p² = q²',
-          o: ['A', 'B', 'C', 'D', 'E'],
-          a: 'A',
-          r: '(1): divide by 3 → p + q = 8. Sufficient. (2): p = ±q, no single answer. A.' },
-        { q: 'DS: What percent of a class is female?\n(1) There are 12 males.\n(2) Females exceed males by 6.',
-          o: ['A', 'B', 'C', 'D', 'E'],
-          a: 'C',
-          r: '(1) alone: need total. (2) alone: need males. Together: females = 18, total = 30 → 60%. C.' },
-        { q: 'DS: Is k > 10?\n(1) k > 0\n(2) k < 5',
-          o: ['A', 'B', 'C', 'D', 'E'],
-          a: 'B',
-          r: '(1) k > 0 alone: k could be 3 (>10? No) or 20 (>10? Yes) — insufficient. (2) k < 5 alone: k ≤ 4, which is always < 10 — definite No, sufficient. Answer B.'
-        }
-      ]),
-      check: [
-        { q: 'DS: x + y = ? (1) x + y + 5 = 13 (2) 2x + 2y = 16', o: ['A', 'B', 'C', 'D', 'E'], a: 0 },
-        { q: 'DS: Is x > 0? (1) x² = 9 (2) x³ = 27', o: ['A', 'B', 'C', 'D', 'E'], a: 1 },
-        { q: 'DS: p with (1) p = 5q (2) q = 2 and p integer', o: ['A', 'B', 'C', 'D', 'E'], a: 2 },
-        { q: 'DS: x² = y² + z²? (1) x = 5 (2) y = 3, z = 4', o: ['A', 'B', 'C', 'D', 'E'], a: 2 },
-        { q: 'DS: How many cars? (1) 40 sedans (2) sedans are 50% of total', o: ['A', 'B', 'C', 'D', 'E'], a: 2 }
-      ]
-    })
-  ];
+  /* ================================================================
+     1. PERCENTAGES (beginner)
+     ================================================================ */
+  topic('quant-pct', 'Percentages', 'quant', 'beginner', {
+    overview: [
+      'A percentage is a fraction whose denominator is 100: p% means p/100, so 25% = 1/4 and 150% = 3/2. Almost every quantitative section item touches percents, which is why mastery here pays off beyond business-school-grade math.',
+      'The GMAT tests three core operations: finding a percent of a number (25% of 240), expressing one number as a percent of another (18 is what percent of 45), and applying a percent increase or decrease to a starting value.',
+      'Recognize the flavors by keywords: "p% of y" demands multiplication; "what percent" demands a ratio multiplied by 100; "increased or decreased by p%" demands the multiplier (1 ± p/100); and "what was the original" reverse questions demand division by a multiplier.',
+      'The base is the value that plays the role of 100% in any percent sentence. In "B is 30% greater than A" the base is A; in "A is 30% of B" the base is B. Hard items are usually built on exactly this confusion, with distractor answers using the wrong base.',
+      'The problem-solving framework: translate the sentence into arithmetic, name the base, convert each percent to a multiplier or fraction, apply the operation to the running value, then sanity-check the result against the plausible mistargets in the answer choices.',
+      'Successive percent changes multiply multipliers instead of adding: an increase of 10% followed by another 10% raises a base of 100 to 121, a net +21% — never +20% — because the second 10% applies to the already-grown 110.',
+      'Test-day insight: whenever real amounts are unknown or awkward, set the quantity you want to track to 100. Concrete numbers reveal the structure of the problem and expose any hidden compounding instantly.',
+      'Reverse-percent logic: to recover the original from a final value after a single change, divide by the multiplier: original = final ÷ (1 ± p/100). Undoing a 25% discount requires a 33⅓% increase, because 0.75 × 4/3 = 1 exactly.',
+      'What makes hard versions hard: hidden compounding (one percent acting on the result of another), deliberately switched bases ("percent of" versus "percent greater than"), and non-integer targets such as 41⅔% that punish premature rounding.'
+    ],
+    formulas: [
+      { term: 'Percent definition', def: 'p% = p/100; a percentage IS a fraction with denominator 100' },
+      { term: 'Percent of', def: 'x% of y = (x/100) × y; "of" always signals multiplication (25% of 80 = 20)' },
+      { term: 'Part / whole', def: 'part = (p/100) × whole; whole = part × (100/p); percent = part/whole × 100' },
+      { term: 'Percent change', def: '(new − old) ÷ old × 100; the base is ALWAYS the original value' },
+      { term: 'Increase multiplier', def: 'up by p% → multiply by (1 + p/100)' },
+      { term: 'Decrease multiplier', def: 'down by p% → multiply by (1 − p/100)' },
+      { term: 'Successive changes', def: 'final = original × m₁ × m₂ × m₃, each m = (1 ± p/100); never add the percents' },
+      { term: 'Reverse change', def: 'original = final ÷ (1 ± p/100); after a decrease d, restoring requires d/(1−d) as a percent, e.g. 25% off needs +33⅓%' },
+      { term: 'x is what percent of y', def: '(x/y) × 100%; the base is y' },
+      { term: 'x is what percent greater than y', def: '((x − y)/y) × 100%; still base y, and the result can be negative for "less than"' },
+      { term: 'Percentage points vs percent', def: '30% → 35% is +5 percentage points but a (5/30) = 16⅔% relative increase' },
+      { term: 'Cross-ratio', def: 'p% of A = q% of B implies A/B = q/p; the ratio of wholes is the reciprocal of the ratio of percents' }
+    ],
+    strategies: [
+      'Set the unknown or awkward value to 100. Percent problems become concrete arithmetic and trap answers become obvious.',
+      'On any percent change, the base is the ORIGINAL value — it is the denominator: (new − old)/old.',
+      'Translate mechanically: "is" → =, "of" → ×, "what percent" → /100.',
+      'Convert each percent event to one multiplier and apply it to the running total; this handles compounding safely.',
+      'To recover an original (reverse percent), divide final by the multiplier — never subtract a percent from a percent.',
+      'Memorize benchmark fractions: 25% = 1/4, 33⅓% = 1/3, 50% = 1/2, 20% = 1/5, 12.5% = 1/8, 10% = 1/10.',
+      'For "x is what percent less/greater than y," write (x − y)/y × 100 and name y as the base before computing.',
+      'In two-percent equations like "60% of x = 25% of y," cancel to the fraction x/y = 25/60 immediately rather than solving for the wholes.',
+      'Sanity rule: an increase followed by an EQUAL decrease never returns to 100% — it lands below the original; use that to reject fake answers instantly.',
+      'When the answer choices are spaced far apart, estimate with rounded values instead of grinding exact decimals.',
+      'For percent-of-a-percent ("what percent of 8% is 2%?"), the answer is 2/8 = 25% — treat both as plain numbers over a common base.',
+      'Re-read every problem for "percent CHANGE" versus "percent OF": 80 → 100 is a 25% increase, yet 100 is 125% of 80; both claims coexist but answer different questions.',
+      'Use multiplier form for decisions: price × 0.7 (pay 70%) is cleaner than "30% off" arithmetic when compounded with taxes or extra discounts.'
+    ],
+    traps: [
+      'Applying the second change to the original instead of the running total. A 25% rise then a 20% drop is 0% net, NOT +5% — always chain multipliers.',
+      'Adding percentages that must multiply. +30% then +40% = +82%, and the +70% option is the bait.',
+      'Using +25% to undo a 25% discount. 0.75 × 1.25 = 0.9375, not 1; the correct restore is +33⅓%.',
+      'Reading "20% off" as paying 20%. A 20% discount means you pay 80% of the price.',
+      'Making the final value the base of a decrease when the sentence says the decrease happened to the original.',
+      'Mixing "5 percentage points" up with "5%": 30% → 35% is 5 points but only a 16⅔% relative rise.',
+      'Forgetting the ×100 when converting a fraction to a percent: 0.4 is 40%, not 4%.',
+      'Confusing three structures: "A is 25% of B" (A = 0.25B), "A is 25% less than B" (A = 0.75B), "A is 25% more than B" (A = 1.25B).',
+      'Picking the answer that equals the arithmetic sum of the two percents in any layered problem (e.g. 15% then 10% op-block → picking 25%).',
+      'Computing reverse changes by subtraction: after a 20% increase, original = F/1.2, not F − 0.2F.',
+      'Solving for the wrong quantity: in "60% of x = 25% of y," students find x and then state it as a percent of the wrong base.',
+      'Rounding non-terminating percents too early and choosing a rounded distractor instead of the exact ⅓-based value.',
+      'Forgetting to identify the base when the sentence flips direction: "B is 30% less than A" has base A, so B = 0.7A, not A = 0.7B.'
+    ],
+    examples: examplesFor([
+      { q: 'A jacket costs $120. What is its price after a single discount of 15%?',
+        o: ['$18', '$96', '$102', '$105', '$108'],
+        a: 'C',
+        r: 'Compute the discount amount: 15% of 120 = 0.15 × 120 = $18. Subtract: 120 − 18 = $102. Equivalently use the pay-multiplier: 120 × 0.85 = 102. The $18 option is the discount, not the price; $96 is a 20% discount; $108 a 10% discount.' },
+      { q: 'In a class of 40 students, 15% wear glasses. How many students wear glasses?',
+        o: ['4', '5', '6', '8', '10'],
+        a: 'C',
+        r: 'Take 15% of 40: 0.15 × 40 = 6. Framing as 10% (4) plus 5% (2) gives 4 + 2 = 6 quickly without a calculator.' },
+      { q: 'A salary rises 40% then falls 25%. What is the net percent change?',
+        o: ['0%', '+4%', '+5%', '+15%', '−5%'],
+        a: 'C',
+        r: 'Base 100 → after the 40% rise, 140. The 25% drop applies to 140: 140 × 0.75 = 105. Net change (105 − 100)/100 = +5%. +15% (the 40 − 25 arithmetic difference) is the trap; multipliers never add.' },
+      { q: 'If 60% of x equals 25% of y, then x is what percent of y?',
+        o: ['40%', '41⅔%', '42%', '45%', '60%'],
+        a: 'B',
+        r: 'Translate: 0.60x = 0.25y. Divide both sides by 0.60y: x/y = 0.25/0.60 = 25/60 = 5/12. As a percent, (5/12) × 100 = 41⅔%. The 60% option reverses the given percents; 42% is the rounded imposter of the exact value.' },
+      { q: 'A town\'s population grows 30% one year and 40% the next. What is the overall percent growth over the two years?',
+        o: ['70%', '72%', '82%', '90%', '112%'],
+        a: 'C',
+        r: 'Chain multipliers: 1.30 × 1.40 = 1.82. A base of 100 becomes 182, a net +82%. The 70% option is the naive sum; 72% arises from adding 30% + 40% onto a recentered base by mistake; 112% uses the growth factor as if it were the growth itself.' },
+      { q: 'A store marks an item up 30% above its cost, then discounts the marked price by 10%. The final price is what percent of the cost?',
+        o: ['113%', '115%', '117%', '120%', '130%'],
+        a: 'C',
+        r: 'Set cost = 100. Markup: 100 × 1.30 = 130. Discount 10% off 130: 130 × 0.90 = 117. So the final price is 117% of cost. 130% ignores the discount; 120% treats the net as 30 − 10 additive; 113% misbuilds the factors.' },
+      { q: 'A vat holds 60 kg of a saltwater solution that is 5% salt by weight. After water boils off, the solution is 10% salt. What is the new total weight?',
+        o: ['20', '25', '30', '35', '45'],
+        a: 'C',
+        r: 'Salt never changes: 5% of 60 = 3 kg of salt. After boiling, that 3 kg is 10% of the new solution: new total = 3 ÷ 0.10 = 30 kg. The 35 option comes from wrongly adding the evaporated amount; 25 from dividing 60 by 2.4 and rounding.' },
+      { q: 'An investment loses 40% one year, then gains 60% the next. What is the net percent change over the two years?',
+        o: ['−4%', '−8%', '0%', '+20%', '+4%'],
+        a: 'A',
+        r: 'Base 100 → lose 40% → 60. Then gain 60% of 60 = 36, so 60 + 36 = 96. Net change (96 − 100)/100 = −4%. +20% is the false sum (60 − 40); 0% assumes the changes cancel when equal multipliers are not opposite.' },
+      { q: 'After a 25% discount, an item would sell for $90. By what percent must the discounted price be raised to get back to the original list price?',
+        o: ['25%', '30%', '33⅓%', '40%', '50%'],
+        a: 'C',
+        r: 'Original × 0.75 = 90, so original = 90 ÷ 0.75 = 120. The discounted price is 90; to reach 120 you need 30 on a base of 90 = 30/90 = ⅓ = 33⅓%. The symmetric 25% seems right but is wrong: 90 × 1.25 = 112.5 ≠ 120. This is the reverse-percent restore rule.' }
+    ]),
+    check: [
+      { q: '25% of 240 = ?', o: ['40', '50', '60', '70', '80'], a: 2 },
+      { q: 'Increase 80 by 25%. Result = ?', o: ['90', '95', '100', '105', '120'], a: 2 },
+      { q: 'Decrease 120 by 30%. Result = ?', o: ['80', '84', '88', '90', '96'], a: 1 },
+      { q: '18 is what percent of 45?', o: ['35%', '40%', '45%', '50%', '60%'], a: 1 },
+      { q: 'A price rises from $50 to $62. Percent increase = ?', o: ['12%', '20%', '24%', '25%', '30%'], a: 2 }
+    ]
+  }),
 
   /* ================================================================
+     2. RATIOS (beginner)
+     ================================================================ */
+  topic('quant-ratios', 'Ratios', 'quant', 'beginner', {
+    overview: [
+      'A ratio is a comparison of two or more quantities written a:b or as a fraction a/b. It carries NO absolute size: 1:2 describes 1 and 2 units just as well as 10 and 20 units.',
+      'Ratios behave like fractions — you may scale both terms by any positive factor. The single most important move is introducing a common multiplier k: if apples:oranges = 2:3, write apples = 2k and oranges = 3k.',
+      'When a ratio sits on a known total, divide the total by the sum of the parts to get k, then multiply back. A 3:5 split of 40 students uses 8 total parts → k = 5 → two groups of 15 and 25.',
+      'When a ratio sits on a known difference, k comes from the difference of the parts: a 7:3 split with a difference of 24 gives 4k = 24 → k = 6.',
+      'Ratio problems also arrive as proportions ("4:7 equals x:28"), solved by cross-multiplication after confirming the units on both sides match.',
+      'Combined ratios stitch separate two-term ratios together: a:b = 2:3 and b:c = 4:5 share only b, so scale to a:b = 8:12 and b:c = 12:15, making a:b:c = 8:12:15.',
+      'The hardest ratio flavor is the before/after problem, where one quantity changes and the ratio shifts: set up women = 5k, men = 2k, apply the change, and solve the resulting equation in k.',
+      'Test-day insight: if a ratio answer must be a real count of people or items, k must come out to a sensible positive number; an absurd k signals a reversed ratio or misplaced operation.',
+      'What makes hard versions hard: mixing multiple bases (two different juice:water ratios), changes applied to only one part of a ratio, and converting between ratios and totals when the total is never directly given.'
+    ],
+    formulas: [
+      { term: 'Ratio definition', def: 'a:b means the quantities are in the relative sizes a and b; no absolute measure' },
+      { term: 'Scaling', def: 'a:b = ka:kb for any positive k; only relative sizes are fixed' },
+      { term: 'Multiplier k', def: 'with a:b, actual amounts are ak and bk; find k from a given total or difference' },
+      { term: 'Split by total', def: 'with a:b and total T, share of a = a/(a+b) × T' },
+      { term: 'Split by difference', def: 'with a:b and difference D, k = D/(a−b); parts are ak and bk' },
+      { term: 'Combined ratios', def: 'a:b and b:c → scale both to equal the middle term, producing a:b:c' },
+      { term: 'Proportion', def: 'a/b = c/d → cross-multiply: ad = bc' },
+      { term: 'Ratio change', def: 'if a:b becomes c:d after adding x to the first part, solve (ak + x)/(bk) = c/d' },
+      { term: 'Parts sum', def: 'a:b has a + b total parts; each part = total ÷ (a + b)' },
+      { term: 'Reduced form', def: 'always reduce to lowest integer terms: 6:9 → 2:3' },
+      { term: 'Ratio of ratios', def: 'A:B = m:n and B:C = p:q gives A:C = mp:nq' },
+      { term: 'Same-unit rule', def: 'all terms of a ratio and every ratio combined must share one unit; convert first' }
+    ],
+    strategies: [
+      'Introduce k for each part of the ratio the moment a total, sum, or difference appears.',
+      'For three-or-more quantities x:y:z = 1:2:3 with a sum of 60, write k + 2k + 3k = 6k = 60, then k = 10.',
+      'Find k from a difference via (larger part − smaller part) = (a − b)k; then compute all requested parts.',
+      'Scale ratios to a common unit before cross-multiplying proportions — never mix km with m mid-equation.',
+      'Combine two-term ratios by making the shared letter hold the same value in both before writing the triple.',
+      'On before/after ratio problems, write BOTH states with the same k and solve the equation rather than guessing plug-in values.',
+      'Reduce every ratio to simplest integer form early — it exposes structure and makes k smaller.',
+      'Answer exactly what is asked: largest share, difference of shares, total, or a specific term; the question will name one.',
+      'Check that all quantities come out as positive integers when the objects are people, marbles, or books.',
+      'Use proportions for unit conversions as well: if 3 pens cost $4.50, the ratio statement 3/4.50 = n/price solves cleanly.',
+      'For mixtures asking "more of A than B," compute (a−b)k, not the individual shares.',
+      'Confirm the ORDER of the ratio: "men:women" followed by a men:women setup — reversing either turns a correct ratio into a distractor.'
+    ],
+    traps: [
+      'Treating a ratio as if it were an absolute amount: 2:3 could be 2 and 3 or 20 and 30.',
+      'Adding or subtracting "ratio parts" directly without the multiplier — you cannot add 5 women to a "5 part" without knowing k.',
+      'Combining ratios with different bases: a:b from container one cannot be glued to b:c from container two until the middle term is equalized.',
+      'Using the ratio sum instead of the total when told only "sum of parts" — the two coincide only when k = 1.',
+      'Reversing the ratio order (writing b:a when the answer needs a:b).',
+      'Failing to reduce, then picking a scaled copy of a correct reduced ratio.',
+      'In before/after problems, applying the change to both sides when only one quantity actually changed.',
+      'Thinking a ratio stays constant when one quantity is added: after adding x to the first term, the new fraction is (ak + x)/bk — the ratio has changed.',
+      'Cross-multiplying with mismatched units, producing answers off by a factor of 1000 or 60.',
+      'Forgetting that a difference of D between parts a:b is (a − b)k, not (a − b) itself.',
+      'Solving for k and stopping, instead of converting k back into the requested share.',
+      'Mixing up "increased by a new ratio" (new term = old term + change) with "becomes" (directly equate new ratio).',
+      'Assuming a ratio of totals when a ratio of per-person values is meant — re-read who or what the ratio compares.'
+    ],
+    examples: examplesFor([
+      { q: 'In a class, the ratio of boys to girls is 3:5 and there are 40 students. How many boys are there?',
+        o: ['12', '15', '18', '20', '24'],
+        a: 'B',
+        r: 'Total parts = 3 + 5 = 8, so k = 40 ÷ 8 = 5. Boys = 3k = 15. Verify: girls = 25, sum 40 ✓.' },
+      { q: 'If the ratio 4:7 equals the ratio x:28, what is x?',
+        o: ['12', '14', '16', '18', '20'],
+        a: 'C',
+        r: 'Write 4/7 = x/28 and cross-multiply: 4 × 28 = 7x → x = 112/7 = 16. Alternatively, the second term scaled by 4 (28 = 4 × 7), so the first term scales by 4 too: 4 × 4 = 16.' },
+      { q: 'A sum of $400 is split among three people in the ratio 1:3:4. What is the largest share?',
+        o: ['$50', '$100', '$150', '$200', '$300'],
+        a: 'D',
+        r: 'Parts total 1 + 3 + 4 = 8, so k = 400/8 = 50. Largest share = 4k = $200. Check: 50 + 150 + 200 = 400 ✓. $300 is 3 partners × $100 from a miscounted k; $150 is the middle share.' },
+      { q: 'The ratio of women to men in an office is 5:2. If 10 more women were hired, the new ratio would be 3:1. How many men work there?',
+        o: ['10', '20', '30', '40', '50'],
+        a: 'B',
+        r: 'Write women = 5k, men = 2k. After hiring, women = 5k + 10 while men = 2k. The new ratio is 3:1, so (5k + 10)/(2k) = 3. Multiply: 5k + 10 = 6k → k = 10. Men = 2k = 20. Verify: women 50, add 10 → 60; 60:20 = 3:1 ✓. Answer B, never the 30 that naively doubles the smaller term.' },
+      { q: 'If a:b = 2:3 and b:c = 4:5, what is a:c?',
+        o: ['8:15', '2:5', '3:4', '8:5', '5:8'],
+        a: 'A',
+        r: 'Equalize the middle term b. Scale a:b = 2:3 by 4 → 8:12. Scale b:c = 4:5 by 3 → 12:15. Now b = 12 in both, giving a:b:c = 8:12:15, so a:c = 8:15. 2:5 forgets to equalize b; 8:5 reverses the order.' },
+      { q: 'Two positive numbers are in the ratio 7:3 and differ by 24. What is the smaller number?',
+        o: ['12', '15', '18', '21', '24'],
+        a: 'C',
+        r: 'Let the numbers be 7k and 3k. Their difference is 4k = 24 → k = 6. Smaller = 3k = 18. Check: 42 − 18 = 24 ✓. 21 assumes k from 7k = 24 by rounding; 24 is the given difference, not a part.' },
+      { q: 'A paint mixture uses red, blue, and white in the ratio 2:3:6. If a batch contains 55 liters total, how many more liters of white are there than red?',
+        o: ['10', '15', '20', '25', '30'],
+        a: 'C',
+        r: 'Total parts = 2 + 3 + 6 = 11, so k = 55/11 = 5. Red = 2k = 10, white = 6k = 30. White − red = 30 − 10 = 20 liters. The 25 option subtracts wrongly as 6k − 2k = 4k but uses k = 55/8 by forgetting the blue term.' },
+      { q: 'At a camp the ratio of juniors to seniors is 5:4. After 9 seniors leave, the ratio becomes 5:3. How many juniors are at the camp?',
+        o: ['36', '40', '45', '50', '54'],
+        a: 'C',
+        r: 'Juniors = 5k, seniors = 4k. After the seniors leave: 5k/(4k − 9) = 5/3. Cross-multiply: 3 × 5k = 5(4k − 9) → 15k = 20k − 45 → 5k = 45 → k = 9. Juniors = 5k = 45. Verify: seniors were 36, after 27; 45:27 = 5:3 ✓. 36 is the original senior count; 40 results from dividing 45-3 by the wrong slope.' },
+      { q: 'A bag contains red, blue, and green marbles in the ratio 3:5:8. There are 20 more green marbles than red. What is the total number of marbles?',
+        o: ['60', '64', '68', '72', '80'],
+        a: 'B',
+        r: 'Green − red = 8k − 3k = 5k = 20 → k = 4. Total = (3 + 5 + 8)k = 16k = 64. Verify: red 12, blue 20, green 32, and 32 − 12 = 20 ✓. The 80 option uses 16k with k = 5 from 20/4; 68 comes from mis-summing parts.' }
+    ]),
+    check: [
+      { q: 'Ratio 2:5 with a total of 35. The second quantity is?', o: ['10', '15', '20', '25', '30'], a: 3 },
+      { q: 'x:y = 6:9 in lowest terms is?', o: ['2:3', '3:2', '6:9', '1:1.5', '4:6'], a: 0 },
+      { q: 'If a/b = 3/5 and a = 12, then b = ?', o: ['15', '20', '25', '30', '36'], a: 1 },
+      { q: 'Ratio 7:9 with a difference of 6. The smaller part is?', o: ['14', '18', '21', '27', '42'], a: 2 },
+      { q: 'Parts in ratio 1:2:3 sum to 24. The middle part is?', o: ['4', '6', '8', '10', '12'], a: 2 }
+    ]
+  }),
+
+  /* ================================================================
+     3. FRACTIONS & DECIMALS (beginner)
+     ================================================================ */
+  topic('quant-fracdec', 'Fractions & Decimals', 'quant', 'beginner', {
+    overview: [
+      'Fractions and decimals are two notations for the same numbers, and fluency across both is the foundation of every quantitative item. The GMAT rewards knowing the benchmark equivalencies cold: 1/8 = 0.125, 3/8 = 0.375, 2/3 ≈ 0.6667, 11/4 = 2.75.',
+      'Adding or subtracting fractions requires a common denominator; multiplying just multiplies numerators and denominators (after cancellation); dividing multiplies by the reciprocal.',
+      'Decimals are fractions over powers of 10: 0.35 = 35/100. Counting decimal places before multiplication and aligning place values before comparison prevents the classic decimal errors.',
+      'A fraction in lowest terms has a terminating decimal exactly when its denominator has no prime factors other than 2 and 5. So 1/8 (8 = 2³) terminates, while 1/6 and 1/7 repeat.',
+      'Comparing fractions is fastest by cross-multiplication: a/b versus c/d is decided by ad versus cb. Mixed numbers and negatives follow the same rule with care.',
+      'The problem-solving framework: reduce early, cancel before multiplying, keep exact fraction form until the final step, then convert to the requested notation (percent, decimal, or fraction).',
+      'Estimation is a licensed shortcut on the GMAT: 71/142 is clearly about 1/2, and answer choices spaced 10% apart rarely demand precise long division.',
+      'Test-day insight: the number of digits in the answer is itself a clue. 0.2 × 0.5 has two decimal digits, so 0.1 (not 1.0) must be in your candidate set — counting places beats memorizing tables.',
+      'What makes hard versions hard: nested operations (division inside brackets), cancellation that hides common factors, mixed-number arithmetic, and comparing five fractions where the denominators share no obvious common multiple.'
+    ],
+    formulas: [
+      { term: 'Addition', def: 'a/b + c/d = (ad + cb)/bd, simplified; use the LCD when convenient' },
+      { term: 'Subtraction', def: 'a/b − c/d = (ad − cb)/bd; same denominator rules' },
+      { term: 'Multiplication', def: '(a/b) × (c/d) = ac/bd; cancel common factors BEFORE multiplying' },
+      { term: 'Division', def: 'a/b ÷ c/d = (a/b) × (d/c) — flip the divisor and multiply' },
+      { term: 'Reciprocal', def: 'the reciprocal of a/b is b/a; sign is preserved for negatives' },
+      { term: 'Decimal to fraction', def: '0.abc = abc/1000 — count decimal places as the exponent of 10' },
+      { term: 'Fraction to decimal', def: 'divide numerator by denominator; 1/8 = 0.125, 3/8 = 0.375' },
+      { term: 'Terminating test', def: 'reduced a/b terminates iff the prime factors of b are only 2 and 5' },
+      { term: 'Repeating blocks', def: '1/3 = 0.3333…, 1/6 = 0.1666…, 1/7 = 0.142857142857…' },
+      { term: 'Comparison', def: 'a/b vs c/d ⟺ compare ad vs cb (cross-product test)' },
+      { term: 'Complex fraction', def: '(a/b) ÷ (c/d) = ad/bc; invert the bottom fraction' },
+      { term: 'Mixed number', def: 'm and a/b = m + a/b, converted to (mb + a)/b before operations' },
+      { term: 'Non-zero denominators', def: 'in a fraction of fractions, the bottom must not be 0' }
+    ],
+    strategies: [
+      'Memorize the benchmark set: 1/4 = 0.25, 3/4 = 0.75, 1/5 = 0.2, 1/8 = 0.125, 3/8 = 0.375, 5/8 = 0.625, 7/8 = 0.875, 1/16 = 0.0625, 2/3 ≈ 0.667.',
+      'Compare any two fractions by cross-multiplication — no common denominator required.',
+      'Cancel common factors before multiplying numerators; it keeps numbers small and arithmetic exact.',
+      'Line up decimal points when adding or subtracting decimals; append trailing zeros to the shorter one.',
+      'Count decimal places in multiplication: 0.2 × 0.5 has two places total → 0.10.',
+      'When dividing by a fraction, flip it and multiply; do not attempt to "cross divide" mixed pairs.',
+      'Use denominator 100 or 1000 as a bridge between decimals and fractions for exact arithmetic.',
+      'Reduce to lowest terms at every checkpoint; graders cannot accept 10/24 when the option lists 5/12.',
+      'Estimate before computing: 71/142 ≈ 1/2 and 49/50 ≈ 0.98, which fast-rejects absurd options.',
+      'For 0.333… use the exact fraction 1/3 in computations; reserve the decimal for estimation.',
+      'On five-fraction comparisons, compare pairwise against a candidate greatest, eliminating options as you go.',
+      'Negative fractions follow identical rules; only the sign requires care in subtraction and division.',
+      'Convert mixed numbers to improper fractions before multiplying or dividing; addition can stay mixed if denominators match.'
+    ],
+    traps: [
+      'Adding fractions by adding the numerators alone. 1/4 + 1/6 is NOT 2/10 — you need a common denominator (12) first.',
+      'Dividing by a fraction and accidentally multiplying by it instead of the reciprocal.',
+      'Cancelling terms across addition: in (2 + 4x)/2 you may not cancel the 2s to get 4x.',
+      'Misaligning decimals: 0.7 and 0.699 compare as 0.700 versus 0.699, so 0.7 is bigger — do not read digit-by-digit from the left without padding.',
+      'Losing decimal places in multiplication: 1.5 × 0.4 = 0.60, not 6.',
+      'Substituting 0.333 for 1/3 in a problem that needs exact arithmetic — the tiny error compounds.',
+      'Forgetting to reduce, then failing to match the reduced option.',
+      'Believing 1/3, 1/6, 1/7 terminate because they look simple; only denominators made of 2s and 5s terminate.',
+      'Reading the division order backwards: "3 ÷ 4" is 3/4, while "4 ÷ 3" is 4/3 — they are not interchangeable.',
+      'Mishandling signs in complex fractions where both numerator and denominator are negative.',
+      'In mixed-number comparison, comparing only the fractional parts and ignoring the wholes.',
+      'Choosing a scaled equivalent (like 10/24) when the answer options are reduced forms.',
+      'Slipping between 0.1 and 1/10 — they are the same value, but a decimal-place error can turn 0.1 into 1.0 in a quick move.'
+    ],
+    examples: examplesFor([
+      { q: 'What is 1/4 + 1/6?',
+        o: ['1/10', '5/12', '2/5', '1/3', '1/2'],
+        a: 'B',
+        r: 'Common denominator 12: 1/4 = 3/12 and 1/6 = 2/12, so 3/12 + 2/12 = 5/12. Adding straight across gives the trap 1/10, which is what "common-denominator-ignored" answers look like.' },
+      { q: 'What is (3/5) ÷ (4/7)?',
+        o: ['12/35', '7/5', '21/20', '35/12', '20/21'],
+        a: 'C',
+        r: 'Flip the divisor and multiply: (3/5) × (7/4) = 21/20. 12/35 is (3/5) × (4/7); 35/12 is both fractions flipped; 20/21 accidentally flips wrong.' },
+      { q: 'Which of the following fractions is greatest: 2/3, 7/9, 5/6, 11/12, 3/4?',
+        o: ['2/3', '7/9', '5/6', '11/12', '3/4'],
+        a: 'D',
+        r: 'Compare against 11/12 using cross-products. 5/6 = 10/12 < 11/12. 7/9 vs 11/12: 84 vs 99 → 11/12 wins. 3/4 = 9/12, 2/3 = 8/12. Every option is below 11/12, so the answer is 11/12.' },
+      { q: 'What is 0.75 + 0.125?',
+        o: ['0.800', '0.825', '0.865', '0.875', '0.885'],
+        a: 'D',
+        r: 'Pad to three places: 0.750 + 0.125 = 0.875. Equivalently 3/4 + 1/8 = 6/8 + 1/8 = 7/8 = 0.875. Options 0.865 and 0.885 fake the third decimal digit.' },
+      { q: 'What is (2/3) × (5/8)?',
+        o: ['5/12', '3/5', '8/15', '5/6', '7/12'],
+        a: 'A',
+        r: 'Multiply across: (2 × 5)/(3 × 8) = 10/24 = 5/12 in lowest terms. The option 3/5 comes from wrongly cancelling 2 with 8 then adding 3 + 5; 7/12 from adding numerators and denominators.' },
+      { q: 'Which of the following lies between 1/3 and 1/2?',
+        o: ['2/5', '1/4', '3/5', '3/4', '1/6'],
+        a: 'A',
+        r: 'Compare each candidate to 1/3 = 0.333 and 1/2 = 0.5. 2/5 = 0.4 sits between. 1/4 and 1/6 are below; 3/5 and 3/4 are above. Cross-multiplication verifies: 2/5 > 1/3 because 6 > 5, and 2/5 < 1/2 because 4 < 5.' },
+      { q: 'What is (2/3 + 1/6) ÷ (5/9)?',
+        o: ['3/2', '5/4', '6/5', '2/3', '1/2'],
+        a: 'A',
+        r: 'First the bracket: 2/3 = 4/6, so 4/6 + 1/6 = 5/6. Then divide by 5/9: (5/6) × (9/5) = 45/30 = 3/2. The 6/5 option mis-flips the second fraction only; 5/4 emerges from adding 9 to the numerator naively.' },
+      { q: 'Compute (3/17) × (34/15).',
+        o: ['0.2', '0.3', '0.4', '0.5', '0.6'],
+        a: 'C',
+        r: 'Cancel before multiplying: divide 3 and 15 by 3 → the fraction becomes (1/17) × (34/5). Then divide 34 and 17 by 17 → (1/1) × (2/5) = 2/5 = 0.4. Direct check: (3 × 34)/(17 × 15) = 102/255 = 2/5 = 0.4.' },
+      { q: 'What is the value of 0.6666… (repeating 6) + 0.125?',
+        o: ['19/24', '3/4', '5/6', '17/24', '13/16'],
+        a: 'A',
+        r: '0.6666… equals exactly 2/3. And 0.125 = 1/8. Sum: 2/3 + 1/8 = 16/24 + 3/24 = 19/24. The option 5/6 = 20/24 is temptingly close and is wrong by exactly the 3/24 term; 3/4 would be the sum of 2/3 and 1/12, a misread decimal.' }
+    ]),
+    check: [
+      { q: '1/3 + 1/9 = ?', o: ['1/12', '2/9', '4/9', '4/12', '3/9'], a: 2 },
+      { q: '(2/5) × (15/4) = ?', o: ['1/2', '3/2', '5/3', '2', '3/4'], a: 1 },
+      { q: '5/6 − 1/2 = ?', o: ['1/3', '1/2', '2/3', '5/12', '7/12'], a: 0 },
+      { q: '0.75 + 0.125 = ?', o: ['0.800', '0.825', '0.865', '0.875', '0.885'], a: 3 },
+      { q: '(1/8) of (2/3) = ?', o: ['1/24', '1/12', '3/16', '2/11', '1/6'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     4. NUMBER PROPERTIES (intermediate)
+     ================================================================ */
+  topic('quant-numprops', 'Number Properties', 'quant', 'intermediate', {
+    overview: [
+      'Number Properties governs integers: parity, primes, factorization, divisibility, greatest common divisors, least common multiples, and remainders. A handful of rules carries you through nearly every item on this territory.',
+      'Parity rules are absolute: even ± even = even, odd ± odd = even, even ± odd = odd, and any product with an even factor is even. They let you answer "must be true" items by pure logic instead of arithmetic.',
+      'Prime factorization is the master tool: every integer greater than 1 factors uniquely into primes (fundamental theorem of arithmetic). Write 60 as 2² × 3 × 5 and most questions about 60 become exponent-counting.',
+      'The number of positive divisors of n = p^a q^b r^c is (a + 1)(b + 1)(c + 1): each exponent can take any value from 0 up to its maximum.',
+      'GCD takes minimum exponents across shared primes; LCM takes maximum exponents of every prime present. The identity GCD × LCM = a × b saves time when the interplay of two numbers is asked.',
+      'Remainders always fit the form n = dq + r with 0 ≤ r < d. A remainder statement like "when divided by 7 leaves 3" is just n = 7q + 3, and working through small values of q lists the eligible numbers.',
+      'Divisibility shortcuts: a number is divisible by 3 (or 9) exactly when its digit sum is; by 11 roughly when the alternating digit sum is a multiple of 11; and by 2 or 5 from the last digit.',
+      'Test-day insight: "must be true" statements are settled by one well-chosen counterexample, while "could be true" statements are settled by one lucky example — flip your strategy with the quantifier.',
+      'What makes hard versions hard: combining several constraints (a two-digit number with a remainder under 6 and a remainder under 8), counting over ranges, and disguised constraints such as n³ divisible by 8 forcing n even.'
+    ],
+    formulas: [
+      { term: 'Parity sums', def: 'even ± even = even; odd ± odd = even; even ± odd = odd' },
+      { term: 'Parity products', def: 'even × any integer = even; odd × odd = odd' },
+      { term: 'Prime', def: 'integer > 1 with exactly two distinct positive divisors (1 and itself); 2 is the only even prime' },
+      { term: 'Fundamental theorem', def: 'every integer > 1 factors uniquely into primes' },
+      { term: 'Factorization', def: '60 = 2² × 3 × 5; keep a factor tree or division ladder' },
+      { term: 'Number of factors', def: 'n = p^a q^b r^c → τ(n) = (a+1)(b+1)(c+1)' },
+      { term: 'Sum of factors', def: '[(p^(a+1) − 1)/(p − 1)] × [(q^(b+1) − 1)/(q − 1)] × …' },
+      { term: 'GCD', def: 'take the minimum exponent on each shared prime' },
+      { term: 'LCM', def: 'take the maximum exponent on every prime that appears' },
+      { term: 'GCD × LCM', def: 'gcd(a,b) × lcm(a,b) = a × b' },
+      { term: 'Remainder form', def: 'n = dq + r with 0 ≤ r < d; r is unique for each (n, d)' },
+      { term: 'Digit rules', def: 'divisible by 3 or 9 ⟺ digit sum divisible by 3 or 9; by 11 ⟺ alternating digit sum divisible by 11' },
+      { term: 'Consecutive products', def: 'the product of k consecutive integers is divisible by k!' },
+      { term: 'Zero and one', def: '0 is even and divisible by everything nonzero; 1 is neither prime nor composite' }
+    ],
+    strategies: [
+      'Prime-factorize everything you meet in Number Properties; factors, GCD, LCM, and counts all read off the prime exponents.',
+      'On "must be true," hunt one counterexample with small integers before accepting anything.',
+      'On "could be true," hunt one working example and stop.',
+      'Check divisibility by a composite number through its coprime prime powers separately: divisible by 6 = divisible by 2 and by 3.',
+      'Express every remainder fact as n = dq + r and list the first few qualifying values.',
+      'To count multiples of k between 1 and m, use floor division: floor(m/k) counts them; subtract endpoint corrections for strict ranges.',
+      'A perfect square has all prime exponents even — so it is the exponent parity that makes 144 = 2⁴ × 3² square.',
+      'For LCM-of-remainder patterns where both remainders sit the same distance BELOW their divisors (4 below 6, 6 below 8), shift the variable: if k + 2 is divisible by both 6 and 8, then k + 2 is a multiple of their LCM 24.',
+      'Compute GCD, LCM by writing the prime factorizations side by side and comparing exponent columns.',
+      'Use parity to eliminate: a sum being even immediately forces both addends to share parity.',
+      'Verify a candidate divisor claim by factoring the number and testing every prime power.',
+      'When asked "how many integers between x and y," prefer complementary counting over brute-force listing for long ranges.'
+    ],
+    traps: [
+      'Calling 1 prime. Its divisors are just {1} — one divisor, so it is neither prime nor composite.',
+      'Forgetting that 0 is even and divisible by every nonzero integer; it trips parity claims.',
+      'Using the divisor-count formula on an unfactored or composite basis — it is ONLY valid for prime exponent expressions.',
+      'Dividing-by-both rule mixups: "divisible by 4 and by 6" forces divisibility by their LCM 12, NOT necessarily by 24.',
+      'Reading remainder problems backwards: "divided by 3 leaves 2" means n = 3k + 2, not n = 2k + 3.',
+      'Assuming a divisor of an even number must be even — odd divisors exist (12 has divisor 3).',
+      'Believing every odd number greater than 1 is prime (9, 15, 21 are counterexamples).',
+      'Double-counting factors: 2² gives factors 2 and 4, but counting "2 and 4" as separate primes inflates distinct-prime answers.',
+      'Forgetting the even-count median rule has nothing to do here, but mixing GCD(evens) with a factor of 2 default — the GCD of two evens need not itself carry every power of 2.',
+      'Assuming variables in Number Properties are positive integers when the stem never says so; negatives and zero flip parity counts.',
+      'In "for how many n does n³ divide 8"-style questions, jumping to counting cubes instead of translating the divisibility into the requirement on n.',
+      'Adding remainders instead of combining patterns: two remainder conditions solve jointly by testing the overlap of two arithmetic progressions, not by summing remainders.'
+    ],
+    examples: examplesFor([
+      { q: 'How many distinct prime factors does 90 have?',
+        o: ['2', '3', '4', '5', '6'],
+        a: 'B',
+        r: 'Factor: 90 = 2 × 3² × 5. The distinct primes are 2, 3, and 5 → three of them. Counting the 3 twice (it appears squared) or adding total exponents (1 + 2 + 1 = 4) produces the other options.' },
+      { q: 'How many positive divisors does 48 have?',
+        o: ['8', '10', '12', '15', '16'],
+        a: 'B',
+        r: 'Factor: 48 = 2⁴ × 3. Divisor count = (4 + 1)(1 + 1) = 10. The 12 option comes from wrongly counting 48 = 6 × 8 factors; 15 from (4+1)(2+1) misusing 4² × 3; 16 from treating levels as 4 × 4.' },
+      { q: 'What is the remainder when 2⁴ is divided by 5?',
+        o: ['0', '1', '2', '3', '4'],
+        a: 'B',
+        r: '2⁴ = 16 and 16 = 5 × 3 + 1, so the remainder is 1. A common slip writes 2⁴ = 8 (mixing up 2³) giving remainder 3, or 2⁴ = 32 giving remainder 2.' },
+      { q: 'If integer n is divisible by both 4 and 6, then n MUST be divisible by:',
+        o: ['8', '12', '18', '24', '36'],
+        a: 'B',
+        r: 'Divisible by 4 and 6 forces divisibility by their LCM = 12. Not 24: n = 12 is divisible by 4 and 6 but not by 24. LCM logic, not product logic, decides "must be divisible by."' },
+      { q: 'Which of the following is NOT a prime number?',
+        o: ['2', '5', '9', '13', '29'],
+        a: 'C',
+        r: '9 = 3 × 3, so it has three divisors (1, 3, 9) and is composite. 2, 5, 13, 29 are all prime. The 2 option tempts those who forget 2 IS prime and the only even prime.' },
+      { q: 'What is the greatest common divisor of 24 and 36?',
+        o: ['4', '6', '12', '18', '24'],
+        a: 'C',
+        r: 'Factor: 24 = 2³ × 3 and 36 = 2² × 3². GCD takes the minimum exponents: 2² × 3 = 12. The 6 option uses one low power each; 24 is a divisor of 24 but not of 36; 18 divides 36 but not 24.' },
+      { q: 'For how many integers n between 1 and 100 inclusive is n³ divisible by 8?',
+        o: ['25', '50', '60', '62', '75'],
+        a: 'B',
+        r: '8 = 2³, so n³ divisible by 8 ⟺ n divisible by 2, i.e. n even. Evens from 1 to 100 inclusive: half the integers = 50. The 25 option counts odd-esque groupings; 62 sneaks in from counting primes in 100.'
+      },
+      { q: 'A two-digit integer k leaves remainder 4 when divided by 6 and remainder 6 when divided by 8. What is the LARGEST two-digit such k?',
+        o: ['68', '70', '82', '88', '94'],
+        a: 'E',
+        r: 'k = 6a + 4 and k = 8b + 6 both mean k + 2 is divisible by 6 and by 8, so k + 2 is a multiple of LCM(6, 8) = 24. k = 24m − 2, giving two-digit values 22, 46, 70, 94. The largest is 94. Verify: 94 − 90 = 4 divisible-by-6 remainder ✓; 94 − 88 = 6 ✓. Option 70 is valid but not largest; 88 leaves remainder 0 mod 8.' },
+      { q: 'What is the sum of the first 40 positive even integers?',
+        o: ['1560', '1600', '1620', '1640', '1680'],
+        a: 'D',
+        r: 'The first 40 evens are 2(1 + 2 + … + 40) = 2 × (40 × 41 ÷ 2) = 40 × 41 = 1640. The 1600 error approximates 40²; 1620 sneaks in from a miscount of one term; 1680 uses 40 × 42.' }
+    ]),
+    check: [
+      { q: 'Which of these is prime: 21, 37, 49, 51, 77?', o: ['21', '37', '49', '51', '77'], a: 1 },
+      { q: 'The number of positive divisors of 36 = ?', o: ['6', '8', '9', '12', '15'], a: 2 },
+      { q: 'LCM of 8 and 12 = ?', o: ['4', '24', '48', '72', '96'], a: 1 },
+      { q: 'Remainder when 13 is divided by 4: ?', o: ['0', '1', '2', '3', '4'], a: 1 },
+      { q: 'The sum of two odd integers is:', o: ['always even', 'always odd', 'even only if equal', 'odd only if different', 'depends'], a: 0 }
+    ]
+  }),
+
+  /* ================================================================
+     5. ALGEBRA (intermediate)
+     ================================================================ */
+  topic('quant-alg', 'Algebra: Linear & Quadratic Equations', 'quant', 'intermediate', {
+    overview: [
+      'Algebra items ask you to solve, interpret, and manipulate equations and expressions. Linear equations (ax + b = c) and quadratic equations (ax² + bx + c = 0) are the staples, typically wrapped in story context or answer-target twists.',
+      'A quadratic with roots r and s factors as (x − r)(x − s) = x² − (r + s)x + rs. Reading off the sum and product of the roots can answer a question without solving the quadratic at all.',
+      'Formulas from the general quadratic ax² + bx + c = 0: sum of roots = −b/a, product = c/a, and the quadratic formula x = (−b ± √(b² − 4ac))/2a resolves everything else.',
+      'Systems of two linear equations yield to substitution or elimination. The all-time GMAT trick: when the target is x + y (rather than x and y separately), add or subtract the equations before solving fully.',
+      'Difference of two squares a² − b² = (a − b)(a + b) and the perfect squares (a ± b)² = a² ± 2ab + b² appear constantly — both as expansions and as factorizations to recognize.',
+      'The zero-product principle is decisive: if AB = 0 then A = 0 or B = 0, which is why x² = x has TWO solutions (x = 0 and x = 1) and why dividing by x first destroys one of them.',
+      'The problem-solving framework: put equations in standard form, factor before applying the formula, check discriminant-before-solve when only counts are asked, and always verify solutions by substitution.',
+      'Test-day insight: with five answer choices, plugging the choices back into the question is often faster than solving symbolically — but only when the equation is simple to evaluate.',
+      'What makes hard versions hard: answer targeting (asking for x² + y² or x − y when the system first gives x + y), extraneous roots after squaring, and putting the unknowns into forms like (x + 3)² = 25 that you must unpack.'
+    ],
+    formulas: [
+      { term: 'Linear solve', def: 'ax + b = c → x = (c − b)/a; isolate the variable by inverse steps' },
+      { term: 'Quadratic standard form', def: 'ax² + bx + c = 0 with a ≠ 0; solve by factoring, completing the square, or formula' },
+      { term: 'Quadratic formula', def: 'x = (−b ± √(b² − 4ac)) / (2a)' },
+      { term: 'Discriminant', def: 'b² − 4ac: > 0 → two real roots; = 0 → exactly one; < 0 → no real roots' },
+      { term: 'Sum of roots', def: 'r₁ + r₂ = −b/a' },
+      { term: 'Product of roots', def: 'r₁ × r₂ = c/a' },
+      { term: 'Factored form', def: '(x − r)(x − s) = 0 has exactly the solutions r and s' },
+      { term: 'Difference of squares', def: 'a² − b² = (a − b)(a + b)' },
+      { term: 'Perfect square', def: '(a ± b)² = a² ± 2ab + b²' },
+      { term: 'Zero product', def: 'AB = 0 ⟹ A = 0 or B = 0' },
+      { term: 'Elimination', def: 'scale equations so one variable cancels on addition or subtraction' },
+      { term: 'Substitution', def: 'solve one equation for a variable; substitute into the other' },
+      { term: 'Answer targeting', def: 'if asked for x + y, add systems: a(x + y) = total when coefficients already match' }
+    ],
+    strategies: [
+      'Put every quadratic in standard form (zero on one side) before factoring or using the formula.',
+      'Factor first; reach for the quadratic formula only when factoring stalls.',
+      'NEVER divide both sides of an equation by a variable expression that could be 0 — factor and use the zero product instead.',
+      'Check every solution by plugging it back into the ORIGINAL equation; squaring can inject extraneous roots.',
+      'Use the sum/product shortcuts: knowing the roots sum to 7 with product 12 identifies the quadratic instantly.',
+      'Read the question target before solving: for x + y, add the equations; for x − y, subtract them; for x² + y², consider (x + y)² − 2xy.',
+      'Recognize the difference of squares under disguise: 101² − 99² = (101 − 99)(101 + 99) = 2 × 200 = 400.',
+      'When asked only "how many solutions," evaluate the discriminant instead of solving.',
+      'Test small integer candidates for linear equations by plugging the answer choices in order.',
+      'Keep fractions as fractions; convert to decimals only at the very end if necessary.',
+      'For equations with denominators, multiply through by the LCM once — then solve the cleared equation and re-check against restrictions.',
+      'In word-form algebra, define the fewest variables possible and translate verbs into = signs mechanically.'
+    ],
+    traps: [
+      'Dividing by x to solve x² = x, losing the root x = 0. Factor: x(x − 1) = 0.',
+      'Sign errors in factored products: (x + 3)(x − 2) = x² + x − 6, not x² − x − 6.',
+      'Applying the quadratic formula to a non-standard-form quadratic.',
+      'Expanding (a − b)² while dropping the middle term: it is a² − 2ab + b², not a² − b².',
+      'Treating x² = 36 as x = 6, ignoring −6.',
+      'Forgetting to scale an equation before elimination, then adding terms that neither cancel nor combine.',
+      'Squaring an equation and grafting the extraneous root back as a solution of the original.',
+      'Exchanging the roles of x and y while substituting in a system.',
+      'Answering "sum of roots" with the product (c/a) — label your result.',
+      'Reducing coefficients incorrectly when clearing fractions.',
+      'Declaring a quadratic invalid because the discriminant looks negative before double-checking signs.',
+      'Checking only one root of a quadratic and accepting a half-solution.'
+    ],
+    examples: examplesFor([
+      { q: 'If 4x + 3 = 19, what is x?',
+        o: ['3', '4', '5', '6', '8'],
+        a: 'B',
+        r: 'Subtract 3: 4x = 16. Divide by 4: x = 4. Checking: 4 × 4 + 3 = 19 ✓. The 3 option comes from solving 4(x + 3) = 19; 5 from 4x = 20.' },
+      { q: 'If 3x − 4 = 2x + 5, what is x?',
+        o: ['1', '5', '9', '14', '−1'],
+        a: 'C',
+        r: 'Move 2x left and −4 right: 3x − 2x = 5 + 4 → x = 9. Verify: 27 − 4 = 23 and 18 + 5 = 23 ✓. The 14 option adds 3x + 2x and 4 + 5; 1 comes from subtracting the wrong way.' },
+      { q: 'The equation x² − x − 6 = 0 has two solutions. What is the larger one?',
+        o: ['−3', '−2', '2', '3', '6'],
+        a: 'D',
+        r: 'Factor: (x − 3)(x + 2) = 0 → x = 3 or x = −2. Larger = 3. The 6 option multiplies −3 × −2 (the constant term); 2 is the absolute value of the negative root.' },
+      { q: 'Given 2x + 3y = 11 and 3x + 2y = 9, what is x + y?',
+        o: ['2', '3', '4', '5', '6'],
+        a: 'C',
+        r: 'Add the two equations: (2x + 3y) + (3x + 2y) = 11 + 9 → 5x + 5y = 20 → x + y = 4. No need to isolate x or y individually. The 2 comes from x − y after subtracting; 5 from mis-splitting 20/5 after error.' },
+      { q: 'If (x + 2)(x − 5) = 0, what is the sum of the two solutions?',
+        o: ['−3', '−2', '3', '5', '7'],
+        a: 'C',
+        r: 'Solutions are x = −2 and x = 5; their sum is 3. Directly, the sum of roots of x² − 3x − 10 = 0 is −b/a = 3. The 7 is the difference 5 − (−2) re-signed; 5 is one root.' },
+      { q: 'If x² = 36 and y² = 16, what is the greatest possible value of x + y?',
+        o: ['2', '6', '10', '14', '−10'],
+        a: 'C',
+        r: 'x = ±6 and y = ±4. The largest sum uses the positive pair: 6 + 4 = 10. The 2 option picks 6 − 4; 14 is impossible since no root reaches 6 + 8; −10 picks both negatives.' },
+      { q: 'A quadratic equation has roots 3 and 4. Which equation has exactly these roots?',
+        o: ['x² + 7x + 12 = 0', 'x² − 7x + 12 = 0', 'x² − 12x + 7 = 0', 'x² + 12x + 7 = 0', 'x² − 7x − 12 = 0'],
+        a: 'B',
+        r: 'The polynomial (x − 3)(x − 4) expands to x² − 7x + 12. The sum of roots is 7 (−b/a with a = 1 → b = −7) and the product is 12. First option has roots with sum −7, so it factors (x + 3)(x + 4).' },
+      { q: 'If (x − 3)² = 25, what are the solutions for x?',
+        o: ['8 and 2', '8 and −2', '−8 and 2', '−8 and −2', '3 and 5'],
+        a: 'B',
+        r: 'Take the square root of both sides: x − 3 = ±5 → x = 8 or x = −2. Taking only the positive root gives "8 only", the 2 option appears from reading 25 as 5² and offsetting the wrong way; 8 and 2 sums to 10, a misfactor.' },
+      { q: 'The product of two consecutive positive integers is 156. What is the larger integer?',
+        o: ['11', '12', '13', '14', '15'],
+        a: 'C',
+        r: 'Solve n(n + 1) = 156 → n² + n − 156 = 0 → (n − 12)(n + 13) = 0, so n = 12 and the larger integer is 13. Check 12 × 13 = 156 ✓. The 12 option is the smaller factor; 14 emerges from 156 ÷ 11 rounding.' }
+    ]),
+    check: [
+      { q: '3x − 7 = 2x + 5 → x = ?', o: ['10', '12', '−12', '14', '6'], a: 1 },
+      { q: 'x² − 9 = 0 → the solutions are?', o: ['3 only', '−3 only', '3 and −3', '9', '±9'], a: 2 },
+      { q: 'The sum of the roots of x² − 7x + 10 = 0 is?', o: ['7', '10', '−7', '−10', '3'], a: 0 },
+      { q: 'x − y = 5 and x + y = 11 → x = ?', o: ['3', '6', '8', '9', '11'], a: 2 },
+      { q: '(x + 4)² expanded = ?', o: ['x² + 16', 'x² + 8x + 16', 'x² + 4x + 16', 'x² − 8x + 16', 'x² + 8x + 8'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     6. INEQUALITIES & ABSOLUTE VALUES (intermediate)
+     ================================================================ */
+  topic('quant-ineq', 'Inequalities & Absolute Values', 'quant', 'intermediate', {
+    overview: [
+      'Inequalities behave like equations in almost every algebraic step, with one lethal exception: multiplying or dividing both sides by a negative number flips the direction of the inequality.',
+      'Addition and subtraction never flip the sign; multiplication and division by a positive never flip it; only multiplication or division by a negative (or taking reciprocals of opposite-sign quantities) reverses the comparison.',
+      'Absolute value is distance: |x| = x when x ≥ 0 and |x| = −x when x < 0. Geometrically, |x − c| is the distance from x to the number c.',
+      'The two canonical absolute-value inequalities: |x| ≤ a means −a ≤ x ≤ a (one bounded interval), while |x| ≥ a means x ≤ −a or x ≥ a (two rays pointing outward).',
+      'Most absolute-value equations on the GMAT are solved by splitting into two cases: expression = value and expression = −value, then solving both linear equations.',
+      'Compound ranges follow logic: "and" intersects the intervals (overlap), "or" unions them. The word "between" implies endpoints are included when ≤ appears.',
+      'The problem-solving framework: isolate the absolute value, write the two cases (or the compound interval), solve each linear inequality, flip signs exactly when a negative multiplier appears, and merge the results.',
+      'Test-day insight: integer-counting questions live on the boundary behavior of ≤ versus <. For how many integers |k| < 4 holds, the seven integers from −3 to 3, not the infinite continuum — count endpoints deliberately.',
+      'What makes hard versions hard: nested operations like |2n − 6| ≤ 4 requiring a two-step interval, distance readings of |x − 3| > 7, and compound intersections where a mis-flip corrupts the whole range.'
+    ],
+    formulas: [
+      { term: 'Flip rule', def: 'multiplying or dividing an inequality by a negative reverses the sign' },
+      { term: 'Safe operations', def: 'adding/subtracting the same value to both sides never flips; multiplying by a positive never flips' },
+      { term: 'Absolute value', def: '|x| = x if x ≥ 0 and |x| = −x if x < 0' },
+      { term: '|x| ≤ a', def: '−a ≤ x ≤ a, one closed interval (a > 0)' },
+      { term: '|x| ≥ a', def: 'x ≤ −a or x ≥ a, two outward rays (a > 0)' },
+      { term: '|x| = a', def: 'x = a or x = −a (a > 0)' },
+      { term: 'Distance reading', def: '|x − c| is the distance between x and c' },
+      { term: 'Compound and', def: 'a ≤ x and x ≤ b is the overlap a ≤ x ≤ b' },
+      { term: 'Compound or', def: 'x < a or x > b is the union of two rays' },
+      { term: 'Transitivity', def: 'a < b and b < c ⟹ a < c' },
+      { term: 'Integer counts', def: 'count the integers strictly inside an interval by endpoint inclusion; −3 < k < 4 gives 6 integers (−2 to 3)' },
+      { term: 'Squaring', def: 'squaring both sides is safe only when both sides are known nonnegative' },
+      { term: 'Reciprocal caution', def: 'if a < b and ab > 0 then 1/a > 1/b — reciprocals flip order for same-sign values' }
+    ],
+    strategies: [
+      'Isolate the absolute value expression before splitting into cases, just as you would isolate a variable.',
+      'Rewrite |x − c| ≤ a as a two-sided linear inequality c − a ≤ x ≤ c + a in one step.',
+      'Test one candidate in each candidate region to confirm the boundaries you built are right.',
+      'Track ≤ versus < endpoints; integer-count questions are decided by this precise distinction.',
+      'Keep the coefficient of the variable positive by moving terms across, avoiding avoidable sign flips.',
+      'Sketch a number line for compound inequalities; the picture resolves "and"/"or" instantly.',
+      'For "how many integers," list the first values of the range and count — never trust eyeballed arithmetic.',
+      'When multiplying an inequality by an unknown, STOP unless the sign of that unknown is guaranteed.',
+      'For |2n − 6| ≤ 4, work in order: this means −4 ≤ 2n − 6 ≤ 4; add 6 then divide the whole chain.',
+      'Sanity-check a solution by substitution at the boundary values themselves.',
+      'On "which value satisfies a compound," plug each answer into the original inequality directly.',
+      'Use the distance interpretation for worded absolute-value items ("within 7 units of 3").'
+    ],
+    traps: [
+      'Multiplying by −1 without flipping — the most common inequality error on the entire exam.',
+      'Solving only the positive case of an absolute value: |x − 2| = 5 requires BOTH x = 7 and x = −3.',
+      'Double-counting endpoints in open intervals when counting integers.',
+      'Adding two inequalities term by term when the second has a negative coefficient created implicitly.',
+      'Squaring both sides of an inequality when you do not know the signs — 2x < 4 does not imply (2x)² < 16 happily.',
+      'Mixing now-and-then boundaries: writing "between −4 and 3" for a solution that is −3 < x < 4.',
+      'Reading |x − 3| as x − 3 for every x; the bar forces sign casework.',
+      'Treating "x < 3 or x > 7" as one continuous interval — it is two separate rays.',
+      'Forgetting the outer bounds when an absolute value is inside a compound: solving |2n − 6| ≤ 4 but losing the −4 side.',
+      'Dividing by a variable assumed positive without stating it; when that assumption collapses, so does the answer.',
+      'Stating x ≥ −3 or x ≤ 3 when the interval is really "and" — orchestrating the cases backwards.',
+      'Answering the range of x but reporting the original inequality coefficients (e.g., reporting 2x ≥ −2 instead of x ≥ −1).'
+    ],
+    examples: examplesFor([
+      { q: 'If −6 < 2x < 8, then x lies between which two numbers?',
+        o: ['−3 and 4', '−4 and 3', '−12 and 16', '0 and 4', '−6 and 8'],
+        a: 'A',
+        r: 'Divide every side by positive 2: −3 < x < 4. Because 2 > 0, the inequality signs never flip. −4 and 3 reverses the numbers; −12 and 16 multiplies instead of dividing.' },
+      { q: 'What are the solutions to |x − 2| = 5?',
+        o: ['{3, 7}', '{−3, 7}', '{−7, 3}', '{−7, −3}', '{2, 5}'],
+        a: 'B',
+        r: 'Split into two cases: x − 2 = 5 → x = 7, and x − 2 = −5 → x = −3. So the solution set is {−3, 7}. The {3, 7} set solves |x − 4| = 3; {−7, 3} flips the assignment.' },
+      { q: '|x| ≥ 3 is equivalent to which statement?',
+        o: ['−3 ≤ x ≤ 3', 'x ≥ 3', 'x ≤ −3', 'x ≤ −3 or x ≥ 3', 'x > 3 or x < −3'],
+        a: 'D',
+        r: 'Since |x| is the distance from 0, being ≥ 3 means being at least 3 to the left or right: x ≤ −3 or x ≥ 3. Option E is the strict-open version that rejects x = ±3 and is therefore unequal to the original; option A is the ≥-to-≤ flip of the same bound.' },
+      { q: 'Which of the following satisfies −2x + 5 > 11?',
+        o: ['−2', '−3', '−4', '1', '2'],
+        a: 'C',
+        r: 'Subtract 5: −2x > 6. Divide by −2, FLIPPING the sign: x < −3. The only candidate strictly below −3 is −4. Every option ≥ −3 fails; −3 itself gives 11, not > 11.' },
+      { q: 'For how many integers k does |k| < 4 hold?',
+        o: ['4', '6', '7', '8', '9'],
+        a: 'C',
+        r: '|k| < 4 means −4 < k < 4, so the integers are −3, −2, −1, 0, 1, 2, 3 — seven of them. Excluding 0 or counting 4 and −4 each give incorrect counts (8 counts endpoints, 6 drops the 0 incorrectly, 9 includes ±4).' },
+      { q: 'If 3 ≤ x ≤ 7 and 5 ≤ x ≤ 9, then what range must x satisfy?',
+        o: ['3 to 9', '5 to 7', '3 to 5', '7 to 9', 'no overlap'],
+        a: 'B',
+        r: 'Both conditions must hold simultaneously ("and"), so x must be at least 5 (to satisfy the second lower bound) and at most 7 (to satisfy the first upper bound): 5 ≤ x ≤ 7. "3 to 9" unions the ranges — that would satisfy only one at a time.' },
+      { q: 'How many integers n satisfy |2n − 6| ≤ 4?',
+        o: ['3', '4', '5', '6', '7'],
+        a: 'C',
+        r: '|2n − 6| ≤ 4 means −4 ≤ 2n − 6 ≤ 4. Add 6: 2 ≤ 2n ≤ 10. Divide by 2: 1 ≤ n ≤ 5. The integers 1, 2, 3, 4, 5 = five values. The 6 and 7 counts include cusp values that fail 2n − 6 strictly at 2n = 10 edge cases misread as < .' },
+      { q: 'If −3 ≤ 2x − 1 ≤ 9, what is the range of x?',
+        o: ['−1 ≤ x ≤ 5', '−2 ≤ x ≤ 8', '−3 ≤ x ≤ 9', '0 ≤ x ≤ 5', '1 ≤ x ≤ 4'],
+        a: 'A',
+        r: 'Add 1 to all sides: −2 ≤ 2x ≤ 10. Divide by 2: −1 ≤ x ≤ 5. The −2 to 8 range only divides the ends by 1 instead of 2; −3 to 9 leaves the original coefficients untouched.' },
+      { q: 'The distance between x and 3 is strictly greater than 7. Which statement describes x?',
+        o: ['−4 < x < 10', 'x < −4 or x > 10', 'x < 4 or x > 10', '−10 < x < 4', 'x < −4'],
+        a: 'B',
+        r: 'Distance > 7 means |x − 3| > 7, so x − 3 > 7 → x > 10, or x − 3 < −7 → x < −4. That is the union of two rays: x < −4 or x > 10. The compound interval option confuses "outside" with "between"; the last option drops the upper ray entirely.'
+      }
+    ]),
+    check: [
+      { q: 'x/4 ≥ 3 → x ≥ ?', o: ['6', '8', '12', '3/4', '12 or less'], a: 2 },
+      { q: '|x + 1| = 3 → the solutions are?', o: ['2 and −2', '2 and −4', '−2 and 4', '3 and −3', '4 only'], a: 1 },
+      { q: 'Number of integers with |x| ≤ 2:', o: ['3', '4', '5', '6', '7'], a: 2 },
+      { q: 'If −3 ≤ x ≤ 5 and x is even, how many integer values are possible?', o: ['2', '3', '4', '5', '6'], a: 2 },
+      { q: 'Solve −2x − 6 > 0:', o: ['x > −3', 'x < −3', 'x < 3', 'x > 3', 'x = −3'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     7. FUNCTIONS & EXPONENTS (intermediate)
+     ================================================================ */
+  topic('quant-exponents', 'Functions & Exponents', 'quant', 'intermediate', {
+    overview: [
+      'Exponent rules reduce otherwise hairy expressions to single powers. The five core laws: x^a × x^b = x^(a+b); x^a ÷ x^b = x^(a−b); (x^a)^b = x^(ab); (xy)^a = x^a y^a; and x⁰ = 1 for any nonzero base.',
+      'Negative exponents are reciprocals (x^(−a) = 1/x^a), and fractional exponents are roots (x^(1/2) = √x, x^(m/n) = (ⁿ√x)^m). Everything else on GMAT exponents derives from these.',
+      'The same-base move is the engine of solving: to solve 2^x = 32, rewrite 32 = 2⁵ and equate exponents. When bases differ, convert one side to a prime power: 8 = 2³, 27 = 3³, 81 = 3⁴, 16 = 2⁴.',
+      'When an equation involves two exponent expressions like 2^(x+y) = 32 and 2^(x−y) = 8, you actually have a small linear system in the exponents x + y and x − y.',
+      'Functions f(x) behave like algebraic recipes: evaluate by substituting the input everywhere x appears. Nested functions evaluate from the inside out.',
+      'The signature GMAT function property is f(a + b) = f(a) + f(b) — additive linearity, true exactly for functions of the form f(x) = cx with no constant term. f(x) = 2x + 3 fails the test because of the +3.',
+      'Even powers have two-square symmetry: x² = 16 has solutions 4 and −4, and (−2)⁴ = 16 while −2⁴ = −16; brackets decide the sign.',
+      'Test-day insight: prime-reduction of every base to a single prime power turns comparison and exponent problems into simple arithmetic on exponents.',
+      'What makes hard versions hard: piling multiple laws into one expression, exponent systems, and the last-digit/cycle questions that need modular thinking about powers.'
+    ],
+    formulas: [
+      { term: 'Product of powers', def: 'x^a × x^b = x^(a+b); bases must match to combine' },
+      { term: 'Quotient of powers', def: 'x^a ÷ x^b = x^(a−b)' },
+      { term: 'Power of a power', def: '(x^a)^b = x^(ab)' },
+      { term: 'Power of a product', def: '(xy)^a = x^a × y^a; no such rule for x^a + y^a' },
+      { term: 'Zero exponent', def: 'x⁰ = 1 for x ≠ 0; 0⁰ is undefined' },
+      { term: 'Negative exponent', def: 'x^(−a) = 1/x^a; negative exponents move the factor across the fraction bar' },
+      { term: 'Fractional exponent', def: 'x^(1/n) = ⁿ√x; x^(m/n) = (ⁿ√x)^m' },
+      { term: 'Prime reduction', def: '4 = 2², 8 = 2³, 16 = 2⁴, 32 = 2⁵, 9 = 3², 27 = 3³, 81 = 3⁴, 25 = 5²' },
+      { term: 'Same base equate', def: 'x^a = x^b ⟹ a = b when x is a positive base other than 1' },
+      { term: 'Even power sign', def: 'x^(even) ≥ 0 always; (−2)⁴ = 16, −2⁴ = −16' },
+      { term: 'Odd power sign', def: 'a negative base raised to an odd power stays negative' },
+      { term: 'Function evaluation', def: 'f(input) replaces every occurrence of the variable in the rule' },
+      { term: 'Additive linearity', def: 'f(a + b) = f(a) + f(b) ⟺ f(x) = cx for some constant c (no constant term)' },
+      { term: 'Last-digit cycle', def: 'powers of 7 cycle 7, 9, 3, 1 every 4 steps; reduce the exponent mod 4' }
+    ],
+    strategies: [
+      'Reduce every base to a prime power before doing anything else; this makes comparisons mechanical.',
+      'To solve or compare, rebuild both sides on a common base, then equate exponents.',
+      'Convert negative exponents to reciprocals before combining; sign clutter hides the arithmetic.',
+      'Split (xy)^a into x^a y^a only for multiplication; sums have no such law.',
+      'Remember an even-power equation x⁴ = 16 has two real solutions ±2; if the stem restricts to positive, report only the sign allowed.',
+      'For f(g(x)), evaluate g(x) first, then feed that into f.',
+      'On the linearity test, check the constant term first: presence of any constant disqualifies the function.',
+      'Track e-exponent systems as linear equations in the exponent sums; add or subtract the equations.',
+      'For last-digit questions, list the cycle of units digits and reduce the exponent modulo the cycle length.',
+      'Verify exponent-law results by substituting a small base (2⁵ × 2³ = 32 × 8 = 256 = 2⁸).',
+      'Handle compound bases like (9)^(x) = 27 by re-expressing as (3²)^x = 3^(2x) = 3³ → 2x = 3.',
+      'In comparisons 4⁵ versus 2⁹, rewrite 4⁵ = (2²)⁵ = 2¹⁰ and read the winner off the exponents.'
+    ],
+    traps: [
+      'Multiplying bases when combining powers: 2³ × 2⁴ = 2⁷, never 4⁷ — the bases must stay put.',
+      'Claiming (a + b)² = a² + b²; the cross term 2ab is mandatory.',
+      'Forgetting x⁰ = 1 and writing 0 (or leaving a base in place).',
+      'Sign errors on even powers of negatives: (−3)² = 9 but −3² = −9.',
+      'Applying (x^a)^b = x^(ab) in reverse safely but forgetting to multiply the base coefficient: (3x)² = 9x².',
+      'Dividing powers of different bases (2⁵ ÷ 4² needs a base fix: 4² = 2⁴ first).',
+      'Mis-scaling fractional exponents: x^(3/2) = (√x)³, not x^3/2 as arithmetic division.',
+      'Choosing x^(a+b) answer options when the operation was power-of-power: 2^(5+3) indifferent to parentheses.',
+      'Asserting f(x) = 2x + 3 satisfies additivity — the +3 doubles in f(a) + f(b).',
+      'Mistaking 16^(3/4) for 16 × (3/4) instead of (⁴√16)³ = 2³ = 8.',
+      'In exponent systems, erroring on which difference attaches to which variable pair.',
+      'Reducing a cycle by 4 but mis-indexing the remainder: exponent 2023 ≡ 3 mod 4 hits the THIRD cycle entry, not the first.'
+    ],
+    examples: examplesFor([
+      { q: 'What is 2⁵ × 2³ ÷ 2⁴?',
+        o: ['2⁰', '2²', '2³', '2⁴', '2⁵'],
+        a: 'D',
+        r: 'Combine exponents: multiply adds 5 + 3 = 8, then division subtracts 4 → 8 − 4 = 4, so 2⁴. 2⁰ would come from multiplying and subtracting every exponent in a tile-misplay; 2² appears if you subtract twice.' },
+      { q: 'If 2^x = 32, what is x?',
+        o: ['3', '4', '5', '6', '8'],
+        a: 'C',
+        r: '32 = 2⁵, so x = 5. Checking: 2⁴ = 16 and 2⁶ = 64 bracket the target; 8 would pair with 256.' },
+      { q: 'Which is greater, 4⁵ or 2⁹?',
+        o: ['4⁵', '2⁹', 'equal', 'cannot compare', 'depends on base'],
+        a: 'A',
+        r: 'Rewrite 4⁵ = (2²)⁵ = 2¹⁰. Compare 2¹⁰ > 2⁹, so 4⁵ wins. Equal is the trap you reach by believing 4⁵ and 2⁹ coincide because 4 and 9 are "close"; they do not.' },
+      { q: 'If f(x) = x² + 2, what is f(3)?',
+        o: ['9', '10', '11', '13', '17'],
+        a: 'C',
+        r: 'Substitute 3: f(3) = 3² + 2 = 9 + 2 = 11. The 9 ignores the +2; 13 computes (3 + 2)²; 17 = 3² + 2² applied wrongly to the whole expression.' },
+      { q: 'If 9^x = 27, what is x?',
+        o: ['1', '1.5', '2', '3', '4'],
+        a: 'B',
+        r: 'Prime-reduce: 9 = 3² so 9^x = 3^(2x), and 27 = 3³. So 2x = 3 → x = 3/2 = 1.5. The 3 option equates exponents without the 2x correction; 2 solves 9^x = 81 instead.' },
+      { q: 'What is the value of 16^(3/4)?',
+        o: ['4', '6', '8', '12', '16'],
+        a: 'C',
+        r: '16 = 2⁴, so 16^(3/4) = (2⁴)^(3/4) = 2³ = 8. The 12 option multiplies 16 by 3/4; 4 is 16^(1/2); 6 appears from mistaking (⁴√16) for √16 and scaling.' },
+      { q: 'For which of the following functions does f(a) + f(b) = f(a + b) hold for all real values of a and b?',
+        o: ['f(x) = x²', 'f(x) = 2x + 3', 'f(x) = −3x', 'f(x) = |x|', 'f(x) = 1/x'],
+        a: 'C',
+        r: 'Only linear functions with no constant term qualify. f(x) = −3x: f(a) + f(b) = −3a − 3b = −3(a + b) = f(a + b) ✓. The quadratic squares cross terms; 2x + 3 doubles the 3; |x| breaks at signs; 1/x cannot satisfy f(a) + f(b) = 1/(a+b).' },
+      { q: 'If 2^(x+y) = 32 and 2^(x−y) = 8, what is x?',
+        o: ['1', '2', '3', '4', '5'],
+        a: 'D',
+        r: 'Both sides are powers of 2: x + y = 5 and x − y = 3. Add the equations: 2x = 8 → x = 4. Then y = 1. Check: 2⁵ = 32 and 2³ = 8 ✓. Answer 3 solves only the second exponent; 5 solves only the first.' },
+      { q: 'What is the units digit of 7^2023?',
+        o: ['1', '3', '7', '9', '5'],
+        a: 'B',
+        r: 'The units digits of powers of 7 cycle: 7¹ → 7, 7² → 9, 7³ → 3, 7⁴ → 1, then repeats every 4. Since 2023 = 4 × 505 + 3, the units digit matches the 3rd in the cycle → 3. The 1 option is the mod-4-exactly answer for a multiple-of-4 exponent; 7 assumes exponent 1.'
+      }
+    ]),
+    check: [
+      { q: '3² × 3³ = ?', o: ['3⁵', '3⁶', '9⁵', '3¹²', '9⁶'], a: 0 },
+      { q: '6⁰ = ?', o: ['0', '1', '6', 'undefined', '−6'], a: 1 },
+      { q: 'If 9^x = 27, then x = ?', o: ['1', '1.5', '2', '3', '4'], a: 1 },
+      { q: '(2³)² = ?', o: ['2⁵', '2⁶', '2⁹', '2¹²', '2⁴'], a: 1 },
+      { q: 'f(x) = 3x − 2; f(4) = ?', o: ['9', '10', '12', '14', '−2'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     8. WORD PROBLEMS: RATE, WORK, MIXTURES (intermediate)
+     ================================================================ */
+  topic('quant-wordprobs', 'Word Problems: Rate, Work, Mixtures', 'quant', 'intermediate', {
+    overview: [
+      'Word problems translate English situations into equations. The workhorse structure is rate × time = quantity, whose three permutations (rate, time, quantity) cover travel, work, pump, and production questions.',
+      'Travel problems use distance = rate × time. Average speed over a whole trip is TOTAL distance ÷ TOTAL time — never the plain average of the speeds.',
+      'Work problems define each worker\'s rate as the fraction of the job completed per unit time: a worker who finishes alone in 6 hours works at 1/6 per hour. Combined rates add; the job is complete when the sum of completed fractions reaches 1.',
+      'Mixture problems are weighted-average structures: amount₁ × concentration₁ + amount₂ × concentration₂ = total × target concentration. The unchanging ingredient (acid, salt, alcohol) is the conserved quantity.',
+      'Relative motion: travelers approaching each other close the gap at the SUM of their speeds; a pursuer catches a head start at the DIFFERENCE of speeds.',
+      'Staggered starts convert to head starts: the first traveler\'s distance before the second leaves becomes the gap the second must close.',
+      'The universal framework: define a variable for every unknown, write one equation per independent condition, then solve with the units aligned (hours, not minutes).',
+      'Test-day insight: in rate problems the answer often sits far from the "add the times" trap, so after solving, re-read which quantity was requested — time combined, time remaining, or distance at meet.',
+      'What makes hard versions hard: work already completed before a helper joins, machines joining or quitting mid-job, and mixture questions that ask for removed water or added pure solvent.'
+    ],
+    formulas: [
+      { term: 'Distance', def: 'd = r × t; equivalently t = d/r and r = d/t' },
+      { term: 'Average speed', def: 'total distance ÷ total time; not the mean of the trip speeds' },
+      { term: 'Work rate', def: 'a worker finishing alone in T hours works at rate 1/T of the job per hour' },
+      { term: 'Combined rate', def: 'rates add: time together = 1/(1/T₁ + 1/T₂)' },
+      { term: 'Fraction completed', def: 'work done = rate × time; remaining fraction = 1 − fraction done' },
+      { term: 'Mixture balance', def: 'a·c₁ + b·c₂ = (a + b)·c_target, where c is the concentration' },
+      { term: 'Relative approach', def: 'speeds add when travelers move toward each other; gap ÷ speed sum = time to meet' },
+      { term: 'Relative chase', def: 'speeds subtract when one pursues the other; head start ÷ speed difference = catch-up time' },
+      { term: 'Head start', def: 'gap = first_speed × (time before the second starts)' },
+      { term: 'Unit conversion', def: 'mph × hours = miles; convert minutes to hours (÷ 60) before multiplying' },
+      { term: 'Two-segment travel', def: 't₁ + t₂ = (d₁/r₁) + (d₂/r₂) = total time' },
+      { term: 'Net pump rate', def: 'fill rate minus empty rate; 1/4 − 1/6 = 1/12 tank per hour → 12 hours' }
+    ],
+    strategies: [
+      'Convert every work statement into a rate (fraction of job per unit time) before combining.',
+      'Build a small Rate × Time = Output table for travel and work questions; fill knowns, assign unknowns, solve the equation across rows.',
+      'For mixtures, write one equation for the conserved ingredient, not for the "mixture" itself.',
+      'Match units on both sides of every equation: minutes must appear as parts of an hour.',
+      'In joined-work, track the fractional part completed before helpers arrive, then divide the remainder by the combined rate.',
+      'For pursuer problems, compute the head start distance first; then time = gap ÷ (faster − slower).',
+      'When asked "total time," remember to add any solo working time to the joint-phase time.',
+      'Estimate before solving: two 6-hour workers together finish in 3 hours; if your answer is 6, the rates were never added.',
+      'For mixture strength, sanity-check the target concentration sits between the two source concentrations.',
+      'Set the shared unknown to the total job = 1 (or to the LCM of the times) to avoid fractions.',
+      'Re-read the question for the exact requested quantity: distance traveled by which car, time until meeting, or quantity of pure acid added.',
+      'Reject negative or absurdings (negative times, speeds over 2× typical) immediately and re-solve.'
+    ],
+    traps: [
+      'Adding the TIMES to combine work: two workers at 4 h and 6 h do NOT finish in 10 h — add the rates (1/4 + 1/6 = 5/12) and then invert: 12/5 = 2.4 hours for the pair.',
+      'Adding speeds when travelers move in the same direction (only the difference closes the gap).',
+      'Forgetting the work completed before a helper joins, so the joint phase is overestimated.',
+      'Computing average speed as the arithmetic mean of the two speeds.',
+      'Mixing minutes and hours: 90 minutes becomes 1.5 hours, and 45 min becomes 0.75 h.',
+      'Dropping the initial solo hour from "total time" tallies.',
+      'In mixtures, adding the amounts (a + b) but answering a concentration without dividing by the total.',
+      'Rounding a joint-work time like 2.8 h to 3 h when the answer choices measure the exact value.',
+      'Using the full-job time on a partial-job question: the remaining 2/3 of a job done at 1/10 per hour takes 20/3 h, not the full 10 h.',
+      'Setting the head-start window backwards — the gap is covered only after the second traveler departs.',
+      'Sign slips on fill-versus-empty pumps: a hose that empties the tank must reduce the fill rate, not increase it.',
+      'For two travelers to a shared meeting point, adding both total trip distances instead of the initial separation.'
+    ],
+    examples: examplesFor([
+      { q: 'A pump fills a tank in 4 hours; a hose empties it in 6 hours. With both running, how long does it take to fill the tank?',
+        o: ['2 h', '8 h', '12 h', '24 h', '5 h'],
+        a: 'C',
+        r: 'Fill rate = 1/4 tank/hour; empty rate = 1/6 tank/hour. Net rate = 1/4 − 1/6 = (3 − 2)/12 = 1/12 tank per hour. Time = 1 ÷ (1/12) = 12 hours. The 2 h option adds 4 and 6 as if complementary; 24 results from multiplying the two times.' },
+      { q: 'A car travels 240 miles in 4 hours at a constant speed. How far does it travel in 90 minutes at the same speed?',
+        o: ['60 mi', '80 mi', '90 mi', '100 mi', '120 mi'],
+        a: 'C',
+        r: 'Speed = 240 ÷ 4 = 60 mph. 90 minutes = 1.5 hours, so distance = 60 × 1.5 = 90 miles. The 80 mi choice uses 80 minutes; 120 doubles the 60 closely; 60 would be one hour only.' },
+      { q: 'How many liters of a 60% acid solution must be mixed with 10 liters of a 30% solution to obtain a 40% solution?',
+        o: ['2', '3', '5', '6', '10'],
+        a: 'C',
+        r: 'Let x = liters of 60% acid. Conserved acid: 0.60x + 0.30(10) = 0.40(x + 10). Multiply out: 0.6x + 3 = 0.4x + 4 → 0.2x = 1 → x = 5. Verify: 5 × 0.6 + 10 × 0.3 = 3 + 3 = 6 acid in 15 L = 40% ✓.' },
+      { q: 'Bob can paint a room alone in 4 hours, Ann in 6 hours. Bob paints alone for 1 hour, then Ann joins him. What is the total time to finish the room?',
+        o: ['2 h', '2.2 h', '2.8 h', '3 h', '4 h'],
+        a: 'C',
+        r: 'Bob\'s rate = 1/4, Ann\'s = 1/6. In the first hour Bob completes 1/4, leaving 3/4. Combined rate = 1/4 + 1/6 = 5/12 per hour. Joint time = (3/4) ÷ (5/12) = (3/4) × (12/5) = 9/5 = 1.8 h. Total = 1 + 1.8 = 2.8 h. The 3 h option forgets the fast solo start shortens the total.' },
+      { q: 'Two cars start 300 miles apart and drive straight toward each other at 50 mph and 70 mph. When will they meet?',
+        o: ['2 h', '2.5 h', '3 h', '3.5 h', '4 h'],
+        a: 'B',
+        r: 'Closing speed = 50 + 70 = 120 mph. Time to meet = 300 ÷ 120 = 2.5 hours. Subtract instead of adding gives 300 ÷ 20 = 15 h (not listed), and truncating 2.5 to 2 h is the underestimate option.' },
+      { q: 'Pipe A fills a tank in 3 hours and pipe B fills it in 6 hours. With both pipes open, how long does it take to fill the tank?',
+        o: ['1.5 h', '2 h', '3 h', '4.5 h', '9 h'],
+        a: 'B',
+        r: 'Rates: A = 1/3, B = 1/6. Combined = 1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2 tank per hour. Time = 1 ÷ 1/2 = 2 hours. The 3-hour option is pipe A alone; 1.5 divides 3 by 2 for the wrong fraction.' },
+      { q: 'Car A leaves at 9:00 AM at 40 mph. Car B leaves from the same point at 9:30 AM at 55 mph on the same straight road. At what time does B catch A?',
+        o: ['10:30', '10:40', '10:50', '11:00', '11:10'],
+        a: 'C',
+        r: 'Head start: A drives 0.5 h × 40 = 20 miles by 9:30. Closing speed = 55 − 40 = 15 mph. Catch-up time = 20 ÷ 15 = 4/3 hours = 1 h 20 min after 9:30 → 10:50. Verify: by 10:50 A traveled 1:50 h × 40 = 73⅓ mi; B 1:20 h × 55 = 73⅓ mi ✓.' },
+      { q: 'A and B together can complete a job in 4 hours. A alone can complete it in 6 hours. How many hours does B alone take?',
+        o: ['6 h', '8 h', '12 h', '18 h', '24 h'],
+        a: 'C',
+        r: 'Combined rate = 1/4, A\'s rate = 1/6, so B\'s rate = 1/4 − 1/6 = 3/12 − 2/12 = 1/12. B alone takes 1 ÷ (1/12) = 12 hours. The 2-hour option is the difference 6 − 4 of the times; 24 multiplies the rates wrong.' },
+      { q: 'Worker A can do a job in 10 hours and worker B in 15 hours. They start together; after 2 hours B stops. How many more hours does A need alone to finish?',
+        o: ['6⅔ h', '6 h', '5 h', '7 h', '8 h'],
+        a: 'A',
+        r: 'Combined rate = 1/10 + 1/15 = 3/30 + 2/30 = 5/30 = 1/6. In 2 hours they complete 2 × 1/6 = 1/3, leaving 2/3. A alone needs (2/3) ÷ (1/10) = (2/3) × 10 = 20/3 = 6⅔ hours. Answer 20/3 ≈ 6.67 → 6⅔ h. The 6 h option ignores the ⅔.'
+      }
+    ]),
+    check: [
+      { q: 'At 40 mph for 2.5 hours, distance = ?', o: ['80', '90', '100', '110', '120'], a: 2 },
+      { q: 'A does a job in 2 h, B in 2 h. Combined rate (jobs per hour) = ?', o: ['1/4', '1/2', '1', '2', '4'], a: 2 },
+      { q: '10 L of 50% solution mixed with 10 L of 30% solution → final concentration?', o: ['30%', '38%', '40%', '45%', '50%'], a: 2 },
+      { q: 'Travelers moving toward each other at 30 and 50 mph, 160 miles apart → meet in?', o: ['2 h', '3 h', '4 h', '5 h', '8 h'], a: 0 },
+      { q: 'Speeds are in the ratio 3:4 over the same time. Distances are in the ratio?', o: ['4:3', '3:4', '1:1', '9:16', '16:9'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     9. MIXTURES, WEIGHTED AVERAGES, PROFIT & INTEREST (intermediate)
+     ================================================================ */
+  topic('quant-mixavg', 'Mixtures, Weighted Averages, Profit & Interest', 'quant', 'intermediate', {
+    overview: [
+      'A weighted average gives each group\'s mean a weight proportional to its size. If 24 girls average 70 and 16 boys average 85, the class average is (24 × 70 + 16 × 85) ÷ 40 = 76 — pulled toward the 70s because there are more girls.',
+      'The weighted mean always lies strictly between the smallest and largest group means and lands closer to whichever group has more members. That alone eliminates most wrong choices before arithmetic.',
+      'Profit arithmetic speaks the same language as percentages: profit = revenue − cost, and percent profit uses COST as the base. A 20% profit on cost means selling price = 120% of cost.',
+      'Interest comes in two gears. Simple interest adds P × r × t; compound interest multiplies the principal by (1 + r) each period, so interest itself earns interest and overtakes simple over multiple periods.',
+      'Discounts multiply complements: a 30% discount means you pay 70%; two successive 10% discounts pay 0.9 × 0.9 = 0.81 — a 19% effective discount, not 20%.',
+      'Markup-plus-discount stacking is the same multiplier math: mark up 60% then discount 25% → 1.6 × 0.75 = 1.20, a 20% profit on cost, nowhere near 35% (= 60 − 25).',
+      'The reverse weighted-average is the premium item: given the blend\'s mean and the sizes of the groups, recover one group\'s mean by working in sums.',
+      'Test-day insight: before computing, ask whether the weighted mean must sit closer to the larger group — and for profit percents, whether the base is cost or selling price.',
+      'What makes hard versions hard: non-integer group means (86⅔), compounding across multiple years with manual multiplication, and stacked markup-discount chains where the base changes at every step.'
+    ],
+    formulas: [
+      { term: 'Weighted mean', def: 'μ = (n₁m₁ + n₂m₂ + …) ÷ (n₁ + n₂ + …); weights are the group sizes' },
+      { term: 'Interpolation', def: 'μ − m₁ = [n₂/(n₁+n₂)] × (m₂ − m₁); use the group sizes to locate the mean' },
+      { term: 'Plain mean of equal groups', def: 'when n₁ = n₂, the weighted mean reduces to (m₁ + m₂)/2' },
+      { term: 'Profit', def: 'profit = revenue − cost; percent profit = profit/cost × 100' },
+      { term: 'Markup', def: 'selling price = cost × (1 + markup/100)' },
+      { term: 'Discount pay-multiplier', def: 'selling = marked × (1 − d/100); 25% off pays 0.75' },
+      { term: 'Successive discounts', def: 'final = P × (1 − d₁) × (1 − d₂); effective discount D = 1 − product' },
+      { term: 'Simple interest', def: 'I = P × r × t; amount = P(1 + rt)' },
+      { term: 'Compound interest', def: 'A = P(1 + r/n)^(nt); with annual compounding, A = P(1 + r)^t' },
+      { term: 'Simple vs compound', def: 'compound exceeds simple when t > 1 period, because the interest itself earns interest' },
+      { term: 'Revenue', def: 'revenue = price × quantity = cost + profit' },
+      { term: 'Reverse weighted mean', def: 'unknown group mean = (total − known group sum) ÷ unknown group size' },
+      { term: 'Markup-discount stack', def: 'net profit factor = (1 + m)(1 − d); 1.6 × 0.75 = 1.2 → 20% profit on cost' }
+    ],
+    strategies: [
+      'Work in SUMS whenever a group mean or size is missing: total = n₁m₁ + n₂m₂ is the master equation.',
+      'Before computing, bracket the weighted average between the group means and tilt toward the bigger group; most traps violate this.',
+      'In profit questions, always identify whether the base is cost or selling price before applying a percent.',
+      'Compound interest multiplies a growth factor each period — never add the same percent repeatedly.',
+      'For successive discounts, form (1 − d₁)(1 − d₂) …; effective discount = 1 − the product.',
+      'Pick 100 for cost in markup/discount abstractions — percents become dollars instantly.',
+      'For interest with n-period compounding, recompute the multiplier (1 + r/n)^n once, then raise to t years.',
+      'Validate a weighted mean by recombining: multiply your candidate group mean by its size and check the total.',
+      'Use the gap-balance shortcut: (μ − m₁)/(m₂ − μ) = n₂/n₁ — the mean splits the gap inversely to the weights.',
+      'On "what percent profit" with a discount applied, stack the two multipliers and translate the product.',
+      'Convert months to years in simple interest (t in years) so r and t share one unit.',
+      'Estimate before exact work: a 10% and 5% discount is "about 14%" off, so a 15% answer must be wrong in the right direction.'
+    ],
+    traps: [
+      'Averaging the group means directly: averaging 70 and 85 to 77.5 ignores that more students scored 70.',
+      'Using selling price as the base of percent profit: a $15 profit on $50 cost is 30%, not 23.1% of the $65 sale.',
+      'Treating compound interest as simple: $200 at 10% for 2 years is $242, not $240.',
+      'Applying the second discount to the ORIGINAL price instead of the discounted price: 0.9 × 0.9 ≠ 0.8.',
+      'Adding the discount percents: 10% + 10% = 20% claimed, but 0.81 ≠ 0.80.',
+      'Ignoring that markup and discount act on different bases sequentially.',
+      'Mixing revenue = cost + profit signs: a loss records negative profit, not negative cost.',
+      'Handing the weighted mean to the arithmetic mean when group sizes differ.',
+      'Rounding 86⅔ to 87 in a numeric-entry-style answer.',
+      'Choosing the simple-interest total when the stem says "compounded annually."',
+      'Using the wrong weight: weighting the means themselves by the other group\'s size.',
+      'Forgetting that a "20% profit maker" sells for 120% of cost — the 20% is BELOW the sale in some "margin" readings but profit% means cost-base here.'
+    ],
+    examples: examplesFor([
+      { q: '24 girls average 70 on a test and 16 boys average 85. What is the class average?',
+        o: ['74', '75', '76', '77.5', '78'],
+        a: 'C',
+        r: 'Total points = 24 × 70 + 16 × 85 = 1680 + 1360 = 3040. Divide by the 40 students: 3040 ÷ 40 = 76. The mean sits between 70 and 85, closer to 70 (more girls). 77.5 is the unweighted mean of 70 and 85.' },
+      { q: 'A trader buys an item for $50 and sells it for $65. What is the percent profit on cost?',
+        o: ['15%', '20%', '25%', '30%', '40%'],
+        a: 'D',
+        r: 'Profit = 65 − 50 = $15. Percent profit = profit ÷ cost = 15 ÷ 50 = 30%. Using the selling price as base (15 ÷ 65 ≈ 23.1%) is not among the choices because it was excluded as a trap; 15% treats the profit as a percentage of the sale directly; 25% = 15/60.' },
+      { q: 'An item marked $80 is discounted 10%, then a further 10% off the reduced price. What is the final price?',
+        o: ['$64', '$64.80', '$64.90', '$72', '$70'],
+        a: 'B',
+        r: 'Apply the multipliers: 80 × 0.90 = 72, then 72 × 0.90 = 64.80. Alternatively 80 × 0.9 × 0.9 = 80 × 0.81 = 64.80. $64 assumes the two discounts simply add to 20%; $72 is the single-discount price.' },
+      { q: 'A principal of $1,000 earns 5% simple interest per year for 3 years. What is the total amount after 3 years?',
+        o: ['$1,050', '$1,100', '$1,150', '$1,157.63', '$1,500'],
+        a: 'C',
+        r: 'Simple interest I = P × r × t = 1000 × 0.05 × 3 = 150. Total = 1000 + 150 = $1,150. $1,157.63 is the annually compounded total (spread as a trap); $1,100 would be simple interest for 2 years.' },
+      { q: 'The average of 10 numbers is 20. Six of them average 24. What is the average of the remaining four?',
+        o: ['10', '12', '14', '15', '16'],
+        a: 'C',
+        r: 'Total = 10 × 20 = 200. Sum of the six = 6 × 24 = 144. Remaining sum = 200 − 144 = 56. Average of the remaining four = 56 ÷ 4 = 14. The 15 midpoint traps the unweighted blend of 20 and another mean; 12 appears from dividing 56 incorrectly.' },
+      { q: 'A merchant buys 100 widgets at $2 each and sells them all with a 20% profit on cost. What is the total revenue?',
+        o: ['$220', '$230', '$240', '$250', '$260'],
+        a: 'C',
+        r: 'Cost = 100 × $2 = $200. Selling price per widget = cost × 1.20 = $2.40. Total revenue = 100 × $2.40 = $240. Alternatively profit = 20% × 200 = $40; revenue = 200 + 40 = 240. The $250 comes from a 25% profit misread.' },
+      { q: '$5,000 is invested at 20% per year compounded annually. What is the value after 2 years?',
+        o: ['$6,000', '$6,200', '$7,000', '$7,200', '$7,400'],
+        a: 'D',
+        r: 'After year 1: 5000 × 1.20 = 6,000. After year 2: 6000 × 1.20 = 7,200. So A = 5000 × 1.44 = 7200. The $7,000 choice is the simple-interest total (5000 + 2 × 1000); $6,200 is single-year 24% mis-compounded.' },
+      { q: 'A class of 30 students averages 82 on an exam. The 12 boys average 75. What is the average of the girls?',
+        o: ['84', '85', '86⅔', '87', '88'],
+        a: 'C',
+        r: 'Total points = 30 × 82 = 2,460. Boys\' sum = 12 × 75 = 900. Girls\' sum = 2460 − 900 = 1,560 across 18 girls → 1560 ÷ 18 = 86.67 = 86⅔. Answer 86⅔ exactly; 87 is the rounded friendly value, 85 the mid-distance guess.' },
+      { q: 'A bookstore marks up a book 60% over cost, then gives a 25% discount on the marked price. What is the percent profit on cost?',
+        o: ['10%', '15%', '20%', '25%', '35%'],
+        a: 'C',
+        r: 'Stack multipliers: 1.60 × 0.75 = 1.20. So the final price is 120% of cost → a 20% profit on cost. 35% is the naive 60 − 25; 10% appears from multiplying 0.6 by 0.25 and reading the result incorrectly; 25% ignores the 60% markup base.'
+      }
+    ]),
+    check: [
+      { q: 'Data: five values of 10 and five of 30. The average is?', o: ['15', '20', '25', '30', '40'], a: 1 },
+      { q: 'Cost $20, selling price $25. Percent profit on cost?', o: ['20%', '25%', '5%', '125%', '80%'], a: 1 },
+      { q: '$200 at 10% per year compounded annually for 2 years → amount?', o: ['$220', '$240', '$242', '$260', '$440'], a: 2 },
+      { q: 'A 25% discount on $60 → price?', o: ['$40', '$42', '$45', '$50', '$55'], a: 2 },
+      { q: 'Simple interest on $500 at 4% for 5 years → interest?', o: ['$20', '$100', '$120', '$130', '$200'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     10. STATISTICS & PROBABILITY (advanced)
+     ================================================================ */
+  topic('quant-statprob', 'Statistics: Mean, Median, SD & Probability', 'quant', 'advanced', {
+    overview: [
+      'Descriptive statistics on the GMAT reduces to a few measures: mean (total ÷ count), median (the middle of an ordered set), mode (most frequent), range (max − min), and standard deviation (a measure of spread around the mean).',
+      'The median is robust to extreme values while the mean is sensitive: a single huge outlier can drag the mean far from the median of the rest.',
+      'Transformations are predictable: adding a constant c to every value shifts mean, median, and mode by c but leaves the range and standard deviation unchanged. Multiplying every value by a positive c scales the mean, median, range, and SD by c.',
+      'For evenly spaced data the mean and median coincide — a fact that turns "average of consecutive integers" questions into one arithmetic move.',
+      'Probability works on a finite ratio when outcomes are equally likely: P = favorable ÷ total. The toolkit: complementary counting (P(at least one) = 1 − P(none)), trees, and organized lists.',
+      'Independent events multiply: P(A and B) = P(A) × P(B). Mutually exclusive events add: P(A or B) = P(A) + P(B). Overlapping events subtract the overlap: P(A or B) = P(A) + P(B) − P(A and B).',
+      'Without-replacement draws change the denominator at every step; you are multiplying conditional probabilities, not reusing a fixed fraction.',
+      'Test-day insight: work in sums for group-mean questions and in complements for "at least one" questions — both convert the heavy lifting into a single equation.',
+      'What makes hard versions hard: combining statistics with algebra (a set whose mean equals its median forces an equation), and probability items requiring careful order-counting (a dice sum has 6 ordered outcomes).'
+    ],
+    formulas: [
+      { term: 'Mean', def: 'μ = sum ÷ count; equivalently sum = μ × count' },
+      { term: 'Median', def: 'middle value of an ORDINED list; with an even count, the average of the two middle values' },
+      { term: 'Mode', def: 'the most frequently occurring value (may not exist or may be multiple)' },
+      { term: 'Range', def: 'range = maximum − minimum' },
+      { term: 'Standard deviation', def: '√(mean of squared deviations from the mean); SD = 0 iff all values are equal' },
+      { term: 'Add constant c', def: 'mean, median, mode shift by c; range and SD unchanged' },
+      { term: 'Multiply by positive c', def: 'mean, median, range and SD all multiply by c' },
+      { term: 'Evenly spaced', def: 'mean = median for arithmetic sequences of any length' },
+      { term: 'Probability ratio', def: 'P = favorable outcomes ÷ total outcomes when equally likely' },
+      { term: 'Complement', def: 'P(not A) = 1 − P(A); P(at least one) = 1 − P(none)' },
+      { term: 'Independent events', def: 'P(A and B) = P(A) × P(B)' },
+      { term: 'Mutually exclusive', def: 'P(A or B) = P(A) + P(B)' },
+      { term: 'General addition', def: 'P(A or B) = P(A) + P(B) − P(A and B)' },
+      { term: 'Without replacement', def: 'multiply conditional probabilities; denominators shrink each draw' }
+    ],
+    strategies: [
+      'Sort data before locating a median; unsorted order is the classic miscue.',
+      'For even counts, average the two middle values — never take just the lower "middle."',
+      'Translate group-mean questions to sums; total = n × mean is the referee equation.',
+      'Judge standard deviation by visual spread: the set whose values deviate most from its mean has the larger SD.',
+      'Apply complements openly: "at least one head in two flips" = 1 − (1/2)².',
+      'Treat two-dice questions as ordered pairs; a sum of 7 corresponds to 6 distinct ordered outcomes.',
+      'For "or" probability, subtract the overlap so favorables are not double-counted.',
+      'For without-replacement draws, update the denominator after each pick.',
+      'Use symmetry: fair coins, dice, and balanced selection make counts symmetric; half of the outcomes land on either side.',
+      'When the mean equals the median, impose BOTH a sorted median and a sum equation; solve the system.',
+      'Check every probability lands in [0, 1] — a 5/4 answer is a counting error.',
+      'Stack transformations: shift then scale, applying the rules in order.'
+    ],
+    traps: [
+      'Forgetting to sort before taking the median of jumbled data.',
+      'Averaging the two middles out of an even set, or averaging the whole set to "find the median."',
+      'Assuming mean = median for skewed or arbitrary data; no guarantee at all.',
+      'Adding the probabilities of overlapping events: rolling a square or a multiple of 4 on a die must subtract the overlap (4).',
+      'Multiplying independent probabilities when the events are mutually exclusive (or vice versa).',
+      'Keeping a fixed denominator in without-replacement draws.',
+      'Computing "at least one" by direct enumeration and missing the double-counted cases.',
+      'Believing the range changes when every value shifts by a constant.',
+      'Counting an ordered outcome set unordered: a sum of 7 needs 6 orderings, not 3.',
+      'Reporting impossible probabilities or fractions that reduce above 1.',
+      'Dividing by n − 1 for the standard deviation (GMAT uses the population n), a habit from other exams.',
+      'Treating "the average of 8 consecutive integers" as requiring the individuals rather than noting mean = median = midpoint.'
+    ],
+    examples: examplesFor([
+      { q: 'The mean of {2, 4, 6, 8, 10} is 6. If the largest value increases from 10 to 20, what is the new mean?',
+        o: ['7', '8', '9', '10', '12'],
+        a: 'B',
+        r: 'The sum rises by exactly 10 (20 − 10) across 5 values, so the mean rises by 10/5 = 2: new mean = 6 + 2 = 8. Direct check: (2 + 4 + 6 + 8 + 20) = 40, and 40/5 = 8 ✓.' },
+      { q: 'What is the median of {3, 1, 7, 2, 5}?',
+        o: ['2', '3', '3.5', '5', '7'],
+        a: 'B',
+        r: 'Sort first: 1, 2, 3, 5, 7. The third of five values is the median = 3. The 3.5 option is the average of 3 and 4 (nonexistent); 5 is the second-largest; 2 is the second-smallest.' },
+      { q: 'A fair six-sided die is rolled once. What is the probability of rolling a prime number?',
+        o: ['1/2', '1/3', '2/3', '1/6', '5/6'],
+        a: 'A',
+        r: 'The primes on a standard die are 2, 3, 5 — three of the six faces. P = 3/6 = 1/2. The 1/6 option counts only one face; 2/3 includes 1 as prime; 1/3 counts two primes.' },
+      { q: 'Two fair dice are rolled. What is the probability of getting at least one 6?',
+        o: ['1/6', '1/3', '11/36', '1/36', '5/6'],
+        a: 'C',
+        r: 'Use the complement: P(no 6) = (5/6) × (5/6) = 25/36. So P(at least one 6) = 1 − 25/36 = 11/36. The 1/36 is double-six; 1/6 is a single die; 1/3 ≈ 12/36 approximates but misses the exact.'
+      },
+      { q: 'Every number in a list is increased by 5. What happens to the standard deviation of the list?',
+        o: ['increases by 5', 'increases by 25', 'stays the same', 'decreases by 5', 'becomes undefined'],
+        a: 'C',
+        r: 'Adding a constant shifts the center of the data but preserves the distances between the values, so the standard deviation is unchanged. This is the transformation rule stated for a c = 5 shift.' },
+      { q: 'Two fair dice are rolled. What is the probability that the sum is exactly 7?',
+        o: ['1/6', '1/9', '1/12', '5/36', '1/3'],
+        a: 'A',
+        r: 'Sum 7 has ordered outcomes (1,6), (2,5), (3,4), (4,3), (5,2), (6,1) — six of the 36 ordered pairs. P = 6/36 = 1/6. The 1/12 treats the pairings as unordered (3/36); 5/36 mis-counts five outcomes.' },
+      { q: 'The set {2, 5, 8, x, 12}, where x > 8, has its mean equal to its median. What is x?',
+        o: ['6', '8', '11', '13', '15'],
+        a: 'D',
+        r: 'With x > 8 the ordered set is 2, 5, 8, x, 12, so the median is 8 (the third value). Mean = (2 + 5 + 8 + x + 12)/5 = (27 + x)/5. Set equal to 8: (27 + x)/5 = 8 → 27 + x = 40 → x = 13. Verify: 13 > 8 and the constraint is honored; sum = 40, mean 8 ✓.'
+      },
+      { q: 'An integer from 1 to 10 inclusive is chosen at random. What is the probability it is a perfect square OR a multiple of 4?',
+        o: ['1/5', '3/10', '2/5', '1/2', '3/5'],
+        a: 'C',
+        r: 'Squares in 1–10: {1, 4, 9}. Multiples of 4: {4, 8}. The overlap is 4. Union size = 3 + 2 − 1 = 4. P = 4/10 = 2/5. The 1/2 option double-counts 4; 3/10 counts the three squares only.' },
+      { q: 'The average of 8 consecutive integers is 12.5. What is the largest of the 8 integers?',
+        o: ['14', '15', '16', '17', '18'],
+        a: 'C',
+        r: 'For consecutive integers, mean = median = the midpoint between 12 and 13 (and 8 numbers straddle it): the set is 9, 10, 11, 12, 13, 14, 15, 16. Sum = (9 + 16) × 4 = 100, and 100/8 = 12.5 ✓. Largest = 16. The 17 option builds 8 numbers ending at 17 with mean 13.5, off by one.'
+      }
+    ]),
+    check: [
+      { q: 'Median of {2, 4, 6, 8} (even count) = ?', o: ['4', '5', '6', '7', '10'], a: 1 },
+      { q: 'P(tails) with a fair coin = ?', o: ['1/3', '1/2', '2/3', '1/4', '1'], a: 1 },
+      { q: 'Range of {5, 9, 3, 12} = ?', o: ['6', '7', '8', '9', '12'], a: 3 },
+      { q: 'Two fair coins are flipped. P(at least one heads) = ?', o: ['1/4', '1/2', '3/4', '1/3', '2/3'], a: 2 },
+      { q: 'If the total of 25 values is 200, the mean = ?', o: ['4', '6', '8', '10', '12'], a: 2 }
+    ]
+  }),
+
+  /* ================================================================
+     11. DATA SUFFICIENCY FUNDAMENTALS (advanced, Quant side)
+     ================================================================ */
+  topic('quant-dstonly', 'Data Sufficiency fundamentals (Quant side)', 'quant', 'advanced', {
+    overview: [
+      'Data Sufficiency migrated to the Data Insights section, but the reasoning is pure quant logic: decide whether the given statements — alone or together — are ENOUGH to answer the question, without necessarily solving it.',
+      'The answer choices are fixed forever: (A) statement (1) alone is sufficient; (B) statement (2) alone is sufficient; (C) BOTH together are sufficient but neither alone; (D) EACH alone is sufficient; (E) not sufficient even together.',
+      'Sufficiency means UNIQUENESS, not positivity. For a value question you need exactly one number; for a yes/no question you need a definite YES or a definite NO in every allowed case.',
+      'A definite "No" IS sufficient: "Is k > 10?" answered "No for every valid k < 5" is fully answered, and the correct letter follows the map like any other sufficient statement.',
+      'The elimination grid halves the work: if (1) is sufficient the answer is A or D; if (1) is insufficient it is B, C, or E. Always test (1) first, alone, before glancing at (2).',
+      'Beware the "deception of roughly enough": a statement that narrows the candidates to two values is NOT sufficient — infinite is obviously out, but TWO distinct values kill sufficiency too.',
+      'Counterexample hunting is the enforcement tool: if you can find two assignments that both satisfy a statement but give different answers to the question, that statement fails. Test integers, negatives, zero, and fractions.',
+      'Test-day insight: never import facts from (2) while evaluating (1), and never assume a variable is a positive integer unless the stem says so.',
+      'What makes hard versions hard: statements that compress two facts (digit constraints), yes/no questions where "always No" masquerades as useless, and single statements that hide a second constraint.'
+    ],
+    formulas: [
+      { term: 'Answer map', def: 'A: (1) alone; B: (2) alone; C: together, neither alone; D: each alone; E: still insufficient together' },
+      { term: 'First-statement drill', def: '(1) sufficient → answer is A or D; (1) insufficient → answer is B, C, or E' },
+      { term: 'Value question', def: 'needs one unique number; two distinct values = insufficient' },
+      { term: 'Yes/No question', def: 'needs the same answer for every valid case; a definite NO is sufficient' },
+      { term: 'Counterexample test', def: 'statement insufficient if two valid cases give different answers' },
+      { term: 'Isolation rule', def: 'evaluate each statement alone; do not borrow facts from the other' },
+      { term: 'Combination rule', def: 'combine only after BOTH fail alone; only then check C vs E' },
+      { term: 'Equation counting', def: 'two independent equations can determine two unknowns; one equation in two unknowns leaves movement' },
+      { term: 'Domain traps', def: 'integer/positive/nonzero restrictions change what counts as a valid case' },
+      { term: 'Hidden constraint', def: 'a statement may settle a question without seeming "complete" (e.g., n² even forces n even)' },
+      { term: 'Units and relationships', def: 'a ratio alone never gives an amount; a difference alone never gives a total' }
+    ],
+    strategies: [
+      'Write down the target before reading the statements: a number, or a yes/no verdict?',
+      'Evaluate statement (1) in isolation FIRST; then run the A-or-D versus B-or-C-or-E grid.',
+      'Hunt counterexamples with small integers, including 0, negatives, and fractions where allowed.',
+      'Decide sufficiency without solving: finding that the equation forces one value is enough.',
+      'For yes/no questions, explicitly ask "can the answer be Yes for some valid case and No for another?" If both possible → insufficient.',
+      'Do not fight the answer map; memorize it axis by axis (1-alone, 2-alone, together, each, neither).',
+      'Check whether the stem constrains the domain (n integer, x positive, k nonzero) before testing cases.',
+      'When (1) suffices quickly, still give (2) an honest check — D is a real letter and traps lean on it.',
+      'On C vs E moments, combine and ask, "is any variable still free to move?" If yes, (E).',
+      'Treat "could be" phrasing with care: "what could x be" may be answered by any qualifying case, changing what sufficiency means.',
+      'For geometry-like DS on equations (side/ratio info), a ratio without scale information is still not an area.',
+      'Re-verify the letter against the map after deciding — a correct decision mapped to the wrong letter costs the question.'
+    ],
+    traps: [
+      'Calling a statement insufficient because it looks incomplete — uniqueness, not amplitude, is the test.',
+      'Believing the actual value must be found; only IF the question is a value question.',
+      'Forgetting that a definite NO answers a yes/no question, sending you to the sufficiency pool.',
+      'Importing statement (2) into the evaluation of (1) alone.',
+      'Accepting two candidate values as sufficient when the stem demands one.',
+      'Assuming variables are integers or positive when the stem never states it.',
+      'Ignoring zero: x² = x has solutions 0 and 1 — a favorite counterexample pair.',
+      'Combining statements and answering C when (1) alone already settled the question.',
+      'Over-solving: grinding out the exact value when deciding sufficiency would do.',
+      'Choosing E from "I could not do it in 30 seconds" rather than from a genuine free variable.',
+      'Reading the map backwards (A for 2-alone) under time pressure.',
+      'Failing to search both directions: sometimes (2) is sufficient for a DIFFERENT reason than (1), and D hides there.'
+    ],
+    examples: examplesFor([
+      { q: 'DS: What is x?\n(1) x = 3 or x = 5\n(2) x is odd',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'E',
+        r: '(1) alone gives two possible values, 3 and 5 — insufficient. (2) alone leaves infinitely many odd numbers — insufficient. Together, x is odd AND in {3, 5}: both are odd, so still two candidates — insufficient even together. Answer E.' },
+      { q: 'DS: Is n even?\n(1) n² is even\n(2) n³ is even',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'D',
+        r: '(1) alone: n² even implies n even (a square inherits the parity of its base) → definite YES, sufficient. (2) alone: n³ even likewise forces n even → definite YES, sufficient. Each alone suffices → D. Never underrate a statement that quietly settles parity.' },
+      { q: 'DS: What is p + q?\n(1) 3p + 3q = 24\n(2) p² = q²',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'A',
+        r: '(1) alone: divide by 3 → p + q = 8, a unique value → sufficient. (2) alone: p² = q² means p = q or p = −q, giving p + q = 2p or 0 — no unique value → insufficient. (1) sufficient, (2) not → A.' },
+      { q: 'DS: What percent of a class is female?\n(1) There are 12 males.\n(2) Females exceed males by 6.',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'C',
+        r: '(1) alone: 12 males, but total is unknown → insufficient. (2) alone: a relationship, no actual numbers → insufficient. Together: females = 12 + 6 = 18, total = 30, so percent female = 18/30 = 60% — a unique value → C. Neither statement suffices alone; together they do.' },
+      { q: 'DS: Is k > 10?\n(1) k > 0\n(2) k < 5',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'B',
+        r: '(1) alone: k > 0 allows k = 3 (> 10? NO) and k = 20 (> 10? YES) — the answer differs → insufficient. (2) alone: k < 5 forces k ≤ 4 always, so the answer is a uniform NO — a definite NO is sufficient. (1) not, (2) yes → B.' },
+      { q: 'DS: Is x = 0?\n(1) x² = 0\n(2) x³ = 0',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'D',
+        r: '(1) alone: x² = 0 ⟹ x = 0 → definite YES, sufficient. (2) alone: x³ = 0 ⟹ x = 0 → definite YES, sufficient. Each alone decides the question → D. Note both statements work for entirely separate algebraic reasons.' },
+      { q: 'DS: What is the units digit of n?\n(1) n is a multiple of 5\n(2) n is odd',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'C',
+        r: '(1) alone: multiples of 5 end in 0 or 5 — two candidates → insufficient. (2) alone: odd numbers end in 1, 3, 5, 7, or 9 — insufficient. Together: an odd multiple of 5 must end in 5 — unique → C.' },
+      { q: 'DS: Is x an integer?\n(1) 2x is an integer\n(2) x/2 is an integer',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'B',
+        r: '(1) alone: 2x integer allows x = 1/2 (2x = 1, x not integer → NO) and x = 2 (YES) — insufficient. (2) alone: x/2 integer means x = 2 × integer, which is always an integer → definite YES, sufficient. (1) not, (2) yes → B.' },
+      { q: 'DS: What is the two-digit integer m?\n(1) The sum of its digits is 12.\n(2) The units digit of m is 4.',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'C',
+        r: '(1) alone: digit pairs like (3, 9), (4, 8), (7, 5) all sum to 12 — many candidates → insufficient. (2) alone: any two-digit number ending in 4 — countless values → insufficient. Together: tens digit + 4 = 12 → tens digit = 8, so m = 84 — unique → C. Verify 8 + 4 = 12 ✓.'
+      }
+    ]),
+    check: [
+      { q: 'DS: x + y = ?\n(1) x + y + 5 = 13\n(2) 2x + 2y = 16', o: ['A', 'B', 'C', 'D', 'E'], a: 3 },
+      { q: 'DS: Is x > 0?\n(1) x² = 9\n(2) x³ = 27', o: ['A', 'B', 'C', 'D', 'E'], a: 1 },
+      { q: 'DS: What is p?\n(1) p = 5q\n(2) q = 2 and p is an integer', o: ['A', 'B', 'C', 'D', 'E'], a: 2 },
+      { q: 'DS: What is x − y?\n(1) x + y = 10\n(2) x − y = 4', o: ['A', 'B', 'C', 'D', 'E'], a: 1 },
+      { q: 'DS: How many cars are in the lot?\n(1) There are 40 sedans.\n(2) Sedans are 50% of the cars.', o: ['A', 'B', 'C', 'D', 'E'], a: 2 }
+    ]
+  })
+];
+
+  /* ================================================================================================================================
      VERBAL
      ================================================================ */
   const verbalTopics = [
-    topic('verbal-rc-main', 'Reading Comprehension: Main Idea & Tone', 'verbal', 'beginner', {
-      overview: [
-        'Reading Comprehension passages on the GMAT Focus are the backbone of the Verbal section: 3–4 passages per test, typically 200–320 words each, drawn from humanities, social science, and physical science.',
-        'Main-idea questions ask what the passage is "primarily concerned with." The correct answer covers the WHOLE passage — including the twist or qualification at the end — not just the opening claim or one body paragraph.',
-        'Tone questions ask for the author\'s attitude. Signal words ("however," "but," "surprisingly," "unfortunately") betray attitude. Correct tone answers are usually measured and moderate — extreme words like "dismissive," "triumphant," or "outraged" are rarely right.'
-      ],
-      formulas: [
-        { term: 'Main idea =', def: 'Subject + claim + scope of the whole passage' },
-        { term: 'Tone ladder', def: 'neutral → cautiously supportive → critical → hostile/celebratory' },
-        { term: 'Signal words', def: 'however, but, although, surprisingly, notably, ironically' }
-      ],
-      strategies: [
-        'Read the passage once for the skeleton: what\'s being discussed, what\'s the claim, what\'s the transition.',
-        'For main idea, eliminate answers that only cover the first paragraph or a single example.',
-        'Extreme tone words are red flags; qualified, balanced wording usually wins.',
-        'Paraphrase the main idea in your own words BEFORE reading the answer choices.'
-      ],
-      traps: [
-        'Choosing a detail that appears but doesn\'t dominate the passage.',
-        'Reading an author\'s attitude as stronger than it is (e.g., "questions" ≠ "rejects").',
-        'Picking an answer that restates a sentence verbatim but generalizes too far.'
-      ],
-      examples: examplesFor([
-        { q: 'A passage discusses a sea-ice decline, lists three proposed causes, and concludes they interact. Main idea?',
-          o: ['Ice decline has one cause', 'The decline results from interacting, reinforcing factors', 'Scientists disagree about whether ice is declining', 'More research funding is needed', 'The decline only affects polar regions'],
-          a: 'B',
-          r: 'The conclusion ("these pressures interact") governs the main idea. Answer B captures causality; the others are too narrow or distort the claim.' },
-        { q: 'Author calls a theory "plausible but unproven." Her tone is:',
-          o: ['Hostile', 'Skeptical but open', 'Wholly convinced', 'Indifferent', 'Enthusiastic'],
-          a: 'B',
-          r: '"Plausible" concedes support; "but unproven" withholds endorsement. That is skepticism with an open door.' },
-        { q: 'A passage opens praising Method X, but paragraph 2 begins "However, X is rarely cost-effective." Main idea?',
-          o: ['X is pioneering', 'X, though promising, has serious practical drawbacks', 'Cost never matters', 'Method Y is introduced', 'The passage rejects all methods'],
-          a: 'B',
-          r: 'The main idea must include the passage\'s overall verdict — a qualified one. "However" flips the opening enthusiasm into a measured criticism.' }
-      ]),
-      check: [
-        { q: '\"The hypothesis, while ingenious, lacks evidence.\" Tone?', o: ['admiring', 'dismissive', 'skeptical', 'neutral', 'hopeful'], a: 2 },
-        { q: 'Passage: methods compared, conclusion favors method B. Main idea?', o: ['A dominates', 'B is superior for the stated purpose', 'They are identical', 'Neither works', 'Test design is bad'], a: 1 },
-        { q: 'Which signals attitude best?', o: ['ironically', 'therefore', 'similarly', 'notably none', 'additionally'], a: 0 },
-        { q: 'Extreme tone words to avoid picking:', o: ['claims', 'notes', 'denounces', 'observes', 'proposes'], a: 2 },
-        { q: 'If author \"raises concerns about a plan,\" she:', o: ['endorses', 'questions', 'celebrates', 'ignores', 'proposes it'], a: 1 }
-      ]
-    }),
+  topic('verbal-rc-main', 'Reading Comprehension: Main Idea & Tone', 'verbal', 'beginner', {
+    overview: [
+      'Reading Comprehension is the largest single component of GMAT Focus Verbal: the section mixes Critical Reasoning with three or four passages of roughly 220–320 words each, drawn from the natural sciences, social sciences, and humanities. Every correct answer is anchored in the text on screen; outside knowledge is never allowed to decide.',
+      'Main-idea and tone questions test the most global understanding of a passage: what the whole piece is about, what the author does with that subject, and how the author feels about it. They are the highest-yield skills because they also feed every other question type you will meet.',
+      'A "primary purpose" question asks what the author does, expressed as a verb — argue, trace, compare, qualify, caution. A "primarily concerned with" question asks what territory the passage covers. The correct option must survive both tests: the right action and the right scope.',
+      'The single most common wrong move is answering a main-idea question with an idea from paragraph one. Passages habitually open with a claim only to qualify, reverse, or complicate it; the true main idea includes the twist. If your candidate answer would not change after reading the final paragraph, you are probably missing the point.',
+      'Tone questions track the author\'s attitude. Report-structure signals carry it: "however," "surprisingly," "unfortunately," "at best," and "remains to be seen" all betray attitude. Correct answers are almost always measured — moderately skeptical, cautiously supportive, reserved — while extreme words such as "dismissive," "triumphant," or "outraged" are almost never right.',
+      'Learn to read for a skeleton: label paragraph one "states prevailing view," paragraph two "gives complicating evidence," paragraph three "endorses a modified view." This mental map makes main idea a quick matching task and makes structural questions nearly free later.',
+      'The core method for main-idea questions is pre-phrasing. After one careful read, write the main idea in your own words before peeking at the options. You are then matching, not solving. Eliminate anything narrower than your pre-phrase, broader than your pre-phrase, or stronger in tone than the author.',
+      'For tone questions, locate the sentence where the author actually evaluates rather than reports. Verbs carry the verdict: "claims" is neutral, "concedes" yields a little, "demonstrates" is confident, "insists" is defensive. Match the strength of the verb in the passage to the strength of the option.',
+      'Test-day insight: the rewarded main-idea answer is the least flashy, most complete one — usually a paraphrase of the passage\'s qualified thesis. When you see an option that is dramatic, absolute, or perfectly quotable, treat it as a suspect, not a gift.'
+    ],
+    formulas: [
+      { term: 'Main-idea formula', def: 'Main idea = subject + the author\'s position + scope covering the whole passage, including any final qualification' },
+      { term: 'Primary purpose vs primary concern', def: 'Purpose = what the author did (a verb); concern = the territory the passage covers; a correct answer satisfies both' },
+      { term: 'Scope rule', def: 'The main-idea answer must survive every paragraph, especially the last; an answer that fits paragraphs 1–2 but not 3 is wrong' },
+      { term: 'Too-narrow test', def: 'An answer describing only one paragraph, one example, or the opening claim fails the main-idea test' },
+      { term: 'Too-broad test', def: 'An answer that generalizes to a whole field or to eras beyond the passage fails the scope test' },
+      { term: 'Tone spectrum', def: 'Neutral (reports) < cautious (suggests, appears, may) < critical (questions, doubts) < hostile (denounces, rejects outright)' },
+      { term: 'Signal-word radar', def: 'however, but, although, surprisingly, ironically, notably, unfortunately — each flags a shift or an attitude' },
+      { term: 'Extreme-word radar', def: 'denounced, celebrated, proved, always, every, wholly — words that outrun what a measured GMAT passage commits to' },
+      { term: 'Author-position verbs', def: 'notes (mild) < suggests (tentative) < argues (committed) < insists (defensive) < denounces (hostile)' },
+      { term: 'Concession tags', def: 'granted, admittedly, to be sure, of course — the author allows a point before pressing its own' },
+      { term: 'Balanced-answer heuristic', def: 'When two options both touch the topic, the one with measured, qualified wording usually survives the tone filter' },
+      { term: 'Verbatim trap rule', def: 'An answer that repeats exact passage phrases may be a detail in disguise; paraphrase competence beats word-matching' }
+    ],
+    strategies: [
+      'Label each paragraph with a one-line function as you complete your first read; those labels are your skeleton.',
+      'Circle every transition word; "however," "still," and "yet" usually announce the real thesis.',
+      'Pre-phrase the main idea and the author\'s attitude before opening the answer choices.',
+      'Test the final paragraph against your candidate: if the candidate ignores the closing qualification, it is wrong.',
+      'On primary-purpose questions, make the answer begin with a verb — argue, trace, compare, caution, qualify.',
+      'Delete any option containing extreme tone or an absolute quantifier before deliberating.',
+      'On tone, find the author\'s evaluative sentence and match the strength of its verb to the option.',
+      'Separate what the passage reports (description) from what the author believes (evaluation).',
+      'Use the scope filter: the answer must fit every paragraph, not just the flashiest one.',
+      'Read the opening and closing sentence of each paragraph as a mini-essay; they usually frame the claim.',
+      'Do not import real-world truth; the passage is the only evidence permitted.',
+      'When two answers look close, prefer the one whose tone is quieter and whose claim is more modest.'
+    ],
+    traps: [
+      'First-paragraph answer: the opening claim seduces, but the main idea includes everything that follows, qualifications included.',
+      'Single-example answer: an illustrative case is evidence for the thesis, not the thesis itself.',
+      'Verbatim lure: a sentence plucked word for word from the passage can still be the wrong scope.',
+      'Half-right answer: matches the subject but exaggerates the claim (e.g., "proves" where the passage merely "suggests").',
+      'Outside scope: an answer generalizing the argument to an entire discipline or era the passage never touches.',
+      'Tone overstatement: "questions" is not "rejects," and "notes a problem" is not "denounces the plan."',
+      'Neutral author read as critical: reporting disagreement among scholars is not the author taking sides.',
+      'Absolute quantifiers: "always," "every," and "entirely" rarely survive against a qualified GMAT passage.',
+      'Ignoring the concession: the final "granted, but..." is usually where the real position lives.',
+      'Topic-only answer: names the subject (chocolate, insurance, glaciers) but never states the author\'s position.',
+      'Dramatic answer: flashy, quotable options are engineered to attract; correctness is quiet.',
+      'Real-world truth: if it is true in life but the passage does not say it, it is wrong.'
+    ],
+    examples: examplesFor([
+      { q: 'A city council debates downtown congestion. Reformers argue that expanding the subway is the most effective way to reduce it; opponents stress the enormous cost. On balance, the plan deserves support, though phased to control spending.\n\nWhich of the following best states the main idea of the passage?',
+        o: ['The subway expansion is certain to eliminate downtown congestion entirely.', 'The subway expansion deserves support, with spending phased to manage cost.', 'Opponents of the subway plan are right, and the plan should be abandoned.', 'Expanding the subway is the least effective way to reduce congestion.', 'The council\'s debate has no bearing on downtown congestion.'],
+        a: 'B',
+        r: 'The author lands on a balanced verdict: support the plan, phase the spending. B captures subject (expansion), position (support), and scope (cost control). A overstates ("eliminate entirely"). C reverses the verdict. D contradicts the reformers\' premise. E ignores the entire debate.' },
+      { q: 'Historians once dismissed the diaries as too fragmentary to matter. Recent scholarship, however, finds in them a rare record of daily working-class life whose gaps are less damaging than once feared.\n\nThe author\'s tone toward the diaries is best described as:',
+        o: ['Scornful', 'Guardedly appreciative', 'Completely neutral', 'Hostile', 'Unconcerned'],
+        a: 'B',
+        r: 'The evaluation is positive ("rare record") but qualified ("less damaging than once feared"). Guardedly appreciative captures both halves. A and D are far too hostile for a measured hedge. C ignores the positive judgment. E ignores the praise.' },
+      { q: 'The decline of pollinating insects has been blamed on pesticide use; a growing body of work points instead to habitat loss. The two are not rivals: farmland increasingly exposes insects to both pressures at once, and each amplifies the other.\n\nThe passage is primarily concerned with:',
+        o: ['Demonstrating that pesticides alone explain the insect decline.', 'Showing that habitat loss alone accounts for the insect decline.', 'Explaining that pesticide use and habitat loss interact and reinforce each other.', 'Arguing that the insect decline cannot be explained at all.', 'Denying that farmland has any connection to insect decline.'],
+        a: 'C',
+        r: 'The crucial transition, "The two are not rivals," announces the thesis: the pressures work together. C states it. A and B each grab one side. D overreaches into "cannot be explained." E contradicts the passage.' },
+      { q: 'Standard accounts of the novelist portray her as a near-total recluse. Letters published last year reveal years of dense correspondence with editors, rivals, and admirers. Several conventions must accordingly be revised, though the evidence is too limited to settle every question.\n\nThe primary purpose of the passage is to:',
+        o: ['Prove that the novelist was not a recluse.', 'Argue that the conventional portrait should be revised while acknowledging the limits of the evidence.', 'Denounce earlier biographers as deliberate frauds.', 'Present the letters as completely definitive proof about the novelist\'s life.', 'Explain why biographers write about novelists.'],
+        a: 'B',
+        r: 'Purpose = revise the portrait (an argument), hedged by "too limited to settle every question." B matches both. A and D overstate; the passage explicitly refuses certainty. C invents hostility. E is out of scope.' },
+      { q: 'The policy is ingenious in design and appears to deliver results, but its long-term effects remain unmeasured.\n\nThe author\'s attitude toward the policy is best described as:',
+        o: ['Dismissive', 'Enthusiastic', 'Reserved but favorable', 'Entirely neutral', 'Alarmed'],
+        a: 'C',
+        r: 'Praise (ingenious, delivers results) is capped by a caveat (unmeasured). That is favorability with reservations. A overstates the criticism; B ignores the caveat; D ignores the praise; E invents fear.' },
+      { q: 'Few changes have done more for public health in the past century than the chlorination of drinking water; chlorination virtually eliminated typhoid in the developed world. Yet the triumph is not costless: disinfection by-products, formed when chlorine reacts with organic matter, have been linked in some studies to elevated cancer risk. Still, the weight of evidence supports keeping chlorination as the bedrock of water safety while funding research into alternatives that carry fewer residual risks.\n\nWhich of the following best states the main idea of the passage?',
+        o: ['Chlorination should be abandoned because of its by-products.', 'Studies linking by-products to cancer prove that chlorination is unsafe.', 'Chlorination, though imperfect, should remain the cornerstone of water safety while alternatives are investigated.', 'Typhoid remains a serious threat to the developed world today.', 'All studies of disinfection by-products are fraudulent.'],
+        a: 'C',
+        r: 'The verdict sentence is "Still ... keeping chlorination as the bedrock ... while funding research into alternatives." C is the faithful, complete paraphrase. A and B overstate the by-product worries. D contradicts "virtually eliminated." E invents a hostility the passage never expresses.' },
+      { q: 'The trade-off theory of capital structure is elegant, and for decades it dominated corporate finance textbooks. Yet its central prediction has fared poorly against observation: many profitable firms borrow little, and some distressed firms borrow heavily. The theory is best treated as a tidy starting point rather than a law.\n\nThe author\'s attitude toward the trade-off theory is best described as:',
+        o: ['Deep contempt', 'Respectful but critical', 'Unconditional endorsement', 'Strict neutrality', 'Bewilderment'],
+        a: 'B',
+        r: '"Elegant" and "tidy starting point" convey respect; "fared poorly" and "rather than a law" convey criticism. B pairs the two. A is far too harsh. C ignores the failure. D ignores the evaluation. E mislabels the sentiment.' },
+      { q: 'Conventional wisdom holds that the telegraph strengthened central governments, letting them rule distant provinces with unprecedented immediacy; in many respects it did. But the telegraph also worked the other way. Provincial editors, merchants, and ordinary citizens gained access to a stream of information that could not be neatly controlled, and a distant governor\'s blunder now reached every corner of the empire within hours. What is striking, in retrospect, is how little changed politically: abundant information neither toppled nor consolidated the imperial order so much as it altered the manner in which legitimacy was contested.\n\nThe passage is primarily concerned with:',
+        o: ['Explaining why the telegraph decisively eroded imperial control.', 'Arguing that the telegraph transformed how political legitimacy was contested without decisively shifting the balance of power.', 'Narrating the sequence of inventions leading up to the telegraph.', 'Claiming that telegraphs always consolidate central authority.', 'Describing the business practices of provincial merchants.'],
+        a: 'B',
+        r: 'The thesis is the final sentence: abundant information changed HOW legitimacy was contested but did not tip power either way. B captures the two-sided claim. A takes one pole only. C adds a false chronology. D takes the other pole and adds "always." E is mere detail.' },
+      { q: 'The council\'s "transparency" initiative, which spent two years in closed-door negotiations and released its deliberations a day before the vote, is a masterpiece of the genre.\n\nThe author\'s attitude toward the initiative is best described as:',
+        o: ['Unqualified approval', 'Irony-laden criticism', 'Awe', 'Genuine confusion', 'Open advocacy'],
+        a: 'B',
+        r: 'The compliment is undercut by the facts it carries (closed doors, last-minute release); "masterpiece of the genre" is ironic. B names the sarcasm. A takes the compliment literally. C and D misread the irony. E inverts the criticism into advocacy.' }
+    ]),
+    check: [
+      { q: '"While intriguing, the hypothesis is unproven." The author\'s tone is best described as:', o: ['guardedly skeptical', 'openly hostile', 'triumphant', 'indifferent', 'adoring'], a: 0 },
+      { q: 'A main-idea answer that covers only the first paragraph is:', o: ['a model answer', 'too narrow', 'a tone answer', 'an inference', 'a detail answer'], a: 1 },
+      { q: '"The plan is flawed but workable." The author\'s attitude is best described as:', o: ['qualified criticism', 'unconditional praise', 'strict neutrality', 'contempt', 'alarm'], a: 0 },
+      { q: 'Extreme tone words such as "denounced" and "celebrated" are:', o: ['always correct', 'signs of a beginner passage', 'usually too strong for the passage\'s measured author', 'required in main-idea answers', 'never used on the GMAT'], a: 2 },
+      { q: 'Before reading the answer choices on a main-idea question, you should:', o: ['memorize the passage word for word', 'count the paragraphs', 'skip the final paragraph', 'pre-phrase the main idea in your own words', 'open the answer explanations'], a: 3 }
+    ]
+  }),
 
-    topic('verbal-rc-detail', 'Reading Comprehension: Detail, Inference & Application', 'verbal', 'intermediate', {
-      overview: [
-        'Detail ("according to the passage...") questions are the easiest RC payoff: the answer is directly stated. The risk is selecting a trap answer that rearranges fragments of the passage into something untrue.',
-        'Inference questions demand a step beyond the text. The answer must be NECESSARILY true given the passage — not merely plausible. The strongest wrong answers go beyond what can be guaranteed.',
-        'Application questions ("would most WEAKEN/STRENGTHEN/ILLUSTRATE...") transfer the passage\'s logic to a novel example. Map the passage\'s key causal claim or comparison, then find the option that mirrors it.'
-      ],
-      formulas: [
-        { term: 'Detail anchors', def: 'Match the exact claim + its qualifiers (\"some\", \"often\", \"may\")' },
-        { term: 'Inference test', def: 'Is it forced by the passage, or merely consistent with it?' },
-        { term: 'Application', def: 'Isolate passage logic → find mirror in options' }
-      ],
-      strategies: [
-        'For detail questions, keep your finger on the sentence that answers it — the correct choice is a faithful paraphrase.',
-        'Qualifiers are your friends: an answer with "some"/"often"/"in many cases" matches a cautious author.',
-        'For inference, negate the candidate: if the passage tolerates the negation, the inference is not forced.',
-        'Application answers must preserve the causal direction of the passage.'
-      ],
-      traps: [
-        'Answers that are true in real life but NOT stated/implied in the passage.',
-        '"Must be true" answers that are only "likely" — overreach.',
-        'Inverting cause and effect in application items.',
-        'Extreme quantifiers (all, never, only) rarely survive the inference test.'
-      ],
-      examples: examplesFor([
-        { q: 'Passage says a subsidy "may reduce emissions in the long run." Which inference is safe?',
-          o: ['It reduces emissions now', 'It might reduce emissions eventually', 'It increases emissions', 'It has proven effective', 'It reduces costs'],
-          a: 'B',
-          r: '"May... in the long run" permits only the guarded inference: it might reduce emissions eventually.' },
-        { q: 'Passage: therapy + medication outperform either alone. Application to a new study?',
-          o: ['Combined approach should show more benefit than single treatments', 'Medication works alone always', 'Therapy works alone always', 'No treatment works', 'Combinations never help'],
-          a: 'A',
-          r: 'Mirror the passage\'s comparative logic in the new context.' },
-        { q: 'Detail: passage says "the new policy applies to full-time staff." Which detail is supported?',
-          o: ['Part-time staff are covered', 'Full-time staff are covered', 'No staff are covered', 'The policy is voluntary', 'Only managers are exempt'],
-          a: 'B',
-          r: 'The fact is that the policy covers full-time staff. Everything else adds claims not stated in the passage.' }
-      ]),
-      check: [
-        { q: 'Applies the passage\'s causal logic to a new case → which type?', o: ['detail', 'application', 'main idea', 'tone', 'structure'], a: 1 },
-        { q: 'Detail answers must be:', o: ['paraphrased faithfully', 'beyond the text', 'extreme', 'vague', 'long'], a: 0 },
-        { q: 'An inference is valid if:', o: ['plausible', 'forced by text', 'true in reality', 'often true', 'wishful'], a: 1 },
-        { q: '\"All cats are pets\" - safest inference?', o: ['all pets are cats', 'some pets are cats', 'no pets are cats', 'cats are rare', 'nothing'], a: 1 },
-        { q: 'Trap answer that overreaches uses:', o: ['always', 'sometimes', 'possibly', 'maybe', 'perhaps'], a: 0 }
-      ]
-    }),
+  topic('verbal-rc-detail', 'Reading Comprehension: Detail, Inference & Application', 'verbal', 'intermediate', {
+    overview: [
+      'Detail, inference, and application questions make up the largest mechanical share of Reading Comprehension. Detail asks what the text says; inference asks what must follow from it; application transfers the text\'s logic to a new scenario. The discipline of not over-reading separates a strong scorer from an average one.',
+      'Detail questions are the easiest in scoring terms yet the most trap-heavy in practice. The correct answer is a faithful paraphrase of one sentence; the wrong answers are usually spliced fragments — a phrase from one sentence welded to a claim from another, creating a falsehood that looks textual.',
+      'The detail playbook: read the stem to know what to hunt, put your finger on the anchoring sentence, and match it precisely, including its qualifiers. "May reduce emissions" is not "reduces emissions," and "applies to full-time staff" says nothing about part-time staff.',
+      'Inference questions never ask for speculation. On the GMAT, "inference" means a conclusion the passage logically compels: combine the stated facts and see what cannot be denied. A merely plausible candidate is a trap; the correct one must be forced.',
+      'The decision rule for inference is the negation test. Negate the candidate answer; if the passage tolerates the negation — both the candidate and its opposite could sit with the text — the candidate is not an inference. If the negation contradicts the passage, the candidate is forced and correct.',
+      'Application questions are Reading Comprehension\'s version of strengthen/weaken reasoning: they take the passage\'s causal, comparative, or conditional logic and ask which new scenario mirrors it, or which new finding would support or erode it. The work is abstraction, not memory: strip the passage to its pattern, then match the pattern to an option.',
+      'The dominant application failure is direction. If the passage says upstream dam construction eroded a downstream delta, the analogous scenario must also move an upstream cause to a downstream effect; an option describing the delta damaging the dam has reversed the arrows.',
+      'Qualifiers are the safest signals in answer choices. "Some," "often," "may," "could," and "in many cases" are the vocabulary of defensible answers; "all," "never," "only," and "every" are the vocabulary of overreach. When a passage hedges, the correct inference hedges too.',
+      'Test-day insight: treat RC inference like a math problem — if you cannot prove the answer from the given information, it is not the answer. Detail, by contrast, is a find-and-paraphrase game in which the qualifiers are the whole game.'
+    ],
+    formulas: [
+      { term: 'Detail anchor', def: 'Locate the single sentence that answers the question; the correct option is a faithful paraphrase of it, qualifiers included' },
+      { term: 'Qualifier matching', def: 'Match the answer\'s strength to the passage\'s: "may" licenses "may," "some" licenses "some," while "all" requires the passage to say "all"' },
+      { term: 'Inference forcing test', def: 'An inference is valid only if the passage compels it; any candidate whose negation could also coexist with the text fails' },
+      { term: 'Negation test (inference)', def: 'Negate the candidate; if the negation contradicts the passage, the candidate is forced and correct' },
+      { term: 'Application transfer rule', def: 'Strip the passage to its causal or comparative pattern, then find the option that preserves the pattern in a new context' },
+      { term: 'Causal-direction rule', def: 'The mirrored scenario must keep the passage\'s cause and effect in the same order; reversals are the main application trap' },
+      { term: 'Qualifier ladder', def: 'all > most > many > some > a few — each step down the ladder weakens the claim an answer can safely make' },
+      { term: 'Splice trap detector', def: 'A wrong detail answer joins a fragment from the passage to an invented extension; test the join point' },
+      { term: 'Beyond-the-text rule', def: 'Real-world truth, expert consensus, and general logic external to the passage never decide an RC answer' },
+      { term: 'Best-supported standard', def: 'GMAT phrasings such as "most strongly supported" or "most likely to agree" still demand the most defensible, text-forced option' },
+      { term: 'Scope boundary', def: 'The inference must stay inside the passage\'s subject; elements outside the text\'s domain fail' },
+      { term: 'First-half/second-half test', def: 'Check both halves of any suspect answer: a detail answer passes only if EVERY clause matches the passage' }
+    ],
+    strategies: [
+      'Read the question stem first; it tells you which paragraph and which clause to attack.',
+      'Underline the anchoring sentence you will paraphrase before you look at the options.',
+      'Paraphrase detail answers in your own words; if the paraphrase adds a word the passage never used, discard the option.',
+      'For inference, run the negation test on the two or three remaining candidates.',
+      'Distinguish levels of support: must-be-true is the strictest; "most strongly supported" allows a small, guarded step.',
+      'In application items, write the passage\'s pattern as one line (cause → effect, group A vs group B) and match it against the options.',
+      'Check every clause of the answer against the passage, not just the opening words.',
+      'Favor weak quantifiers and modal verbs in the inference you pre-phrase.',
+      'Re-read only the relevant two or three sentences on detail items instead of the whole passage.',
+      'Attack any option containing "always," "never," "only," or "every" unless the passage is equally absolute.',
+      'When an answer relies on a real-world fact you know, ask whether the passage states or forces it — usually it does not.',
+      'If two options both seem supported, prefer the one that makes the smaller claim.'
+    ],
+    traps: [
+      'Real-world truth: tariffs may indeed raise prices, but if the passage never says it, the answer is wrong.',
+      'Splicing: combining a fragment from one sentence with a claim from another to build a convincing falsehood.',
+      'Overreach: "may reduce" presented as "reduces," or "some districts" inflated to "all districts."',
+      'Merely consistent, not forced: the inference killer — an answer that could coexist with the text but is not required by it.',
+      'Cause-effect reversal: the passage\'s upstream-downstream arrow flipped in an application option.',
+      'Out-of-scope generalization: extending the finding beyond the population, era, or domain the passage covers.',
+      'Half-support: the first half of the answer matches the passage while the second half silently invents a new claim.',
+      'Answering what could be true instead of what must be true.',
+      'Unstated causal leap: a correlation stated in the passage treated as causation in an answer.',
+      'False specificity: inventing numbers, dates, or proportions the passage never supplied.',
+      'Word-matching: picking the option with the most overlapping vocabulary instead of the one with the correct logic.',
+      'Ignoring the modifier: "often," "some," and "may" in the passage are load-bearing and must appear in the answer.'
+    ],
+    examples: examplesFor([
+      { q: 'The estate tax, unlike the income tax, applied only to the wealthiest holdings, and its share of federal revenue was always small.\n\nAccording to the passage, the estate tax:',
+        o: ['Applied to every holding, however small.', 'Applied only to the wealthiest holdings.', 'Produced most of the federal government\'s revenue.', 'Was identical to the income tax.', 'Was paid by all citizens equally.'],
+        a: 'B',
+        r: 'The sentence states the estate tax "applied only to the wealthiest holdings." B is the direct, faithful paraphrase. A expands it to "every holding." C inverts "always small." D contradicts "unlike the income tax." E is invented.' },
+      { q: 'Ferns and mosses reproduce by spores, while flowering plants reproduce by seeds. Ferns require moist ground at the very moment of reproduction, which is why they cluster near streams.\n\nAccording to the passage, ferns require:',
+        o: ['Dry soil at the moment of reproduction.', 'Moist ground at the moment of reproduction.', 'Seeds to spread across a watershed.', 'Pollinating insects.', 'Perpetual shade year-round.'],
+        a: 'B',
+        r: 'The passage says ferns "require moist ground at the very moment of reproduction." B is exact. A is the opposite. C and D describe flowering-plant machinery. E adds "perpetual shade," a claim the passage never makes.' },
+      { q: 'All of the orchids in the wildlife reserve are protected by statute. Several rare ferns in the reserve are also protected, but the reserve\'s grasses receive no statutory protection.\n\nWhich of the following is most strongly supported by the statements above?',
+        o: ['Some protected plants in the reserve are orchids.', 'All protected plants in the reserve are orchids.', 'Every plant in the reserve is protected.', 'The reserve\'s rare ferns are not protected.', 'No orchid in the reserve is protected.'],
+        a: 'A',
+        r: 'Since all orchids are protected and orchids exist in the reserve, at least some protected plants are orchids — A. B overreaches because the rare ferns are protected too. C contradicts the grasses clause. D and E contradict the text directly.' },
+      { q: 'The regime\'s agrarian reforms, enacted in 1953, redistributed land to smallholders but deliberately left the agricultural credit system untouched. Exports climbed steadily over the following decade.\n\nAccording to the passage, the agrarian reforms:',
+        o: ['Redistributed land and simultaneously overhauled the credit system.', 'Redistributed land while leaving the credit system untouched.', 'Cut off the country\'s agricultural exports.', 'Were enacted in 1951.', 'Abolished smallholder farming.'],
+        a: 'B',
+        r: 'The core fact is redistribution "but deliberately left the agricultural credit system untouched." B preserves the twist. A splices in "overhauled," the opposite of "untouched." C contradicts "climbed." D misstates the year. E reverses the smallholder redistribution.' },
+      { q: 'In a controlled trial, patients receiving an experimental drug in addition to standard therapy recovered in half the average time of patients on standard therapy alone. The drug had no measurable effect when given by itself.\n\nWhich of the following situations is most analogous to the relationship described in the passage?',
+        o: ['An approach works only when combined with another treatment, and fails on its own.', 'An approach works equally well alone and in combination.', 'An approach works only after a lengthy delay.', 'Combining two treatments slows recovery.', 'A single treatment outperforms every combination.'],
+        a: 'A',
+        r: 'The passage\'s logic: the combined regimen delivers the benefit while the solitary ingredient does nothing. A mirrors it exactly. B and D contradict it. C inserts a delay never mentioned. E inverts the comparison.' },
+      { q: 'For decades the tablets were read as purely ceremonial texts. Paleographic study now shows that many carry administrative entries: inventories, tax tallies, and work rosters, although exactly what share of the collection is administrative remains unknown.\n\nWhich of the following is most strongly supported by the passage?',
+        o: ['No tablet has yet been shown to be administrative.', 'It is possible that some of the tablets are administrative records.', 'Every tablet in the collection is ceremonial.', 'All administrative tablets were inscribed by a single scribe.', 'The script of the tablets can no longer be deciphered.'],
+        a: 'B',
+        r: '"Many carry administrative entries" establishes that some may be administrative, while the unknown share forbids stronger claims. B is the guarded inference. A and C contradict the many-carry-administrative claim. D adds an unstated scribe. E contradicts "paleographic study."' },
+      { q: 'By trapping the river\'s sediment upstream, the new dam starved the delta of its natural replenishment, and the delta began to sink and erode.\n\nThe relationship described is most analogous to which of the following?',
+        o: ['A factory\'s upstream water diversion dries up a downstream wetland that depended on the river\'s normal flow.', 'A drought leads farmers to dig deeper wells.', 'Coastal erosion opens a new inlet that attracts shipping.', 'A bridge is built because a river\'s flow has increased.', 'A wetland\'s erosion eventually blocks the river channel above it.'],
+        a: 'A',
+        r: 'The passage shows an upstream intervention degrading a downstream system that depends on the altered resource. A matches that causal geometry. B is a responsive adaptation. C and D reverse the causal order. E runs the effect upstream.' },
+      { q: 'Every member of the expedition who descended into the crater later reported dizziness or nausea. No member of the support crew, all of whom remained at the rim, reported such symptoms.\n\nWhich of the following is most strongly supported by the statements above?',
+        o: ['Descending into the crater causes dizziness.', 'At least one expedition member reported dizziness or nausea.', 'The support crew descended into the crater.', 'The symptoms were caused by the altitude at the rim.', 'No expedition member reported any symptoms.'],
+        a: 'B',
+        r: 'The premise itself asserts that every member who descended reported symptoms, which presupposes reports occurred — B is forced. A and D reach for causation, a step the correlational evidence does not license. C contradicts "remained at the rim." E contradicts the premise.' },
+      { q: 'Museum specimens can document a species\' historical range, but only when collection dates and locations were recorded at the time of collecting; annotations added much later are often unreliable.\n\nWhich of the following, if true, best illustrates the passage\'s point about unreliable later annotations?',
+        o: ['A specimen whose provenance was added decades after collection is later used to extend the species\' documented range incorrectly.', 'A contemporary field diary records the exact date and place of each collection.', 'Museums now digitize their entire catalogs.', 'The species\' fossils are found on a different continent.', 'Later annotations are never consulted by researchers.'],
+        a: 'A',
+        r: 'The passage\'s concern is that late-added provenance corrupts the record. A is the concrete instance of exactly that failure. B illustrates the reliable alternative, not the failure. C is neutral. D is irrelevant. E would undermine the premise that later annotations matter.' }
+    ]),
+    check: [
+      { q: 'A "detail" answer choice must be:', o: ['a faithful paraphrase of the stated material', 'an extreme generalization', 'beyond the text', 'a real-world fact', 'the author\'s private opinion'], a: 0 },
+      { q: 'An inference is valid on GMAT Reading Comprehension only if it is:', o: ['consistent with the passage', 'forced by the passage\'s statements', 'true in everyday life', 'agreeable to experts', 'longer than the question'], a: 1 },
+      { q: 'Words such as "may," "some," and "likely" in an RC answer choice make it:', o: ['automatically wrong', 'cautious and often defensible', 'too vague to answer', 'an application answer', 'a tone answer'], a: 1 },
+      { q: 'Application questions are most likely to fail when the answer:', o: ['reverses the passage\'s cause-and-effect direction', 'uses too many numbers', 'is too short', 'mentions the passage topic', 'uses simple words'], a: 0 },
+      { q: 'An answer that is true in the real world but unsupported by the passage should be:', o: ['chosen anyway', 'eliminated', 'kept for main idea', 'used as a strengthener', 'quoted in the reasoning'], a: 1 }
+    ]
+  }),
 
-    topic('verbal-rc-structure', 'Reading Comprehension: Structure & Author\'s Intent', 'verbal', 'intermediate', {
-      overview: [
-        'Structure questions ask how the passage is organized: "The second paragraph serves primarily to..." or "Which best describes the development of the passage?"',
-        'Recurring structures: prevailing view minus complicating evidence; problem → proposed solution → critique; phenomenon → hypotheses → evaluation; comparison of two theories.',
-        'Author\'s-intent questions probe why a detail appears: to illustrate, qualify, concede, counter, or transition. The correct answer describes the FUNCTION, not the content.'
-      ],
-      formulas: [
-        { term: 'Structural verbs', def: 'illustrate, qualify, concede, counter, trace, contrast, synthesize' },
-        { term: 'Passage arcs', def: 'claim→evidence→qualify | problem→solution→limits | phenomenon→explanations→adjudicate' }
-      ],
-      strategies: [
-        'For each paragraph, write a one-line label as you read (e.g., "gives counterevidence").',
-        'Function questions: ask "what job does this sentence do for the argument?" rather than restating it.',
-        'Watch the opening and closing sentences — they often anchor the structure.',
-        'Distinguish "primary purpose" (whole passage) from "function of a part."'
-      ],
-      traps: [
-        'Answering content when the question asks for function.',
-        'Confusing "a question is raised" with "a problem is solved."',
-        'Selecting "comparison" for a passage that never actually compares.'
-      ],
-      examples: examplesFor([
-        { q: 'Last paragraph begins "However, recent evidence suggests..." Its function?',
-          o: ['Reinforce the earlier claim', 'Introduce counter-evidence, qualifying it', 'Summarize', 'Define a term', 'Provide background'],
-          a: 'B',
-          r: '"However" + evidence = counter to steer, qualifier to the thesis.' },
-        { q: 'Passage: phenomenon, then three explanations, then support for the third. Structure?',
-          o: ['definition-then-example', 'phenomenon → competing explanations → adjudication', 'thesis → refutation', 'chronology', 'cause → effect'],
-          a: 'B',
-          r: 'The pattern exactly matches the phenomenon/explanations/adjudicate arc.' },
-        { q: 'A sentence begins "Granted, the data are noisy, but the trend is clear." Function of "Granted..."',
-          o: ['To reject the trend', 'To concede a limitation before making the main point', 'To introduce a new topic', 'To define the data', 'To conclude the passage'],
-          a: 'B',
-          r: '"Granted" concedes the caveat; "but" announces the author\'s actual point. The concession preempts an objection — that is the function.' }
-      ]),
-      check: [
-        { q: '\"For example\" begins a sentence. Function?', o: ['counter', 'illustrate', 'concede', 'define', 'transition', 'never'], a: 1 },
-        { q: 'Primary purpose asks to cover:', o: ['a paragraph', 'the whole passage', 'the conclusion', 'the intro only', 'the title'], a: 1 },
-        { q: '"Traces the development of X" implies a passage that:', o: ['compares', 'narrates evolution', 'defends', 'defines', 'rejects'], a: 1 },
-        { q: 'Function of a concession ("admittedly") is to:', o: ['win agreement', 'weaken self', 'preempt objection', 'add data', 'end'], a: 2 },
-        { q: 'Contrast structure requires:', o: ['two entities compared', 'one topic', 'chronology', 'a single study', 'definitions'], a: 0 }
-      ]
-    }),
+  topic('verbal-rc-structure', 'Reading Comprehension: Structure & Author\u0027s Intent', 'verbal', 'intermediate', {
+    overview: [
+      'Structure and author\'s-intent questions ask not what a passage says but what it does. They reward the same skeleton-building skill that powers main-idea questions, and on GMAT Focus they arrive in two flavors: whole-passage organization and the function of a particular sentence, paragraph, or example.',
+      'Organization questions offer descriptions such as "trace the development of a theory" or "present a problem, evaluate two solutions, then endorse one." Your job is to match the passage\'s actual arc to the option, not to admire an option\'s vocabulary.',
+      'The most common arcs are small in number and instantly recognizable: claim → evidence → qualification; phenomenon → rival explanations → adjudication; problem → proposed solution → critique; comparison of two theories; chronological narrative; and definition → example → extension. Name the arc as you finish the first read.',
+      'Function questions ("the reference to X serves to...") are answered by asking what job the detail does for the argument — illustrate, concede, counter, qualify, define, transition, conclude — rather than what the detail says. Options that merely restate the detail\'s content are traps.',
+      'The key structural signals are transitions. "However" and "but" introduce counter-evidence or qualification; "for example" introduces illustration; "granted" and "admittedly" introduce concession; "moreover" and "furthermore" extend a point. The transition predicts the function.',
+      'A common GMAT game distinguishes a concession from a refutation. Conceding "the sample is small" does not defeat the argument; the author who concedes a point usually does so to disarm an objection before pressing the main claim. Function answers must respect exactly how much the text actually does.',
+      'Similarly, "raises a question" is not "answers a question," and "questions a theory" is not "refutes a theory." Precision of the verb is the whole game: options that overshoot the passage\'s action by one step are the standard wrong answers.',
+      'Primary purpose (the whole passage) and the function of one part are related but distinct; a sentence that illustrates a claim within a passage whose overall purpose is to argue X is doing both jobs, and the correct answer must match the level the question asks about.',
+      'Test-day insight: pre-write one verb per paragraph as you read and keep transition words mentally bolded; structure questions then answer themselves. The most polished-sounding structural description is not always the accurate one — match the arc, not the eloquence.'
+    ],
+    formulas: [
+      { term: 'Structural verb set', def: 'illustrate, qualify, concede, counter, contrast, trace, synthesize, adjudicate, caution, define' },
+      { term: 'Passage arcs', def: 'claim → evidence → qualify; phenomenon → rival explanations → adjudication; problem → solution → limits; compare two theories; chronology; definition → example' },
+      { term: 'Transition-to-function map', def: 'however/but = counter or qualify; for example = illustrate; granted/admittedly = concede; moreover = extend; in contrast = oppose' },
+      { term: 'Function formula', def: 'Function = what the detail does for the argument (its job), not what the detail says (its content)' },
+      { term: 'Concession vs refutation', def: 'concede = allow a limited point while pressing on; refute = demonstrate that a view is false' },
+      { term: 'Raised vs answered', def: 'a passage that raises a question does not resolve it; "leaves open" is not "resolves"' },
+      { term: 'Question-vs-refute rule', def: 'question = subject to doubt; refute = shown false; reject = refused — verbs must match the passage\'s actual action' },
+      { term: 'Primary purpose vs part function', def: 'purpose covers the whole passage; a sentence\'s function is its local job — match the level asked' },
+      { term: 'Anchor-sentence heuristic', def: 'the opening and closing sentences of a passage usually frame the argument and its limits' },
+      { term: 'Structure requires objects', def: 'contrast needs two entities; chronology needs time markers; adjudication needs rival views to be judged' },
+      { term: 'Overreach-verb test', def: 'an option verb asserting more than the passage does (prove vs suggest, resolve vs question) fails' },
+      { term: 'Content-vs-function trap', def: 'answers that faithfully describe a detail\'s content without naming its job fail function questions' }
+    ],
+    strategies: [
+      'Label each paragraph in one phrase as you finish it, using function verbs only: "counter-evidence," "concession," "endorsement."',
+      'Circle every transition; the transition predicts the function before you read the sentence.',
+      'On function questions, answer in your head first — "this detail is here to ___" — then match your verb to the options.',
+      'Check the opening and closing sentences of the passage and of each paragraph for the structural frame.',
+      'Distinguish the whole-passage purpose from the local function; match the level the stem requests.',
+      'Beware answer verbs that outrun the text: "refute" for a passage that only "questions," or "resolve" for one that leaves things open.',
+      'For organization questions, test each option against your paragraph labels in sequence.',
+      'Refuse options like "compare" when only one theory is discussed, and "chronology" when no time markers appear.',
+      'If an answer describes what a detail says, check whether it also says what the detail does; if not, cut it.',
+      'Read the last paragraph\'s first sentence as the resolution cue before whole-passage questions.',
+      'Reuse the skeleton you built for main-idea questions — one skill, two question families.',
+      'Where two structural answers both sound plausible, pick the one whose verb matches the passage\'s actual strength.'
+    ],
+    traps: [
+      'Content-answer on a function question: tells you what the detail is about instead of what it does.',
+      'Overreach verbs: "refutes" for "questions," "proves" for "suggests," "resolves" for "raises."',
+      'Concession read as capitulation: a "granted" clause is the author steeling the argument, not abandoning it.',
+      'Question-vs-answer confusion: "whether the policy will succeed remains to be seen" is an open question, not a verdict.',
+      'Whole-passage answer to a part question, and vice versa.',
+      'Too-generic options that could describe any passage ("discusses a topic and concludes").',
+      'Invented comparison: choosing "contrast" when the passage never sets two things against each other.',
+      'Invented chronology: assuming sequence from a passage that makes no time claims.',
+      'Outside scope: an organization answer that adds a paragraph the passage does not contain (e.g., "proposes a new study").',
+      'Ignoring the caveat: passages habitually end with limits; an option that omits the limit is incomplete.',
+      'Choosing the flashiest description: the most ornate structural answer is often the least accurate.',
+      'Mislabeling debate as adjudication: reporting that scholars disagree is not the author settling the question.'
+    ],
+    examples: examplesFor([
+      { q: 'The first two sentences present a general claim about municipal budgeting. The third sentence begins, "For example, the city of Alden..." and describes Alden\'s experience in detail.\n\nThe sentence about Alden is included in order to:',
+        o: ['Introduce evidence that undermines the preceding claim.', 'Illustrate the general claim with a concrete case.', 'Define a technical term from the passage.', 'Conclude the passage.', 'Raise a question about Alden\'s budget.'],
+        a: 'B',
+        r: '"For example" is the classic illustration signal; the case study serves as a concrete instance of the claim. B names that function. A invents opposition. C, D, and E mislabel the sentence\'s role.' },
+      { q: 'The final sentence of a passage about a drugs policy reads, "Whether the policy will survive the next budget cycle remains to be seen."\n\nThe final sentence functions primarily to:',
+        o: ['Resolve the debate about the policy.', 'Acknowledge an unresolved question about the policy\'s future.', 'Denounce the policy\'s drafters.', 'Define the terms "policy" and "budget cycle."', 'Compare the policy with an earlier one.'],
+        a: 'B',
+        r: '"Remains to be seen" flags an open question rather than an answer. B matches. A claims resolution. C invents hostility. D and E add functions the sentence does not perform.' },
+      { q: 'Paragraph 1 describes the decline of a seabird population. Paragraph 2 presents two rival hypotheses for the decline. Paragraph 3 weighs the evidence, favors the second hypothesis, and concedes that important gaps remain.\n\nWhich of the following best describes the organization of the passage?',
+        o: ['A thesis followed by its refutation.', 'A problem followed by rival explanations and a qualified adjudication.', 'A strictly chronological narrative of the population\'s decline.', 'A definition followed by an extended example.', 'A comparison of two hypotheses with no resolution reached.'],
+        a: 'B',
+        r: 'The sequence is problem, rival explanations, then a decision with a caveat — exactly B. A misfires because the second hypothesis wins rather than being refuted. C fails because no timeline is told. D misreads the paragraphs as definition and example. E fails because the passage does favor the second hypothesis.' },
+      { q: 'In a passage about a new screening method, the second sentence reads: "Granted, the sample in the trial was small, but the pattern of results was robust across repeated tests."\n\nThe phrase "Granted, the sample... was small" functions to:',
+        o: ['Deny that the sample was small.', 'Concede a limitation in order to head off an objection before stating the main point.', 'Prove that the method is unreliable.', 'Define what counts as a sample.', 'Conclude the argument.'],
+        a: 'B',
+        r: '"Granted" marks a concession; the "but" clause then carries the author\'s real point. B describes that standard function. A contradicts the text. C inverts the import. D and E are off-target.' },
+      { q: 'The first paragraph of a passage states a prevailing theory; the second presents evidence that complicates it; the final paragraph endorses a modified version of the theory.\n\nThe primary purpose of the passage is to:',
+        o: ['Refute the prevailing theory entirely.', 'Refine the prevailing theory in light of the complicating evidence.', 'Chronicle every study conducted in the field.', 'Defend the discredited version of the theory.', 'Compare the two research methods used in the studies.'],
+        a: 'B',
+        r: 'The arc is not destruction but amendment: complicate, then endorse a modified version. B is precise. A overstates ("refute entirely"). C adds a survey the passage never gives. D backs the old version. E discusses methods, not the theory\'s fate.' },
+      { q: 'An economics passage states an abstract principle, then continues: "To see why, consider a farmer choosing between two crops: the subsidy quietly tips the arithmetic of the decision."\n\nThe farmer example serves to:',
+        o: ['Refute the principle being discussed.', 'Render an abstract principle concrete for the reader.', 'Introduce a chronological account of farming.', 'Define the word "subsidy."', 'Conclude the passage\'s argument.'],
+        a: 'B',
+        r: '"To see why" telegraphs that the example translates abstraction into a tangible case. B captures that job. A reverses the example\'s support. C, D, and E do not describe what the example does.' },
+      { q: 'The passage opens with a historical puzzle: why large cities grew despite chronic water and sanitation problems. It reviews two earlier explanations for that growth, rejects both, and argues for a third — institutional change — while acknowledging that the evidence is not conclusive.\n\nWhich of the following best describes the organization of the passage?',
+        o: ['A chronology of the growth of large cities.', 'A puzzle, followed by rejected explanations, followed by a favored though limited explanation.', 'A comparison of two explanations with no resolution reached.', 'An experimental hypothesis followed by a single test.', 'A survey of an entire scholarly field.'],
+        a: 'B',
+        r: 'Puzzle, rejected rivals, favored-but-caveated third: that is exactly B. A is wrong because growth is not narrated chronologically. C fails because a third view is favored. D conflates history with controlled experiment. E is far too broad.' },
+      { q: 'The final paragraph of a passage reads: "None of this licenses the conclusion that the reforms caused the boom; the correlation may be coincidence, or the causation may run the other way. The safest reading is that reform accompanied boom, with causation unresolved."\n\nThe final paragraph functions primarily to:',
+        o: ['Warn the reader against causal overreach that the evidence does not justify.', 'Prove that the reforms caused the boom.', 'Confirm that the boom caused the reforms.', 'Redefine the term "boom."', 'Compare the reform era with the period before it.'],
+        a: 'A',
+        r: 'The paragraph\'s whole purpose is to police the causal claim, closing with "causation unresolved." A names that caution. B and C assert the very directions the paragraph blocks. D and E are unrelated to its function.' },
+      { q: 'Paragraph 1 states that a certain theory makes a central prediction. Paragraph 2 reports observations that repeatedly fail that prediction, then suggests the theory may still be useful as a rough heuristic.\n\nWhich of the following best describes the relationship between the two paragraphs?',
+        o: ['The second paragraph refutes the theory outright.', 'The second paragraph tests the theory\'s prediction and downgrades its status while retaining it as a heuristic.', 'The second paragraph defines the theory\'s core terms.', 'The two paragraphs discuss unrelated subjects.', 'The second paragraph endorses the theory unconditionally.'],
+        a: 'B',
+        r: 'Observations fail the prediction (a failed test), and the theory\'s status drops from law-like to heuristic. B captures both moves. A overstates the demolition. C mislabels the content. D ignores the connection. E ignores the failure.' }
+    ]),
+    check: [
+      { q: '"For example" at the start of a sentence most often signals an ___ function.', o: ['illustrative', 'concessive', 'conclusive', 'chronological', 'hierarchical'], a: 0 },
+      { q: '"Granted, the sample was small, but the pattern held" concedes a point in order to:', o: ['abandon the argument', 'preempt an objection before stating the main point', 'prove the objection true', 'change the topic', 'replace the premise with the conclusion'], a: 1 },
+      { q: '"Primary purpose" questions are decided by the structure of the:', o: ['second paragraph alone', 'example alone', 'whole passage', 'question stem', 'italicized footnote'], a: 2 },
+      { q: 'An option saying the passage "refutes" a view is correct only if the passage actually:', o: ['shows the view to be false', 'merely expresses doubt about it', 'agrees with it', 'names it', 'dates it'], a: 0 },
+      { q: 'If the final sentence says "whether the policy will succeed remains to be seen," the passage:', o: ['proves the policy will succeed', 'leaves the question open', 'dates the policy', 'denounces the policy', 'defines the policy'], a: 1 }
+    ]
+  }),
 
-    topic('verbal-cr-basics', 'Critical Reasoning: Argument Anatomy & Assumptions', 'verbal', 'beginner', {
-      overview: [
-        'Critical Reasoning items present short arguments (a conclusion supported by premises) with one question type: strengthen, weaken, find the assumption, infer, evaluate, or describe the flaw.',
-        'Break every argument into pieces: Facts (premises) + Claim (conclusion) + Gap (the assumption that makes premises support the claim). Find the conclusion first — it is what you would defend.',
-        'An assumption is an unstated premise the argument NEEDS. If the assumption is false, the argument collapses. The "negation test": negate the candidate; if the argument dies, it was a required assumption.'
-      ],
-      formulas: [
-        { term: 'Conclusion cue', def: 'therefore, so, hence, thus, demonstrates, concludes' },
-        { term: 'Premise cue', def: 'because, since, given that, as, on the grounds that' },
-        { term: 'Negation test', def: 'Assumption required if its negation destroys the argument' }
-      ],
-      strategies: [
-        'Read the question stem BEFORE the argument — it tells you what to hunt for.',
-        'Identify the conclusion in your own words before reading answers.',
-        'For assumption questions, apply the negation test to each option.',
-        'Beware of "must be true" vs "strengthens": a strengthener can merely make the argument more likely; an assumption is mandatory.'
-      ],
-      traps: [
-        'Mistaking a premise for the conclusion.',
-        'Choosing a statement the argument takes for granted implicitly? Less concrete — stick to the negated test.',
-        'Picking an answer that supports the argument but is not REQUIRED.',
-        'Reading "necessary" where only "helpful" is.'
-      ],
-      examples: examplesFor([
-        { q: 'Sales fall because prices rose (argument). The assumption?',
-          o: ['Other factors unchanged', 'Prices rose first', 'Customers noticed the price change', 'Prices affect demand', 'Revenue = price × quantity'],
-          a: 'C',
-          r: 'For "prices rose" to explain falling sales, customers must have noticed. Negate: "customers did not notice the change" → explanation collapses.' },
-        { q: '"We should ban plastic bags; they pollute oceans.\" Conclusion?',
-          o: ['Plastic bags pollute', 'We should ban plastic bags', 'Oceans are polluted', 'People litter', 'Bans work'],
-          a: 'B',
-          r: '"We should ban" is the recommendation — the conclusion. The pollution fact is the premise.' },
-        { q: 'Assumption for: "This drug is safe because it passed trials."',
-          o: ['Trials accurately predict safety', 'The drug is cheap', 'Trial patients were healthy', 'Drugs work', 'Safety matters'],
-          a: 'A',
-          r: 'Negate: trials do NOT predict safety → the "safe because passed" argument fails. Required assumption.' }
-      ]),
-      check: [
-        { q: 'Conclusion cue word:', o: ['because', 'since', 'therefore', 'given', 'as'], a: 2 },
-        { q: 'Negation test finds:', o: ['weakeners', 'required assumptions', 'premises', 'examples', 'conclusions'], a: 1 },
-        { q: '\"Since traffic is heavy, we will be late.\" Premise?', o: ['we will be late', 'traffic is heavy', 'no premise', 'heavy is vague', 'late is bad'], a: 1 },
-        { q: 'An argument\'s unstated needed premise is its:', o: ['conclusion', 'assumption', 'example', 'counterargument', 'topic'], a: 1 },
-        { q: 'Best to read first:', o: ['answers', 'question stem + argument', 'summary', 'conclusion only', 'nothing'], a: 1 }
-      ]
-    }),
+  topic('verbal-cr-basics', 'Critical Reasoning: Argument Anatomy & Assumptions', 'verbal', 'beginner', {
+    overview: [
+      'Critical Reasoning delivers short arguments followed by a single question. On GMAT Focus, CR is roughly 10 to 13 of the 23 verbal questions, and the skill begins with reading an argument the way a court reads a brief: premises, conclusion, and the unstated step in between.',
+      'Every argument has anatomy. The conclusion is the claim the author is trying to establish — often a recommendation ("should"), a prediction ("will"), or a verdict ("therefore X is"). The premises are the evidence offered for it. The gap between them is where assumptions hide.',
+      'Question stems tell you what to hunt before you read: conclusion, assumption, strengthen, weaken, inference, evaluate, or flaw. Reading the stem first converts a passive read into active hunting — you walk into the argument knowing the target.',
+      'An assumption is an unstated premise the argument requires. It is not merely something that helps; without it the argument cannot stand. GMAT assumption questions test whether you can name the load-bearing missing piece.',
+      'The master weapon is the negation test. Take the candidate assumption and assert its opposite; if the argument collapses, the candidate was required. If the argument shrugs, the candidate was optional — a strengthener, not an assumption.',
+      'Assumptions come in recurring shapes: bridge assumptions link new information to the conclusion; sampling assumptions let a study\'s result stand for a population; causal assumptions rule out rival causes; analogy assumptions assume that what worked in one context transfers to another.',
+      'The GMAT is informal-logic friendly: formal symbols are not needed, but discipline is. Conclusions are found by asking "what would the author defend if challenged?" — not "which sentence contains the word therefore." Recommendation conclusions hide behind "should"; predictions hide behind "will."',
+      'Pre-phrasing is the CR version of the RC main-idea move: once you know the conclusion and the gap, say the likely correct answer in your head before browsing the five options. The GMAT\'s distractors are engineered to be attractive at first glance and wrong on inspection.',
+      'Test-day insight: every argument makes exactly one logical leap, and every CR question type is a different attack on that same leap. Learn to name the leap in one sentence and you have already answered half the question.'
+    ],
+    formulas: [
+      { term: 'Argument anatomy', def: 'Premises (evidence) → Gap (unstated leap) → Conclusion (the claim the author defends)' },
+      { term: 'Conclusion cues', def: 'therefore, so, hence, thus, accordingly, consequently, clearly, shows, demonstrates, must, should' },
+      { term: 'Premise cues', def: 'because, since, given that, as, on the grounds that, studies show, historically' },
+      { term: 'Assumption definition', def: 'an unstated premise the argument requires in order to stand; merely supportive material is a strengthener, not an assumption' },
+      { term: 'Negation test', def: 'negate the candidate; if the argument collapses, the candidate is a required assumption' },
+      { term: 'Bridge assumption', def: 'links the information in the premises to the new claim in the conclusion (e.g., a past record predicts the next result)' },
+      { term: 'Sampling assumption', def: 'the observed group stands for the group being generalized to; sever the link and the conclusion loses its base' },
+      { term: 'Causal assumption', def: 'rules out rival causes and wrong directions; the observed correlation truly runs from alleged cause to effect' },
+      { term: 'Analogy assumption', def: 'the two cases resemble each other on the dimension that matters for the conclusion' },
+      { term: 'Necessary vs helpful', def: 'an assumption is necessary (required); a strengthener is merely helpful (optional) — GMAT "assumes" means necessary' },
+      { term: 'Find-the-conclusion move', def: 'ask "what would the author defend if challenged?", not "which sentence says therefore"' },
+      { term: 'Recommendation conclusions', def: '"should," "ought," and "must implement" announce the recommendation — the recommendation is the claim, and the facts around it are its support' }
+    ],
+    strategies: [
+      'Read the question stem before the argument; it designates the hunt — conclusion, assumption, strengthen, weaken, flaw.',
+      'Find the conclusion first, in your own words, and bracket it mentally.',
+      'Name the gap: one sentence capturing what the conclusion adds beyond the premises.',
+      'Pre-phrase the expected answer before opening the choices.',
+      'Apply the negation test to candidate assumptions and to every lingering uncertainty.',
+      'Discard options that merely repeat a stated premise — an assumption must be unstated.',
+      'Discard options that strengthen the argument but are not required by it.',
+      'For "should" conclusions, remember that the recommendation itself is the conclusion.',
+      'Watch the scope of the conclusion: "all buyers" demands far more support than "some buyers."',
+      'When two candidates seem close, negate both; the one whose negation kills the argument is the assumption.',
+      'Treat "the argument assumes" and "the argument depends on" as the same task: find the necessary missing premise.',
+      'Never import subject-matter expertise; only the argument\'s internal logic decides.'
+    ],
+    traps: [
+      'Premise-as-conclusion: choosing the fact instead of the claim the fact supports.',
+      'Recommendation ignored: in a "should" argument, the recommendation is the conclusion and the facts are the premises.',
+      'Strengthener-as-assumption: an option that helps the argument but is not required by it.',
+      'Stated-premise answer: an assumption cannot be something the passage already says outright.',
+      'Negating the wrong element: negate the option when testing it, not the conclusion.',
+      'Oversized assumption: demanding "every customer" when "some customers" suffices — an overstrong guess is not required.',
+      'Undersized assumption: a barely-helpful detail that a counterexample can render unnecessary.',
+      'Circular reading: assuming the conclusion is true, then "finding" its support within itself.',
+      'Outside knowledge: real-world economics, physics, or politics deciding an answer the argument never established.',
+      'Ignoring the stem word: "assumes" (necessary) and "would strengthen" (optional) reward different answers.',
+      'Conclusion scope creep: a conclusion about this year elevated to a permanent rule and treated as the argument.',
+      'The verbatim lure: an option that quotes argument vocabulary while failing to name the missing link.'
+    ],
+    examples: examplesFor([
+      { q: 'Traffic across the bay bridge has increased every year for a decade. The city should therefore build a second bridge.\n\nWhich of the following is the conclusion of the argument?',
+        o: ['Traffic has increased every year for a decade.', 'The city should build a second bridge.', 'Bridges are expensive to build.', 'Trends lasting a decade are significant.', 'The existing bridge is structurally unsound.'],
+        a: 'B',
+        r: '"Should" marks the recommendation, and "therefore" slots it in as the claim being supported. B is the conclusion. A is the premise. C and E introduce unstated claims. D invents a principle.' },
+      { q: 'Our team has never lost a home match. Tonight\'s match is at home, so we will not lose.\n\nThe argument\'s conclusion follows only if which of the following is assumed?',
+        o: ['The opponent\'s players are tired from travel.', 'The pattern of past results at home will apply to tonight\'s match.', 'The referee will favor our team.', 'The team\'s best players are all injured.', 'Home crowds do not affect performance.'],
+        a: 'B',
+        r: 'The leap is from a historical record to tonight\'s result; the bridge is that the record predicts this contest. Negate it and the conclusion loses all support. A, C, and D are inventions. E would actively undermine the home-field inference.' },
+      { q: 'A marketing firm surveyed two thousand adults who recently bought the company\'s product, and 85 percent said they were satisfied. The firm concludes that the product is widely enjoyed by its buyers.\n\nWhich of the following is an assumption on which the argument depends?',
+        o: ['The two thousand surveyed buyers are representative of all buyers of the product.', 'Satisfied buyers will buy the product again.', 'The survey was conducted in printed form.', 'Two thousand is the largest possible sample size.', 'The product is inexpensive.'],
+        a: 'A',
+        r: 'The argument reasons from a surveyed slice to all buyers; it needs the slice to stand for the whole. Negate A — the sample was skewed — and the generalization collapses. B strengthens but is not required. C, D, and E are irrelevant.' },
+      { q: 'Factory managers claim that raising wages would cut profits. History shows that in this industry, higher wages have reduced turnover and increased productivity. The managers are therefore wrong.\n\nThe conclusion of the argument is:',
+        o: ['Higher wages reduce turnover.', 'Productivity rises with wages.', 'The managers are mistaken about the effect of higher wages on profits.', 'Profits always fall when wages rise.', 'Turnover is caused by low pay.'],
+        a: 'C',
+        r: '"The managers are therefore wrong" is the claim the premises support; the wage effects are the evidence. C is the conclusion. A and B are premises. D contradicts the argument. E is unstated.' },
+      { q: 'City officials report that after the downtown speed limit was lowered, fatal accidents fell by a third. They now propose lowering the limit further to cut fatalities still more.\n\nWhich of the following is an assumption on which the proposal depends?',
+        o: ['Further reductions in the limit will yield further reductions in fatal accidents.', 'The earlier decline in fatalities had nothing to do with the speed limit.', 'Drivers currently ignore the posted speed limit.', 'Fatal accidents in the city have already reached zero.', 'The city lacks the budget for new signs.'],
+        a: 'A',
+        r: 'The proposal transfers the first limit\'s success to a second reduction; the bridge is that the relationship continues to hold. Negating A leaves the new proposal without support. B contradicts an official premise. C and E would weaken. D makes the proposal pointless.' },
+      { q: 'Campaign organizers in a series of neighboring districts found that an incumbent\'s economic message resonated strongly with voters there. They conclude that candidates in our district should adopt the same message.\n\nThe argument depends on which of the following assumptions?',
+        o: ['Voters in our district resemble voters in the neighboring districts closely enough that the message\'s appeal will carry over.', 'Incumbents never lose elections.', 'Polling is illegal in our district.', 'The economic message had no effect in the neighboring districts.', 'Every candidate in our district is an incumbent.'],
+        a: 'A',
+        r: 'The inference transfers an observed reaction from one set of districts to another; the assumption is likeness between the audiences. Negate it and the transfer loses its basis. B is extreme and unnecessary. C and E are irrelevant; D contradicts the finding.' },
+      { q: 'Plants in a greenhouse grew noticeably faster in the weeks when soft music was played. The gardener concludes that the music promotes plant growth.\n\nWhich of the following is an assumption on which the argument depends?',
+        o: ['Other growing conditions were essentially the same in the music and no-music periods.', 'Plants have a demonstrated preference for music.', 'Music alone produced all of the growth observed.', 'The greenhouse was continuously heated.', 'Growth was measured at the end of the season only.'],
+        a: 'A',
+        r: 'The causal claim needs the two periods to be otherwise comparable; differences in water, light, or temperature would supply rival explanations. Negate A and the conclusion fails. B puts a false preference in the plants\' heads. C is too strong — the argument needs near-equivalence, not a monopoly of causes. D and E are irrelevant.' },
+      { q: 'When tariffs on coffee were abolished, coffee imports more than doubled within a year. The government now abolishes the tariff on tea and predicts that tea imports will more than double within a year.\n\nThe prediction depends on which of the following assumptions?',
+        o: ['Tea imports respond to the removal of tariffs in the same way that coffee imports did.', 'Coffee is healthier than tea.', 'Tariffs are the only barrier to trade between the two countries.', 'Tea prices were falling before the tariff was removed.', 'No tea was imported in the previous year.'],
+        a: 'A',
+        r: 'The forecast leans on an analogy between coffee and tea; it assumes the response pattern carries over. Negate that and the prediction has no basis. B is irrelevant. C and E are too strong. D introduces a possible confound.' },
+      { q: 'A survey of five hundred listed companies found that firms with proportionally more women on their boards also reported higher average profits. Concluding that board diversity boosts profitability, the authors recommend that companies diversify their boards.\n\nWhich of the following is an assumption on which the argument depends?',
+        o: ['The higher profits of the diverse firms are a result of their board composition rather than a cause of it.', 'Every surveyed company has a board of at least ten members.', 'Companies with diverse boards always outperform their industry peers.', 'The surveyed companies are the only firms with diverse boards.', 'Profitable companies are universally reluctant to diversify their boards.'],
+        a: 'A',
+        r: 'The conclusion fixes a causal direction: board composition causes profit. If the truth is the reverse (profitable firms can afford diversity), the recommendation collapses. Negating A kills the causal claim. B is arbitrary. C is extreme and unneeded. D and E are absurd or irrelevant.' }
+    ]),
+    check: [
+      { q: '"Since it is raining, the game will be cancelled." Which is the conclusion?', o: ['it is raining', 'the game will be cancelled', 'rain causes cancellations', 'games are popular', 'cancellations are common'], a: 1 },
+      { q: 'The negation test is used to identify:', o: ['stated premises', 'required assumptions', 'topic sentences', 'conclusion cues', 'counterexamples'], a: 1 },
+      { q: '"Every analyst we interviewed expects inflation to fall next quarter; therefore, inflation will fall." The argument assumes that:', o: ['the analysts were paid for their opinions', 'analyst expectations accurately predict actual inflation', 'inflation fell last quarter', 'the analysts work for one firm', 'inflation is rare'], a: 1 },
+      { q: 'Which cue word most often introduces a conclusion?', o: ['because', 'given that', 'therefore', 'since', 'as'], a: 2 },
+      { q: 'A stated premise cannot be the missing assumption because an assumption must be:', o: ['lengthy', 'quantitative', 'unstated', 'negative', 'about the future'], a: 2 }
+    ]
+  }),
 
-    topic('verbal-cr-strengthen', 'Critical Reasoning: Strengthen & Weaken', 'verbal', 'intermediate', {
-      overview: [
-        'Strengthen items ask you to add support; weaken items ask you to puncture. Both hinge on the ASSUMPTION GAP of the argument.',
-        'Most arguments reason from a sample to a population, from correlation to causation, or from a premise to a policy. Strengthen by: ruling out alternative causes, providing a control comparison, confirming the mechanism, or closing the sample-population gap.',
-        'Weaken by: offering an alternative explanation, showing the comparison was unfair, exposing the sample as unrepresentative, or breaking the causal chain.',
-        'The best strengthener/weakener is the one most DIRECTLY on the gap — not merely plausible or true.'
-      ],
-      formulas: [
-        { term: 'Strengthen links', def: 'plug the gap, confirm mechanism, control confounds, apportion causal direction' },
-        { term: 'Weaken breaks', def: 'alternative cause, unfair comparison, unrepresentative sample, reverse causation' }
-      ],
-      strategies: [
-        'State the argument\'s conclusion and its one weak link; test each option against that link.',
-        'For correlation→causation, remember the four threats: third variable, reverse causation, coincidence, biased sample.',
-        'Temporal sequence alone does not prove cause. Look for the option that addresses causality directly.',
-        'Documented evidence usually beats calls to evidence.'
-      ],
-      traps: [
-        'Choosing an answer that merely mentions the topic but doesn\'t touch the argument.',
-        'Confusing strengthening the premises with strengthening the inference.',
-        'Accepting a weaken answer that attacks only a side remark.',
-        'Overlooking the possibility of reverse causation in strengthen/weaken items.'
-      ],
-      examples: examplesFor([
-        { q: 'Correlation: towns with gyms have healthier citizens. To weaken?',
-          o: ['Wealthier towns have both', 'Gym membership is rising', 'Gyms are cheap', 'Doctors recommend gyms', 'Citizens exercise'],
-          a: 'A',
-          r: 'Wealth is a third variable explaining both the gyms and the health — the classic correlation killer.' },
-        { q: 'Survey: app users lose more weight. To strengthen?',
-          o: ['Randomized trial matches this group result', 'App is popular', 'Users like it', 'Non-users are heavier', 'App is free'],
-          a: 'A',
-          r: 'A controlled experiment supporting the same conclusion removes the most serious (selection) threat.' },
-        { q: 'Reduce: \"motor accidents fell after speed cameras.\" Weaken?',
-          o: ['Training campaigns launched the same month', 'Cameras are visible', 'Speeds fell', 'Fines rose', 'Drivers know about cameras'],
-          a: 'A',
-          r: 'A contemporaneous campaign offers an alternative explanation for the decline.' }
-      ]),
-      check: [
-        { q: 'Alternative explanation is a:', o: ['strengthener', 'weakener', 'assumption', 'conclusion', 'premise'], a: 1 },
-        { q: 'Confounding variable does what to the causal claim?', o: ['proves', 'undermines', 'supports', 'defines', 'extends'], a: 1 },
-        { q: 'Randomized control is a:', o: ['weakener', 'strengthener', 'trap', 'conclusion', 'premise'], a: 1 },
-        { q: 'Reverse causation means:', o: ['cause precedes', 'effect precedes cause', 'no link', 'larger samples', 'no effect'], a: 1 },
-        { q: 'When asked to WEAKEN, best option:', o: ['touches the gap directly', 'is broadly true', 'restates premise', 'adds detail', 'summarizes'], a: 0 }
-      ]
-    }),
+  topic('verbal-cr-strengthen', 'Critical Reasoning: Strengthen & Weaken', 'verbal', 'intermediate', {
+    overview: [
+      'Strengthen and weaken questions are the heart of GMAT Critical Reasoning scoring. Both are attacks on the same target: the gap between the premises and the conclusion. If you can name the leap, you can decide what supports it and what severs it.',
+      'Every strengthen question supplies one missing piece of support. It never has to prove the conclusion; it only has to make the conclusion more likely — exactly one step better. The traps are options that are plausible, true, or merely talk about the topic.',
+      'The four classic strengthen moves: rule out alternative explanations; confirm the mechanism; close a sample-population gap; make a comparison fair. Each closes a specific hole in a specific kind of argument.',
+      'The four classic weaken moves are their mirrors: supply an alternative explanation; expose an unfair comparison; break the causal chain; show the causation runs backward.',
+      'Most GMAT arguments that conclude causation from correlation are vulnerable to four threats: a third variable driving both factors, reverse causation, coincidence, and a biased sample. Test weaken options against this checklist before accepting anything.',
+      'The directness filter is the single most valuable mechanical skill. An option that mentions both key elements of the argument and touches the exact link beats a long, plausible option that only orbits the topic. Strength of connection beats volume of text.',
+      'For recommendation arguments, the buried assumption is usually cost-benefit: the recommended action\'s benefits must exceed its costs. Options that speak to the balance of benefits and costs are directly on the gap; options about aesthetics or side details are window dressing.',
+      'Comparison arguments — this district, this store, this trial — live and die on comparability. The strongest strengthener often provides a control case; the strongest weakener shows the comparison was rigged, meaning the two groups differed on something relevant all along.',
+      'Test-day insight: before reading the choices, say the direction you need — "I need an alternative explanation" or "I need the groups to be comparable." The correct option is the one that satisfies that precise need, and almost nothing else will.'
+    ],
+    formulas: [
+      { term: 'Strengthen moves', def: 'rule out alternatives, confirm the mechanism, close the sample-population gap, make the comparison fair, confirm benefit over cost' },
+      { term: 'Weaken moves', def: 'supply an alternative explanation, expose an unfair comparison, break the causal chain, reverse the causal direction' },
+      { term: 'Four correlation threats', def: 'third variable, reverse causation, coincidence, biased sampling — test weaken options against all four' },
+      { term: 'Directness filter', def: 'an option touching both key elements of the argument beats a longer option that only orbits the topic' },
+      { term: 'Control-group logic', def: 'the cleanest strengthener is often a comparison group that changed nothing and saw no change' },
+      { term: 'Alternative-cause logic', def: 'the cleanest weakener explains the observed result without the alleged cause' },
+      { term: 'Cost-benefit test', def: 'recommendations ("should") carry an implicit promise that benefits exceed costs; touching that balance is directly on target' },
+      { term: 'Sample-population link', def: 'a study conclusion transfers only if the studied group represents the group the conclusion is about' },
+      { term: 'Representativeness probe', def: 'for surveys, ask who was polled and whether they speak for the population named in the conclusion' },
+      { term: 'Temporal-sequence warning', def: 'after does not mean because of; sequence alone cannot certify a causal strengthen or weaken' },
+      { term: 'Modest-and-relevant heuristic', def: 'the correct option is often modest and precisely relevant; the spectacular one is usually a distraction' },
+      { term: 'A-little-relevant rule', def: 'a small amount of directly relevant support beats a large amount of irrelevant support' }
+    ],
+    strategies: [
+      'Restate the conclusion and its one weak link in a single sentence before reading the choices.',
+      'Pre-decide the direction: "I seek an alternative explanation" or "I seek a ruling out of alternatives."',
+      'Run the four-corner test on every causal weaken option: third variable, reverse causation, coincidence, biased sample.',
+      'On strengthen, look for what would shut down the loudest objection to the argument.',
+      'Favor options that mention both the cause and the effect (or the sample and the population) — the gap lies between them.',
+      'For recommendation arguments, ask whether the option settles the benefits-versus-costs balance.',
+      'In comparison arguments, check which group differences the option introduces; relevant differences favor weaken, their absence favors strengthen.',
+      'Reject options that strengthen the premises but leave the inference untouched.',
+      'Beware strengtheners that do too much: an option claiming "always" or "proves" overcommits and usually misfires.',
+      'Test strengthen candidates by negation: if the opposite would weaken, the candidate is doing real work.',
+      'Never import outside facts as support; the option must interact with this argument, not with reality in general.',
+      'When stuck, ask which option, if true, would change the mind of the person who made the argument.'
+    ],
+    traps: [
+      'The topical mirage: an option full of the argument\'s keywords that never touches the inference.',
+      'Strengthening the premise instead of the link: better data for the evidence does not fix the leap.',
+      'The overcommitted option: "always," "proves," or "guarantees" — too much strength makes a candidate fragile.',
+      'The reverse direction: a well-disguised weakener offered on a strengthen question, and vice versa.',
+      'The side-remark attack: weakening a tangential point while leaving the conclusion standing.',
+      'The methodology swipe: attacking the study\'s smallness or style without connecting the flaw to the specific conclusion.',
+      'The plausible-in-reality option: true in the world, inert against the argument.',
+      'The some-vs-all sweep: a conclusion about everyone "supported" by evidence about a few.',
+      'Ignoring reverse causation: adopting an option that confirms X causes Y when the evidence equally fits Y causing X.',
+      'The coincidence trap: treating a strengthener that shows sequence (A then B) as if it established cause.',
+      'For recommendation questions, championing the product\'s virtues without touching the cost-benefit balance.',
+      'The vague weakener: "many things could have happened" commits to nothing and therefore severs nothing.'
+    ],
+    examples: examplesFor([
+      { q: 'Coffee shops in the downtown district stay busy until midnight every night. A local official concludes that downtown residents strongly prefer late-night coffee.\n\nWhich of the following, if true, most seriously weakens the official\'s conclusion?',
+        o: ['The shops\' regular customers are mostly hotel guests and commuters, not residents.', 'Downtown contains a large number of coffee shops.', 'Coffee is popular throughout the country.', 'Most downtown shops close at midnight.', 'Residents also drink tea at home.'],
+        a: 'A',
+        r: 'The argument infers residents\' preference from shop traffic. If the traffic comes from non-residents, the inference collapses. A supplies exactly that alternative explanation. B and C are irrelevant. D is consistent with the premise. E fails to speak to coffee preference at all.' },
+      { q: 'A magazine\'s sales rose in the month after its cover was redesigned. The editor concludes that the redesign caused the increase.\n\nWhich of the following, if true, most strengthens the editor\'s conclusion?',
+        o: ['No other change in price, promotion, or content coincided with the redesign.', 'The redesign was expensive to produce.', 'Most readers subscribe rather than buy single copies.', 'Print magazine sales in general are declining.', 'The editors personally liked the new design.'],
+        a: 'A',
+        r: 'The redesign\'s causal claim is fragile because simultaneous changes could explain the rise. Ruling them out — A — is the strongest support. B and E are irrelevant. C complicates the sales measure. D would, if anything, weaken the attribution.' },
+      { q: 'Towns that added dedicated bicycle lanes last year saw cycling injuries fall by 20 percent. City planners conclude that the lanes reduced injuries.\n\nWhich of the following, if true, most seriously weakens that conclusion?',
+        o: ['Cycling injuries fell by about 20 percent in comparable towns that added no lanes.', 'Cycling injuries rose in towns without any cycle network.', 'The new lanes are heavily used.', 'Cyclists in the towns wear helmets at similar rates to before.', 'Lane construction was inexpensive.'],
+        a: 'A',
+        r: 'If injuries declined equally where nothing was installed, the decline is a broad trend and the lanes did not do the causal work. A supplies that alternative explanation. B runs the same direction as the conclusion. C is consistent. D is neutral. E is irrelevant.' },
+      { q: 'A school credits its new tutoring program for a sharp rise in test scores from one year to the next.\n\nWhich of the following, if true, most strengthens the school\'s claim?',
+        o: ['Scores at a demographically similar school without the program were flat over the same period.', 'The school\'s total budget grew during the program year.', 'All of the tutors are certified teachers.', 'The tests are multiple choice.', 'Parents support the tutoring program.'],
+        a: 'A',
+        r: 'A comparison school that changed nothing while this one improved rules out a shared trend as the cause. A is the strongest evidence. B offers another plausible cause (budget growth), which would actually weaken the program\'s credit. C, D, and E are weak or irrelevant.' },
+      { q: 'A poll of viewers of a cooking channel found that 90 percent favor changing the channel\'s flagship show\'s format. The network decides to change the format.\n\nWhich of the following, if true, most seriously weakens the network\'s decision?',
+        o: ['The poll sampled only viewers who had written comments complaining about the current format.', 'Viewing figures for the channel have been stable.', 'The flagship show remains the most-watched program on the channel.', 'The poll was anonymous.', 'Recipes on the show change frequently.'],
+        a: 'A',
+        r: 'If the only sampled viewers were the complainers, the 90 percent figure reflects selection bias, not the audience. A attacks representativeness directly. B and C actually point the other way. D is neutral. E is irrelevant.' },
+      { q: 'Stores that installed brighter lighting reported fewer thefts in the following year. A retail analyst concludes that the brighter lighting deters theft.\n\nWhich of the following, if true, most strengthens the analyst\'s conclusion?',
+        o: ['Stores that modernized other fixtures but kept dim lighting showed no drop in thefts.', 'Theft in retail fell nationwide during the same period.', 'Lighting bills at the upgraded stores rose.', 'Managers at the upgraded stores reported fewer incidents.', 'Most stores still use dim lighting.'],
+        a: 'A',
+        r: 'The comparison group (upgraded but still dim) isolates the lighting variable: no lighting change, no drop. A is the classic control. B would weaken, since a nationwide trend could explain the decline. C is neutral. E is irrelevant.' },
+      { q: 'Countries with high per-capita chocolate consumption also have more Nobel laureates per capita. A columnist concludes that eating chocolate boosts intellectual achievement.\n\nWhich of the following, if true, most seriously weakens the columnist\'s conclusion?',
+        o: ['Wealthier countries both consume more chocolate and invest more in science and education.', 'Chocolate is widely available in most countries.', 'The criteria for the prize have changed over time.', 'Winners are typically older than sixty.', 'Chocolate is taxed heavily in some countries.'],
+        a: 'A',
+        r: 'Wealth is the classic third variable explaining both chocolate consumption and laureate counts. A breaks the causal link by naming a common cause. B is neutral. C and D do not address the claimed mechanism. E is irrelevant.' },
+      { q: 'Switching the office\'s lighting to LEDs will cut the firm\'s energy bill, so the firm should switch now.\n\nThe argument would be most strengthened if it were true that:',
+        o: ['The retrofit cost will be fully offset by energy savings within fourteen months.', 'The LED manufacturer offers a two-year warranty.', 'Workers have complained about flicker in the current lights.', 'A majority of the firm\'s staff oppose the current lighting.', 'LED prices have been stable for a decade.'],
+        a: 'A',
+        r: 'A "switch now" recommendation implies that benefits outweigh costs soon. A closes exactly that gap. B is marginally relevant at best. C and D address comfort, not the financial case. E is neutral.' },
+      { q: 'Nuclear plants generate low-carbon electricity, and climate goals require low-carbon electricity. Therefore, countries should build many more nuclear plants.\n\nWhich of the following, if true, most seriously weakens the argument?',
+        o: ['Cost overruns and long build times would prevent enough new plants from being completed by the target dates.', 'Nuclear fuel is energy-dense and easily stockpiled.', 'Plant construction creates skilled jobs.', 'Modern reactors meet current safety standards.', 'Electricity demand is expected to keep growing.'],
+        a: 'A',
+        r: 'The recommendation presumes new plants can actually deliver low-carbon power in time. A severs that practical link, so the recommendation loses its grounds. B, C, and E either support the pro-nuclear case or are neutral. D is neutral-to-supportive.' }
+    ]),
+    check: [
+      { q: 'An alternative cause that fully explains the observed result will generally ___ the conclusion that the claimed cause produced it.', o: ['strengthen', 'weaken', 'prove', 'define', 'support'], a: 1 },
+      { q: 'A control group untouched by the treatment is most useful for:', o: ['ruling out alternative explanations', 'enlarging the margin of error', 'replacing the hypothesis', 'shrinking the sample', 'biasing the results'], a: 0 },
+      { q: '"In comparable towns without the program, scores rose just as much." This finding ___ the claim that the program caused the rise.', o: ['confirms', 'weakens', 'proves', 'illustrates', 'extends'], a: 1 },
+      { q: 'For a recommendation to switch products to save money, the decisive question is whether the:', o: ['savings outweigh the switch\'s costs', 'supplier is local', 'competitors have switched', 'product is new', 'staff likes it'], a: 0 },
+      { q: 'A strengthen/weaken option that merely mentions the general topic but never touches the premises-to-conclusion link:', o: ['is still ideal', 'carries little or no force', 'is automatically correct', 'strengthens the most', 'is an assumption'], a: 1 }
+    ]
+  }),
 
-    topic('verbal-cr-other', 'Critical Reasoning: Inference, Evaluate & Flaws', 'verbal', 'intermediate', {
-      overview: [
-        'Inference questions ("which must be true") test strict logic: the answer must follow from the given statements. Unlike strengthen/weaken, new information is NOT allowed — only careful combination of the premises.',
-        'Evaluate questions offer "which question would be most useful to answer." Map to the gap: the right probe, when answered YES or NO, swings the conclusion. The four threats to correlation (third variable, reverse cause, sampling, coincidence) are the targets.',
-        'Flaw (reasoning error) questions describe the error abstractly: correlation treated as causation, part-to-whole generalization, biased sample, false dilemma, circular reasoning, or moving from the possible to the inevitable.'
-      ],
-      formulas: [
-        { term: 'Must-be-true', def: 'Combine premises; no new facts; safe quantifiers' },
-        { term: 'Evaluate probe', def: 'YES/NO t asic? answer flips the conclusion' },
-        { term: 'Flaw families', def: 'correlation→causation | sample→population | part→whole | false either/or | circular' }
-      ],
-      strategies: [
-        'Inference: draw a mini Venn or set diagram for "some/all/only" premises.',
-        'Evaluate: for each option, ask "if answer = yes, does the conclusion get stronger; if no, weaker?" If not, discard.',
-        'Flaw: state the error in general terms; avoid options that re-state the conclusion or are too vague to be specific.',
-        '"Flawed because it assumes" answers name a faulty assumption — often exactly right.'
-      ],
-      traps: [
-        'Inference: picking something merely compatible instead of necessitated.',
-        'Evaluate: choosing a factual question that yields no decision.',
-        'Flaw: echoing the topic without naming the logical sin.',
-        'Confusing "sample" flaws with "conclusion" attacks.'
-      ],
-      examples: examplesFor([
-        { q: 'Premises: All seniors > 18; some students are seniors. Safe inference?',
-          o: ['all students > 18', 'some students > 18', 'no seniors', 'all seniors are students', 'some seniors < 18'],
-          a: 'B',
-          r: 'Some seniors exist (existence premise), and all seniors > 18 → some students > 18.' },
-        { q: 'Evaluate \"city crime fell after new police chief\": probe?',
-          o: ['Did crime fall statewide too?', 'Is crime seasonal?', 'Who is the chief?', 'Are cops paid well?', 'When did hiring begin?'],
-          a: 'A',
-          r: 'If crime fell everywhere, the chief is not the cause; the statewide trend is. This probe can flip the conclusion.' },
-        { q: 'Flaw: \"sales rose after we rebranded, so the rebrand caused it.\" Error?',
-          o: ['correlation implied as causation', 'circular reasoning', 'false dilemma', 'composition', 'appeal to authority'],
-          a: 'A',
-          r: 'Temporal correlation alone does not establish the cause — the classic error.' }
-      ]),
-      check: [
-        { q: 'Must-be-true questions forbid:', o: ['combining premises', 'new facts', 'logic', 'diagrams', 'quantifiers'], a: 1 },
-        { q: 'Evaluate probes flip the result when answered:', o: ['yes only', 'no only', 'yes or no', 'never', 'maybe'], a: 2 },
-        { q: '\"Since most students like x, the whole school does\" is the ___ flaw.', o: ['sample', 'circular', 'false dilemma', 'attack', 'anecdote'], a: 0 },
-        { q: 'Correlation treated as causation is:', o: ['valid', 'a flaw', 'an inference', 'an assumption', 'a premise'], a: 1 },
-        { q: 'Circular reasoning means the premise:', o: ['differs from conclusion', 'restates conclusion', 'adds evidence', 'is empirical', 'is denied'], a: 1 }
-      ]
-    })
-  ];
+  topic('verbal-cr-other', 'Critical Reasoning: Inference, Evaluate & Flaws', 'verbal', 'intermediate', {
+    overview: [
+      'The third CR family gathers inference (must be true), evaluate, and flaw questions. All three test how rigorously you can police reasoning — no new facts, no outside assumptions, no applauding a conclusion the evidence cannot carry.',
+      'Inference questions are strict derivation problems. The correct answer follows from the premises when the premises are combined; it is not merely consistent with them. If a candidate could be false while the premises remain true, it is not an inference.',
+      'Set logic does most of the work. "All X are Y" plus "some Z are X" forces "some Z are Y." "Most" and "many" license weaker conclusions than "all." Sketching such premises as circles on scratch paper is legal and usually quicker than prose reasoning.',
+      'Evaluate questions present the argument\'s decision point in question form. The ideal probe is a question whose two answers point in opposite directions: YES boosts the conclusion, NO guts it. Any question that cannot flip the conclusion in one of its two answers is the wrong probe.',
+      'Evaluate questions are hidden strengthen/weaken pairs: the best probe almost always targets the same gap that a strengthen or weaken option would address. Identify the gap first, then translate it into a question.',
+      'Flaw questions ask "what is wrong with this reasoning?" in abstract terms. The error families are few: correlation treated as causation, generalization from a sample to a population, attacking the person rather than the argument, false dilemma, circular reasoning, and post hoc chronology.',
+      'The flaw answer is not a fact about the world; it is a description of the logical sin. An option that merely echoes the topic, restates the conclusion, or supplies a counterexample is not a flaw answer even if it is interesting.',
+      'The refined art is verb discipline: "is flawed because it assumes that correlation implies causation" is precise; "is flawed because it overlooks many possibilities" is mush. The correct flaw answer names the mechanism of the error, and only that mechanism.',
+      'Test-day insight: inference rewards reading like a computer (derive, do not imagine); evaluate rewards asking the one question that decides; flaw rewards naming the sin without committing it. All three fall for the same trap — letting your own beliefs fill the argument\'s holes.'
+    ],
+    formulas: [
+      { term: 'Must-be-true test', def: 'an inference is valid only if the premises force it; if the negation could coexist with the premises, the candidate is not an inference' },
+      { term: 'Set-logic chains', def: 'all X are Y; some Z are X; therefore some Z are Y. Most and many license weaker conclusions than all' },
+      { term: 'No-new-facts rule', def: 'inference answers combine the given statements; importing new evidence or experience is disqualifying' },
+      { term: 'Evaluate probe test', def: 'a useful probe flips the conclusion when answered YES versus NO; a probe that cannot flip it either way is useless' },
+      { term: 'Evaluate = hidden strengthen/weaken', def: 'the best probe targets the same gap a strengthen or weaken option would address' },
+      { term: 'Four correlation threats', def: 'third variable, reverse causation, coincidence, biased sample — the standard evaluate and flaw targets' },
+      { term: 'Flaw families', def: 'correlation→causation, sample→population, part→whole, false dilemma, circular reasoning, post hoc, ad hominem' },
+      { term: 'Post hoc, ergo propter hoc', def: '"after this, therefore because of this" — sequence alone never proves cause' },
+      { term: 'False dilemma', def: 'presenting two options as the only options when others exist' },
+      { term: 'Circular reasoning', def: 'the conclusion restates, or silently assumes, the premise; no independent support is offered' },
+      { term: 'Sample-to-population flaw', def: 'concluding about a whole group from the reactions of a narrow or unrepresentative subset' },
+      { term: 'Verb-precision test for flaws', def: 'the correct flaw answer names a mechanism (correlation, sampling, dilemma); vague or topic-bound answers fail' }
+    ],
+    strategies: [
+      'On inference, read the premises twice and combine them deliberately, exactly as you would combine given equations.',
+      'For "some/all/most/only" premises, sketch a two-circle diagram on scratch paper.',
+      'Eliminate every inference candidate that adds a fact the premises do not contain.',
+      'On evaluate questions, test each probe twice — "if YES..." and "if NO..." — the probe must move the conclusion in opposite ways.',
+      'Convert evaluate probes back to strengthen/weaken thinking: what one piece of information would settle the dispute?',
+      'On flaw questions, name the sin in your own words before reading the choices.',
+      'Reject flaw options that restate the conclusion or merely echo the topic.',
+      'Distinguish the flaw description (abstract) from a weaken fact (concrete); a flaw question rewards the abstraction.',
+      'For correlation arguments, check the four threats in sequence: third variable, reverse causation, coincidence, sampling.',
+      'Welcome the phrase "assumes that" in flaw answers; it usually signals a precisely named error.',
+      'Beware of "is flawed because it does not consider..." answers that list a generic limitation without a mechanism.',
+      'On must-be-true questions, prefer the weakest claim that still must hold; big conclusions usually overreach.'
+    ],
+    traps: [
+      'The merely-consistent distractor: true alongside the premises but not forced by them.',
+      'New-facts temptation: answering an inference with real-world knowledge or personal experience.',
+      'Some-versus-all inversion: an option that inflates the premises\' "some" into "all" (or deflates "all" into "some").',
+      'The yes/yes probe: an evaluate option whose answers cannot affect the conclusion either way.',
+      'The single-direction probe: a question that only helps under one of its two answers — it cannot decide.',
+      'Flaw option that restates the conclusion in fancier words.',
+      'Flaw option that names the topic instead of the sin ("it concerns taxation" is not a flaw).',
+      'The over-broad flaw: "it fails to consider many things" — true of every argument and useful about none.',
+      'Conglomerating errors: choosing "biased sample" when nothing was sampled, or "false dilemma" when options were never limited.',
+      'The post-hoc misread: treating "occurred after" as "was caused by" without a mechanism.',
+      'The manufactured ad hominem: an attack-the-person description where no personal attack occurs.',
+      'Answering evaluate with a strengthen option: a useful fact is not automatically a decisive question.'
+    ],
+    examples: examplesFor([
+      { q: 'Every worker on the night shift is a certified machine operator. Some warehouse employees work the night shift.\n\nWhich of the following must be true?',
+        o: ['All warehouse employees are certified machine operators.', 'Some warehouse employees are certified machine operators.', 'No warehouse employee is certified.', 'All night-shift workers are warehouse employees.', 'Some certified operators do not work the night shift.'],
+        a: 'B',
+        r: 'Some warehouse employees are on the night shift, and every night-shift worker is certified, so those warehouse employees are certified. B is forced. A inflates "some" to "all." C denies the chain. D reverses the premise. E may be true but is not forced.' },
+      { q: 'The theater\'s Saturday matinee is always sold out a week before the performance. Next Saturday\'s matinee is two weeks from now.\n\nWhich of the following must be true?',
+        o: ['The matinee is sold out today.', 'The matinee will be sold out by the time it is one week before the performance.', 'The matinee will never sell out.', 'The matinee is currently half empty.', 'At least part of the matinee will be cancelled.'],
+        a: 'B',
+        r: 'The rule guarantees a sellout at the one-week mark; from today we can be sure only that the matinee will be sold out no later than next week. B is exact. A pulls the guarantee too early. C and E contradict the rule. D is unsupported.' },
+      { q: 'Gym membership at a city club rose sharply in the quarter after the club\'s renovation. The manager concludes that the renovation boosted membership.\n\nWhich of the following questions would be most useful to answer in evaluating the manager\'s conclusion?',
+        o: ['Did memberships at the city\'s other gyms also rise in the same quarter?', 'Did the renovation come in under its budget?', 'Are the club\'s members satisfied with the equipment?', 'When was the club originally built?', 'How large is the club\'s parking lot?'],
+        a: 'A',
+        r: 'If other gyms rose too, an industry or seasonal trend explains the increase; if they stayed flat, the renovation takes credit. The answer to A flips the conclusion either way. B, C, D, and E cannot decide it.' },
+      { q: 'Ice cream sales and drowning deaths both peak in July. A newspaper column concludes that ice cream causes drowning.\n\nThe columnist\'s reasoning is most vulnerable to criticism because it:',
+        o: ['Treats a mere correlation as evidence of causation without considering a common cause such as summer heat.', 'Reasons in a circle, with the conclusion restating the evidence.', 'Presents a false dilemma between two extreme options.', 'Generalizes from an unrepresentative sample of swimmers.', 'Appeals to the authority of a single expert.'],
+        a: 'A',
+        r: 'Two things rising together do not establish a causal link; the classic flaw is treating correlation as causation and ignoring third variables such as heat. A names it precisely. B, C, D, and E are different errors the column does not commit.' },
+      { q: 'A survey of five hundred readers of a finance blog found them overwhelmingly in favor of raising the retirement age. The survey\'s author concludes that the general public supports raising the retirement age.\n\nThe argument is most vulnerable to criticism because it:',
+        o: ['Generalizes about the whole public from a sample of finance-blog readers, who are unlikely to represent everyone.', 'Reasons in a circle.', 'Assumes that there are only two possible retirement ages.', 'Denounces the respondents rather than their argument.', 'Relies on an expert whose credentials are unverified.'],
+        a: 'A',
+        r: 'The partisan sample (readers of a finance blog) is pressed into service for the whole population. A names that sample-to-population leap. B, C, D, and E describe different flaws that are not present.' },
+      { q: 'Cities that legalized ride-share services report fewer drunk-driving arrests. A transportation analyst concludes that ride-sharing reduces drunk driving.\n\nWhich of the following questions would be most useful to answer in evaluating the analyst\'s conclusion?',
+        o: ['Did drunk-driving arrests fall in comparable cities that did not legalize ride-sharing?', 'Are ride-share drivers required to hold commercial licenses?', 'Do ride-share fares rise during peak demand?', 'How many rides are completed each day?', 'Are traditional taxi companies profitable?'],
+        a: 'A',
+        r: 'Comparable non-legalizing cities are the control. If their arrests fell too, a broader factor such as enforcement or attitudes explains the drop; if not, the legalization earns credit. The other options cannot settle the causal question.' },
+      { q: 'Bank A holds only federal government bonds. Bank B holds only municipal bonds. Any bond held by either bank matures before 2040. Some bonds held by Bank B mature after 2030.\n\nWhich of the following must be true?',
+        o: ['Some municipal bonds mature after 2030.', 'All federal bonds mature after 2030.', 'No municipal bond matures before 2040.', 'Bank B holds some federal bonds.', 'Some bonds held by Bank A mature after 2030.'],
+        a: 'A',
+        r: 'Bank B holds only municipal bonds, and some of Bank B\'s bonds mature after 2030, so some municipal bonds do. A is forced. B and E reach beyond what is stated about specific bonds. C overstates the "matures before 2040" claim. D contradicts "only municipal."' },
+      { q: 'Either the company must raise prices, or its profit margin will collapse. Raising prices would anger customers, so the company must accept collapsing margins.\n\nThe reasoning is most vulnerable to criticism because it:',
+        o: ['Assumes that raising prices and accepting collapsing margins are the only two options, ignoring cost cuts, efficiency gains, or new revenue.', 'Assumes that customers are always angered by price increases.', 'Reasons in a circle, since the conclusion repeats the evidence.', 'Concludes that one thing caused another from mere sequence.', 'Bases the conclusion on an unrepresentative sample of customers.'],
+        a: 'A',
+        r: 'The "either X or Y" frame is a false dilemma if other paths exist. A names the restrictive assumption. B describes a premise, not the structural error. C misfires — the conclusion does not restate the evidence. D is irrelevant. E invents a sample.' },
+      { q: 'A drug firm tested its allergy medication against a placebo in a small pilot study and found that patients on the medication reported fewer symptoms. The firm concludes that the medication is effective and should be approved.\n\nWhich of the following questions would be most useful to answer in evaluating the firm\'s conclusion?',
+        o: ['Is the reported difference between the groups too small to rule out having arisen by chance, given the small sample size?', 'Are allergies more common in some regions than others?', 'Was the medication taken in tablet form?', 'Do placebos sometimes reduce reported symptoms?', 'Does the firm manufacture other profitable drugs?'],
+        a: 'A',
+        r: 'With a tiny pilot, the observed difference may be noise. Whether the difference is statistically meaningful after accounting for sample size decides the conclusion. B, C, and E cannot make the effectiveness call. D is already neutralized by the placebo arm — the real risk is chance, not the placebo effect.' }
+    ]),
+    check: [
+      { q: 'A "must be true" inference question allows you to:', o: ['combine and derive from the given premises', 'bring in outside facts', 'invent new evidence', 'ask questions about the author', 'rely on real-world knowledge'], a: 0 },
+      { q: 'The ideal evaluate question, answered either way, should:', o: ['leave the conclusion unmoved', 'flip the conclusion one way or the other', 'add unrelated detail', 'prove a premise true', 'suspend all reasoning'], a: 1 },
+      { q: '"Event B occurred after event A, therefore A caused B" exemplifies the:', o: ['circular reasoning flaw', 'post hoc (after this, therefore because of this) flaw', 'false dilemma flaw', 'sample-size flaw', 'appeal to authority flaw'], a: 1 },
+      { q: 'Ninety percent of golf-club members favor a tax, so the author concludes the whole public favors it. The flaw is:', o: ['generalizing from an unrepresentative sample', 'reversing cause and effect', 'posing a false either-or', 'relying on a vague authority', 'attacking the author'], a: 0 },
+      { q: 'Rather than naming the logical error, a weak flaw answer tends to:', o: ['be unusually precise', 'restate the conclusion or merely echo the topic', 'supply new evidence', 'define the terms', 'shorten the argument'], a: 1 }
+    ]
+  })
+];
 
-  /* ================================================================
+  /* ================================================================================================================================
      DATA INSIGHTS
      ================================================================ */
   const diTopics = [
-    topic('di-ds', 'Data Sufficiency', 'dataInsights', 'beginner', {
-      overview: [
-        'Data Sufficiency migrated entirely to the Data Insights section. You evaluate two statements against a fixed set of five answer choices (unique among GMAT sections).',
-        'The fixed answer map — (A) (1) alone sufficient; (B) (2) alone sufficient; (C) together but not alone; (D) each alone sufficient; (E) never even together — must be memorized cold.',
-        'A statement is sufficient if it yields a UNIQUE value or a UNIQUE yes/no for every allowed case. Both a definite YES and a definite NO count as sufficient.',
-        'A calculator is allowed in DI — but sufficiency logic favors testing small cases mentally even more than computation.'
-      ],
-      formulas: [
-        { term: '(A)', def: 'only statement (1) is sufficient' },
-        { term: '(B)', def: 'only statement (2) is sufficient' },
-        { term: '(C)', def: 'together sufficient; neither alone' },
-        { term: '(D)', def: 'each alone sufficient' },
-        { term: '(E)', def: 'not sufficient even together' }
-      ],
-      strategies: [
-        'Decide the target first: value or yes/no? Then decide what information the target needs.',
-        'Test (1) alone; if sufficient, answer is A or D; if not, B/C/E. Half the work done.',
-        'Hunt counterexamples with small integers — two different outcomes ⇒ insufficient.',
-        'In yes/no questions, \"definitely no\" is still an answer.'
-      ],
-      traps: [
-        'Plugging both statements in while evaluating one of them alone.',
-        'Assuming uniqueness when both statements together merely narrow options (e.g., two possibilities left).',
-        'Treating an in-sufficiency as sufficiency because you picked one convenient value.',
-        'Ignoring sign and domain constraints (integers, positives, ≠0) in the stem.'
-      ],
-      examples: examplesFor([
-        { q: 'DS: What is the value of k?\n(1) 2k + 3 = 13\n(2) k is between 1 and 10',
-          o: ['A', 'B', 'C', 'D', 'E'],
-          a: 'A',
-          r: '(1) gives k = 5 uniquely — sufficient. (2) gives a range, infinite candidates — insufficient.' },
-        { q: 'DS: Is x > y?\n(1) x − y = 2\n(2) x + y = 8',
-          o: ['A', 'B', 'C', 'D', 'E'],
-          a: 'A',
-          r: '(1): x = y + 2 > y — definite YES, sufficient. (2): many pairs (x=8,y=0 vs x=0,y=8) — insufficient.' },
-        { q: 'DS: How many integers 1–100 are divisible by m?\n(1) m = 5\n(2) m < 10',
-          o: ['A', 'B', 'C', 'D', 'E'],
-          a: 'A',
-          r: '(1): multiples of 5 → 20 integers, unique. (2): m could be 2,3,...8 different counts — insufficient.' }
-      ]),
-      check: [
-        { q: '(1) sufficient, (2) not → answer', o: ['A', 'B', 'C', 'D', 'E'], a: 0 },
-        { q: 'Each alone sufficient → answer', o: ['A', 'B', 'C', 'D', 'E'], a: 3 },
-        { q: 'Neither alone nor together → answer', o: ['A', 'B', 'C', 'D', 'E'], a: 4 },
-        { q: 'Together only → answer', o: ['A', 'B', 'C', 'D', 'E'], a: 2 },
-        { q: 'Definite NO in yes/no question is:', o: ['insufficient', 'sufficient', 'invalid', 'a guess', 'undefined'], a: 1 }
-      ]
-    }),
+  topic('di-ds', 'Data Sufficiency', 'dataInsights', 'beginner', {
+    overview: [
+      'Data Sufficiency (DS) now lives exclusively in the GMAT Focus Data Insights section: 20 questions in 45 minutes, with an on-screen calculator available. DS is roughly half of the section, so mastering its logic is the single highest-return move on the whole exam.',
+      'The architecture is fixed. Every DS item shows a question stem, then two numbered statements, (1) and (2), followed by five answer choices that never change: (A) statement (1) alone is sufficient; (B) statement (2) alone is sufficient; (C) together the statements are sufficient but neither alone is; (D) each statement alone is sufficient; (E) the statements are not sufficient even together. Memorize this map cold before test day — the exam will not repeat it for you.',
+      'Sufficiency means UNIQUENESS, not truth-for-the-answer choice: a statement (or pair) suffices when it yields a unique value for the asked quantity, or a single coherent YES or NO for every permissible case. A statement that hard-wires a definite NO is fully sufficient — "Is k positive? (k < -5)" is answered, point blank, NO.',
+      'On the screen the choices appear as a fixed A-B-C-D-E panel with radio buttons; your job is to classify which statements pin down the answer, never to type a number. Because the question never asks for the value itself, the exam reframes everything: you are paid to reason about whether an answer exists, not to produce it.',
+      'DS comes in three sub-formats. VALUE questions ask "What is the value of x?" and need a single number. YES/NO questions ask "Is x greater than y?" and need a single verdict. INEQUALITY questions wrap a range around the unknown; they interact with hidden domain constraints in the stem, such as integer, positive, prime, nonzero, or digits — and the domains are part of the given data.',
+      'The solving workflow is the AD/BCE grid. Name the target and the domain first. Then evaluate statement (1) ALONE: if it suffices, the answer is A or D; if it does not, the answer must be B, C, or E. Then evaluate statement (2) ALONE: if it suffices and (1) failed, pick B; if both fail alone, combine them and test whether the pair collapses to one answer.',
+      'Bank seconds by never computing a full solution — stop at uniqueness. Kill statements with hostile small values (0, 1, -1, a fraction, a huge integer): two distinct outcomes both consistent with the statement prove insufficiency. Recognize isomorphs: (x+y)^2 = x^2 + y^2 + 2xy, the difference of squares, ratio scaling, and "the coefficient of x equals x itself after factoring."',
+      'The hardest common twist is the C/E boundary. Two statements that together leave TWO surviving candidates are insufficient — C requires the pair to pin exactly one case. Equally brutal is the duplicate trap: statements that look independent but secretly restate each other, e.g., each says "x >= 0," and together still only "x >= 0" — that is E territory. The trained mistake is converting "narrowed to one" into "narrowed."',
+      'Calculator reality: almost no DS item needs arithmetic heavier than the mental test. If a statement seems to demand a multi-digit computation, the test is usually handing you a structure — a product of consecutive integers, a ratio, a factorable polynomial — that dissolves the arithmetic. Trust the structure before reaching for the tool.',
+      'One more focus-era mindset: statements are ALWAYS true and consistent with each other. You test values that satisfy a statement; you never compare a statement against real-world facts. When the two statements contradict each other or (1) and (2) are obviously different flavors of the same fact, expect C/E traps rather than D.'
+    ],
+    formulas: [
+      { term: 'Choice (A)', def: 'Only statement (1) alone is sufficient; (2) alone is not' },
+      { term: 'Choice (B)', def: 'Only statement (2) alone is sufficient; (1) alone is not' },
+      { term: 'Choice (C)', def: 'Together sufficient; neither statement alone is sufficient' },
+      { term: 'Choice (D)', def: 'Each statement alone is sufficient' },
+      { term: 'Choice (E)', def: 'Not sufficient even when the statements are combined' },
+      { term: 'Sufficiency test', def: 'Unique value OR a single coherent YES or NO across every allowed case' },
+      { term: 'AD/BCE grid', def: '(1) sufficient → A or D; (1) insufficient → B, C, or E' },
+      { term: 'Counterexample rule', def: 'One allowed case answering X and another answering Y ⇒ statement is insufficient' },
+      { term: 'Definite NO rule', def: 'A uniform No fully answers a yes/no question — sufficient' },
+      { term: 'Domain audit', def: 'List stem constraints (integer, positive, prime, even, nonzero, range) before evaluating either statement' },
+      { term: 'Duplicate rule', def: 'Statements that restate each other rarely combine to D; near-duplicates usually signal E' },
+      { term: 'Equation heuristic', def: 'n independent equations determine n unknowns — verify independence before trusting it (dependent equations collapse to E)' }
+    ],
+    strategies: [
+      'Rephrase the question before reading the statements: "what exactly must I pin down, and what numbers are allowed?"',
+      'Always test statement (1) ALONE first — it instantly splits the options into the two families A/D and B/C/E.',
+      'Even after (1) works, still test (2) alone; you must choose between A and D, and both statements win or lose independently.',
+      'Kill statements with hostile small values: 0, 1, -1, a fraction, a negative, a huge integer. Two different outcomes ⇒ the statement is dead.',
+      'For inequality stems, sketch one number line, shade the statement\'s region over the stem\'s domain, and ask "does the shaded region collapse to a single point or verdict?"',
+      'In yes/no items, hunt for one YES-case and one NO-case both consistent with the statement; if both exist, it is insufficient.',
+      'Never import a fact from statement (2) while testing statement (1) alone — contamination is the most common wrong-answer cause.',
+      'On "is x/y an integer" items, probe y = 1, y = x, x = 2y, and non-divisor pairs before concluding.',
+      'When the two statements look similar, ask whether they are actually independent; identical content points to E, complementary facts may point toward C.',
+      'Recognize classic pair-patterns: (x + y) and (x - y) pinned ⇒ x and y pinned; x^2 + y^2 and xy pinned ⇒ (x + y)^2 pinned; a sum of digits with a count-of-factors can pin a number.',
+      'If a statement pins a RANGE but the stem allows only integers (or primes) inside it, count the survivors — a single survivor is sufficient.',
+      'Watch boundary language: "at least" and "at most" are inclusive — the boundary value itself is usually the decisive test case.',
+      'Budget about 2 minutes per DS item. If you cannot classify in time, eliminate with the grid and move on; a grid-informed guess beats a rushed full solve.'
+    ],
+    traps: [
+      'Evaluating statement (1) while subconsciously leaning on a fact from statement (2) — the classic contamination error. Evaluate each alone, in order.',
+      'Declaring sufficiency after finding ONE convenient value that satisfies the question. Sufficiency demands uniqueness, not existence.',
+      'Forgetting zero, negatives, and non-integers: "x^2 = 4 so x = 2" silently drops x = -2 and destroys the verdict.',
+      'Reading a definite NO as a failure. "Is n > 5? (n < 0)" is conclusively answered — sufficient, letter for (1).',
+      'Treating a range as automatically insufficient without scanning the stem for integer, prime, or positive restrictions that make it finite.',
+      'Assuming two equations mean two unknowns are solved: dependent statements (x + y = 5 and 2x + 2y = 10) give no new information — E territory.',
+      'Picking D just because the statements "feel consistent": D requires each alone to suffice, never that they merely agree with each other.',
+      'Choosing C when the combined statements still allow two cases — together the pair must collapse to exactly one answer.',
+      'Forgetting that both statements are always TRUE; you test values consistent with a statement, never against it.',
+      'Rephrasing a yes/no question into a value question: "Is x > 0?" does not require finding x\'s exact size.',
+      'Ignoring the stem\'s domain constraints until the combine step — the integer/domain restrictions flip many answer keys.',
+      'Over-solving: burning 3+ minutes computing a value the question never asks for. Stop at uniqueness.',
+      'Miscounting "narrowed" as "resolved": a pair that leaves two possibilities is insufficient even if one option feels likelier.'
+    ],
+    examples: examplesFor([
+      { q: 'What is the value of x?\n(1) 3x + 2 = 17\n(2) x^2 = 25',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'A',
+        r: '(1) alone: 3x = 15, so x = 5 — exactly one value, sufficient. (2) alone: x^2 = 25 gives x = 5 or x = -5 — two values, not unique, insufficient. Answer A.' },
+      { q: 'Is n even?\n(1) n^2 = 36\n(2) n is divisible by 3',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'A',
+        r: '(1) alone: n = 6 or n = -6, and both are even — a definite YES, sufficient. (2) alone: n = 6 is even (YES) but n = 3 is odd (NO) — mixed, insufficient. Answer A.' },
+      { q: 'What is the value of x + y?\n(1) 3x + 3y = 27\n(2) 5x + 5y = 45',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'D',
+        r: '(1): divide by 3 → x + y = 9, sufficient alone. (2): divide by 5 → x + y = 9, sufficient alone. Each alone works — D.' },
+      { q: 'Is x > 0?\n(1) x^3 = 8\n(2) x^2 = 4',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'A',
+        r: '(1) alone: x^3 = 8 forces x = 2, which is greater than 0 — definite YES, sufficient. (2) alone: x = 2 (YES) or x = -2 (NO) — mixed, insufficient. Answer A.' },
+      { q: 'How many employees work for the firm?\n(1) 33 employees are marketing staff.\n(2) Marketing staff make up 55% of the firm.',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'C',
+        r: '(1) needs the total → insufficient. (2) needs the number of marketing staff → insufficient. Together: 33 = 0.55 × total, so total = 33/0.55 = 60 — one value. Neither alone, together sufficient — C.' },
+      { q: 'Is k > 10?\n(1) k is even\n(2) k < 5',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'B',
+        r: '(1) alone: k = 4 (NO) or k = 14 (YES) — mixed, insufficient. (2) alone: k < 5 guarantees k < 10, so k is NOT greater than 10 — a definite NO, sufficient. Answer B.' },
+      { q: 'What is the value of x?\n(1) x is a prime number.\n(2) x is an odd integer between 1 and 10.',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'E',
+        r: '(1) alone: primes are infinite — insufficient. (2) alone: odd integers between 1 and 10 are 3, 5, 7, 9 — four values, insufficient. Together: odd primes in that range are 3, 5, 7 — three values still. Not unique even together — E.' },
+      { q: 'Is x an integer?\n(1) x^2 is an integer.\n(2) x^3 is an integer.',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'C',
+        r: '(1) alone: x = sqrt(2) has x^2 = 2 but x is not an integer — insufficient. (2) alone: x = cubert(2) has x^3 = 2 but x is not an integer — insufficient. Together: x = x^3 / x^2 is a ratio of two integers, hence rational; write x = p/q in lowest terms, then x^2 = p^2/q^2 being an integer forces q = 1, so x is an integer — definite YES. Neither alone, together sufficient — C.' },
+      { q: 'If x and y are positive integers, is x divisible by y?\n(1) x = 2y\n(2) y = 6',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'A',
+        r: '(1) alone: x/y = 2y/y = 2, an integer, so x is divisible by y — definite YES, sufficient. (2) alone: y = 6 alone leaves x free — x = 12 (YES) or x = 13 (NO) — insufficient. Answer A.' }
+    ]),
+    check: [
+      { q: 'In Data Sufficiency, answer choice (A) means:', o: ['Statement (1) alone is sufficient', 'Statement (2) alone is sufficient', 'Together sufficient; neither alone', 'Each alone is sufficient', 'Not sufficient even together'], a: 0 },
+      { q: 'Answer choice (B) means:', o: ['Statement (1) alone is sufficient', 'Statement (2) alone is sufficient', 'Together sufficient; neither alone', 'Each alone is sufficient', 'Not sufficient even together'], a: 1 },
+      { q: 'Both statements are together sufficient, but neither alone is — select the letter:', o: ['A', 'B', 'C', 'D', 'E'], a: 2 },
+      { q: 'A statement that ALWAYS returns NO on a yes/no question is:', o: ['insufficient', 'sufficient', 'invalid', 'impossible', 'only sometimes sufficient'], a: 1 },
+      { q: 'What is the value of x?\n(1) x + 5 = 9\n(2) x^2 = 16 — select the letter:', o: ['A', 'B', 'C', 'D', 'E'], a: 0 }
+    ]
+  }),
 
-    topic('di-msr', 'Multi-Source Reasoning', 'dataInsights', 'intermediate', {
-      overview: [
-        'Multi-Source Reasoning (MSR) presents 2–3 tabs of information (emails, memos, tables, charts, reports) and asks you to reach conclusions using ONLY the supplied documents.',
-        'Some MSR items are multi-part, ending in two or three yes/no questions that are answered together — all must be correct for credit.',
-        'The skill is cross-referencing: reconcile dates, dollars, and conditions across documents and spot which document governs which clause of the question.',
-        'Watch the interplay of constraints — a deadline from one memo and a receipt rule from another combine to decide the outcome.'
-      ],
-      formulas: [
-        { term: 'Cross-reference', def: 'identify which tab each clause belongs to; check conflicts' },
-        { term: 'Conditionals', def: '\"must\", \"except\", \"provided that\" decide the boundary cases' },
-        { term: 'Consistency', def: 'discard facts that clash; keep those jointly supported' }
-      ],
-      strategies: [
-        'Skim all tabs first; then read the question and return to the tabs it names.',
-        'Underline numbers, dates, and conditions as you read — nearly every MSR question turns on one of them.',
-        'For multi-part items, answer each part using the SAME reading of the documents.',
-        'When a later document contradicts an earlier one, the later document governs unless the earlier one says otherwise.'
-      ],
-      traps: [
-        'Using outside knowledge instead of the documents.',
-        'Missing that a deadline or dollar threshold changes the answer completely.',
-        'Assuming the most recent memo overrides others in every case.',
-        'Reading a permissive rule as mandatory (or vice versa).'
-      ],
-      examples: examplesFor([
-        { q: 'Tab 1: expenses within 30 days; Tab 2: no receipt under $25. Item: $20 meal, submitted at day 35, no receipt. Outcome?',
-          o: ['accepted (no receipt needed)', 'rejected (past deadline)', 'accepted (cheap)', 'ask director', 'depends'],
-          a: 'B',
-          r: 'The $25 rule affects only the attachment; the 30-day deadline is independent and was breached.' },
-        { q: 'Tab A: warehouse capacity 5/wk; Tab B: holiday demand 6/wk for 4 wks. During the period:',
-          o: ['capacity sufficient', 'shortfall of 1/wk', 'shortfall of 2/wk', 'constant', 'over-supplied'],
-          a: 'B',
-          r: 'Demand 6 vs capacity 5 → shortfall of 1 unit per week.' },
-        { q: 'Memo A: "Budget approval covers the project." Memo B: "Approval expires if not used within 6 months." A project starts at month 7 with no new approval:',
-          o: ['covered by Memo A', 'expired — needs new approval', 'partially covered', 'grandfathered', 'unknown'],
-          a: 'B',
-          r: 'The date condition in Memo B is decisive: 6-month expiry means the month-7 start has no valid approval.' }
-      ]),
-      check: [
-        { q: 'MSR documents are:', o: ['optional context', 'all authoritative where they apply', 'decorative', 'unrelated', 'replaced by knowledge'], a: 1 },
-        { q: 'Conflicting documents → govern:', o: ['the older', 'the controlling/newer', 'neither', 'the shorter', 'the longer'], a: 1 },
-        { q: 'Dates, dollars, conditions are:', o: ['fluff', 'the kernels', 'distractions', 'optional', 'unused'], a: 1 },
-        { q: 'Should you use outside knowledge?', o: ['yes', 'no - only the tabs', 'sometimes', 'only in inference', 'always'], a: 1 },
-        { q: 'Multi-part MSR items require:', o: ['partial credit ok', 'all parts correct', 'one part', 'guessing', 'estimation'], a: 1 }
-      ]
-    }),
+  topic('di-msr', 'Multi-Source Reasoning', 'dataInsights', 'intermediate', {
+    overview: [
+      'Multi-Source Reasoning (MSR) presents two or three "tabs" of realistic documents — policy memos, finance emails, surveys, contracts — and every question must be answered from the documents alone. Outside knowledge about the world counts for nothing.',
+      'The interface: the tabs sit side by side while the question stays fixed, so you toggle between documents rather than scrolling a long passage. This is the exam\'s most reading-light, logic-dense item type: the words are short, but the connections between them are the test.',
+      'Many MSR items are multi-part: a scenario followed by two or three yes/no sub-questions that are graded as ONE block — every sub-answer must be correct for any credit. Never submit after answering only some of the parts.',
+      'Expect phrasing like "For each of the following, select Yes if the documents support it, No otherwise." The documents are engineered so that plausible-sounding alternatives are contradicted or merely unsupported; precise cross-referencing is the whole game.',
+      'The core skill is cross-referencing: which tab, which line, which clause governs a given claim. Nearly every MSR question turns on one number, one date, or one qualifying expression — "unless," "provided that," "except," "at most," "after the 25th."',
+      'Resolution rule: when a later document amends an earlier one, the LATEST controlling document governs — but only over the rules it actually touches. A follow-up email that raises a lodging cap does not change a flight-police rule.',
+      'Three recurring sub-formats: policy-and-case (apply a rule set to a concrete scenario), consistency checks (all tabs must hold simultaneously), and numeric reconciliation (a total, threshold, or schedule that must be derived from the tab figures). The numbers are deliberately clean — spreadsheet-style.',
+      'Workflow: first pass — skim every tab and underline every date, dollar, percentage, and modal verb. Second pass — read the question and locate the exact tab clause it engages before judging any option. Never synthesize or memorize; return to the tab line each time.',
+      'Banking seconds: MSR reads are short, so re-reading is cheap; what is expensive is wrong document attribution. For multi-part blocks, answer the sub-parts in one consistent reading pass and re-check the whole block together.',
+      'The hardest common twist is the simultaneous-constraint item: a scenario must satisfy clauses from TWO tabs at once — the memo\'s cap AND the email\'s deadline — and one candidate passes the first rule but trips the second. Students fixate on the tab with the louder numbers and skip the other tab entirely.'
+    ],
+    formulas: [
+      { term: 'Document precedence', def: 'The latest controlling document governs what it amends — and only that' },
+      { term: 'AND-of-tabs', def: 'A scenario is valid only if it satisfies every applicable clause of every tab' },
+      { term: 'Threshold test', def: 'Compare the scenario value against the tab\'s stated cap or floor before judging' },
+      { term: 'Modal audit', def: '"must/shall/never" = mandatory; "may/unless/except" = permissive or exception' },
+      { term: 'Cross-reference', def: 'Map each clause of the question stem to the tab and line that decides it' },
+      { term: 'Row-wise yes/no', def: 'Each row is an independent mini-test against the SAME rule set' },
+      { term: 'Block grading', def: 'All sub-answers correct for credit; a single outlier voids the whole item' },
+      { term: 'Contradiction rule', def: 'Conflicting documents — the later date wins for the overlapping content' },
+      { term: 'Unverifiable = No', def: 'A claim the tabs neither state nor imply counts as not-supported' },
+      { term: 'Scope test', def: 'A rule citing a department, region, or period binds only that scope' },
+      { term: 'Numeric reconciliation', def: 'Totals and thresholds must be derived from tab figures alone — never imported' }
+    ],
+    strategies: [
+      'Skim all tabs first and underline every date, dollar, percentage, and modal verb before reading the question.',
+      'Read the question, then classify which tab each clause belongs to; one tab is often a decoy for part of the claim.',
+      'For policy-and-case items, push the scenario through each applicable rule in sequence — first tab rule, then next tab rule.',
+      'When documents conflict, apply the most recent controlling document to the overlapping rule only.',
+      'In multi-part blocks, answer all sub-questions in one reading pass and re-check the block as a whole before moving on.',
+      'Modal words decide boundary cases: memorize the effect of "unless," "except," "must," and "provided that."',
+      'For yes/no rows, apply the identical rule set to every row; never let row 1\'s verdict leak into row 2.',
+      'Use the on-screen documents and never import real-world business norms about policy.',
+      'Hunt for the deliberate near-miss: a figure that clears one requirement but trips another.',
+      'If a case fails just one clause, stop — it is invalid regardless of how many later clauses it would pass.',
+      'When reconciling totals, add the line items and check the headline number rather than trusting it.',
+      'Manage time: MSR reads light but answers logical — read once with purpose, answer, and re-enter the tabs only as needed.'
+    ],
+    traps: [
+      'Backing a claim with general knowledge when the tabs say nothing (or the opposite).',
+      'Overseeing a second-tab constraint while a first tab\'s loud numbers dominate attention.',
+      'Assuming the newest memo rewrites everything — it rewrites only the rules it mentions.',
+      'Reading a permissive rule ("may") as mandatory ("must"), or vice versa.',
+      'Declaring a case compliant after passing one rule while a second rule also applies.',
+      'Missing the "except" phrase that inverts the rule for the flagged exception.',
+      'Treating an unverifiable claim as "probably yes" — no evidence in the tabs means No.',
+      'Forgetting that multi-part items grade as a block; one miss costs the entire item.',
+      'Mixing units or periods when figures come from different tabs (per day vs per week).',
+      'Confusing the scenario\'s dates with the policy\'s effective dates.',
+      'Concluding "cannot be decided" when the documents actually resolve the case — they usually DO decide.',
+      'Ignoring a qualification ("at most," "for domestic travel only") written into the tab text.'
+    ],
+    examples: examplesFor([
+      { q: 'Tab 1 — Q3 Finance memo: The Q3 marketing budget is $60,000. Allocations: online ads 40%, print 25%, events 20%, sponsorships 15%.\nQuestion: How many dollars are allocated to online ads in Q3?',
+        o: ['$18,000', '$22,000', '$24,000', '$26,000', '$30,000'],
+        a: 'C',
+        r: 'Tab 1 allocates 40% of $60,000 to online ads. 0.40 × 60,000 = 24,000 → $24,000. Answer C.' },
+      { q: 'Tab 1 — Q3 Finance memo: The Q3 marketing budget is $60,000. Allocations: online ads 40%, print 25%, events 20%, sponsorships 15%.\nTab 2 — Q4 Finance email: The Q4 budget is $20,000 higher than Q3. Online ads keep the same dollar amount as Q3; events rise to 30% of Q4; print falls to 15% of Q4.\nQuestion: Which statement is fully supported by the two tabs?',
+        o: ['Sponsorships receive the largest Q4 dollar allocation', 'Events receive the same Q4 dollars as online ads', 'Print receives $16,000 in Q4', 'Sponsorships receive 30% of Q4', 'Online ads receive more than $25,000 in Q4'],
+        a: 'B',
+        r: 'Q4 = 60,000 + 20,000 = 80,000. Online stays at 24,000 (30% of Q4). Events = 30% of 80,000 = 24,000. Print = 15% of 80,000 = 12,000. Sponsorships = 80,000 - 24,000 - 24,000 - 12,000 = 20,000 (25%). Only B holds: events (24,000) equal online ads (24,000).' },
+      { q: 'Tab 1 — Expense policy: purchases under $500 need only a manager\'s sign-off; purchases of $500 or more need the finance director\'s approval.\nTab 2 — Finance email: effective immediately, any order placed after the 25th of the month must also be approved by the CFO.\nQuestion: A $400 order placed on the 26th carries a manager\'s sign-off. Which approval is still missing?',
+        o: ['None — fully approved', 'The manager\'s sign-off', 'The finance director\'s approval', 'The CFO\'s approval', 'Both the finance director and the CFO'],
+        a: 'D',
+        r: 'Tab 1: $400 is under $500, so only the manager\'s sign-off is needed — present. Tab 2: placed on the 26th, after the 25th, so the CEO\'s CFO approval is additionally required — missing. Answer D.' },
+      { q: 'Tab 1 — Network memo: daily retail demand is 15 crates in the North and 10 crates in the South.\nTab 2 — Dispatch email: Alpha depot can ship at most 20 crates/day; Beta depot can ship at most 20 crates/day.\nProposal: Alpha ships 12 crates North and 6 crates South daily; Beta ships 3 crates North and 4 crates South daily.\nQuestion: Which statement is true about the proposal?',
+        o: ['Feasible — every demand and every capacity is met', 'Fails to meet North demand', 'Fails to meet South demand', 'Exceeds Alpha\'s capacity', 'Exceeds Beta\'s capacity'],
+        a: 'A',
+        r: 'North: 12 + 3 = 15 = demand. South: 6 + 4 = 10 = demand. Alpha: 12 + 6 = 18 ≤ 20. Beta: 3 + 4 = 7 ≤ 20. All demands and caps satisfied — feasible. Answer A.' },
+      { q: 'Tab 1 — Reimbursement policy: company-paid meals above $150 must include a receipt; taxi fares under $100 need no receipt; hotel nights always require a receipt.\nScenario: one report includes a $180 dinner (receipt attached), a $90 taxi ride (no receipt), and a $160 hotel night (receipt attached).\nQuestion: Which element violates the policy?',
+        o: ['Nothing violates the policy', 'The dinner — receipts are required above $150', 'The taxi — no receipt under $100', 'The hotel — stays under $200 are exempt', 'The dinner — only meals under $100 count'],
+        a: 'A',
+        r: 'Dinner $180 > $150, receipt present — OK. Taxi $90 < $100, no receipt needed — OK. Hotel $160, receipt attached as always required — OK. Nothing violates the policy. Answer A.' },
+      { q: 'Tab 1 — March memo: All project budgets are frozen at their February levels for the rest of the quarter.\nTab 2 — March 20 email: One-time add-ons up to $5,000 per project are allowed with the finance director\'s approval.\nQuestion: A project frozen at $40,000 requests a $4,000 add-on with director approval. What most accurately reflects the two documents?',
+        o: ['The add-on is barred by the freeze', 'The email lifts the freeze for add-ons up to $5,000, so the $4,000 add-on is allowed', 'The email lifts the freeze for all amounts', 'The freeze overrides everything, even approved add-ons', 'The request must exceed $5,000 to be valid'],
+        a: 'B',
+        r: 'The later email (March 20) amends the freeze specifically for add-ons capped at $5,000. The $4,000 add-on with director approval falls inside the allowance → allowed. Answer B.' },
+      { q: 'Tab 1 — Lodging policy: reimburse hotel nights at face value with a receipt; without a receipt, reimburse at the $120 cap.\nTab 2 — Finance email: effective July 1, the no-receipt cap rises to $150, and claims must be filed within 30 days of the stay.\nScenario: a traveler files a $140 hotel night (no receipt) for a stay that ended June 20; the claim is filed July 15 — 25 days after the stay.\nQuestion: What is the correct reimbursement for that night?',
+        o: ['$140', '$150', '$120', '$0 — rejected', '$100'],
+        a: 'C',
+        r: 'The stay ended before July 1, so the old $120 no-receipt cap applies. Filing date: July 15 minus June 20 = 25 days, within the 30-day window, so the claim is timely. $140 > $120 → reimbursement $120. Answer C.' },
+      { q: 'Tab 1 — Grant rules: travel grants fund domestic trips of at least 3 days; international trips need 8 or more days.\nTab 2 — Budget note: total grant budget is $9,000; the daily rate is $300 for domestic and $400 for international, applied to every full day.\nScenario: a domestic trip of 4 days applied for $1,400.\nQuestion: Which statement is fully supported?',
+        o: ['Approved — $1,200 is the correct grant', 'Approved — $1,400 as requested', 'Rejected — domestic trips need at least 3 days and 4 qualifies', 'Not fully supported — 4 days at $300 = $1,200, below the $1,400 request', 'Approved — $1,400 is within the $9,000 budget'],
+        a: 'D',
+        r: 'Tab 1: 4 days ≥ 3 days, so the trip qualifies. Tab 2: the correct grant is 4 × $300 = $1,200, which contradicts the $1,400 request. The request as stated is not supported by the documents. Answer D.' },
+      { q: 'Tab 1 — Vendor contract: suppliers must deliver within 10 business days of an order.\nTab 2 — Operations email: any order above $50,000 ships in two batches, and each batch separately counts against the 10-day window.\nScenario: a $60,000 order placed on a Monday; batch 1 arrived 9 business days later; batch 2 arrived 12 business days later.\nQuestion: Which statement correctly describes the vendor\'s performance?',
+        o: ['On time — only batch 1 counts', 'Late — batch 2 breached the 10-day window', 'On time — the $60,000 order needs one window', 'Late — even batch 1 breached the window', 'The two-batch rule does not apply'],
+        a: 'B',
+        r: 'Tab 2 splits orders above $50,000, and each batch must land within 10 business days. Batch 1 at day 9 is fine; batch 2 at day 12 breaches the window. The vendor is late. Answer B.' }
+    ]),
+    check: [
+      { q: 'MSR answers may only be based on:', o: ['General business knowledge', 'The tab documents', 'Practice-test experience', 'The question stem alone', 'Estimates from memory'], a: 1 },
+      { q: 'A later email that amends a memo governs:', o: ['Only the part it amends', 'Nothing at all', 'Every rule forever', 'Older rules exclusively', 'Whatever it touches, plus guesses'], a: 0 },
+      { q: 'On a yes/no MSR row, a claim the tabs do not support counts as:', o: ['Yes', 'No', 'Unclear', 'Both', 'Sometimes'], a: 1 },
+      { q: 'Policy: domestic trips need at least 3 days; the daily rate is $300. A 3-day domestic trip grants:', o: ['$600', '$900', '$1,200', '$1,500', '$300'], a: 1 },
+      { q: 'Multi-part MSR items award credit:', o: ['Per sub-part', 'Only for a fully correct block', 'For any single answer', 'Only on guesses', 'For two of three parts'], a: 1 }
+    ]
+  }),
 
-    topic('di-table', 'Table Analysis', 'dataInsights', 'intermediate', {
-      overview: [
-        'Table Analysis presents a sortable, filterable table of 5–10 rows. You answer an "either/or" style question — typically with binary (yes/no) checkboxes per row, or multi-select of true statements.',
-        'The tables reward quick arithmetic: percentages, rankings, and thresholds computed from two or more columns.',
-        'Because the tables are genuine data, read carefully: column units (thousands? millions?), row labels, and any "sorted by" hints.'
-      ],
-      formulas: [
-        { term: 'Share/percent', def: 'cell ÷ column total (or row total) × 100' },
-        { term: 'Ranking', def: 'sort rows by a metric; answer identify min/max/middle' },
-        { term: 'Satisfies rule', def: 'apply the stated threshold to each row' }
-      ],
-      strategies: [
-        'Compute one summary metric per row (share, margin, ratio) before comparing — do not eyeball raw numbers.',
-        'Read the question stem for the exact definition of the metric (e.g., \"profit margin = profit ÷ price\").',
-        'Reorder mentally (or with paper) rather than guessing from row order.',
-        'Answer each row\'s yes/no separately; each is a mini-decision.'
-      ],
-      traps: [
-        'Comparing different units across rows.',
-        'Applying the wrong definition of a margin or rate.',
-        'Forgetting to check which rows meet EVERY part of a compound rule.',
-        'Rounding too early in percent questions.'
-      ],
-      examples: examplesFor([
-        { q: 'Table rows give price & cost; \"margin = profit ÷ price.\" Highest margin?',
-          o: ['compute each', 'pick highest price', 'pick lowest cost', 'any row', 'average'],
-          a: 'A',
-          r: 'You must compute profit per row and divide by that row\'s price — raw prices are irrelevant.' },
-        { q: 'Rule: \"ship within 2 days if in stock and city; 5 days otherwise.\" Row in stock, out of town:',
-          o: ['2 days', '5 days', '1 day', 'varies', 'cannot tell'],
-          a: 'B',
-          r: 'Both conditions are required for the fast lane; the row fails one.' },
-        { q: 'Table rows list sales ($) and employees; metric = sales per employee. Which row is best on the metric?',
-          o: ['the highest total sales', 'the lowest headcount', 'compute division per row first', 'the largest margin', 'the first row'],
-          a: 'C',
-          r: 'You cannot compare on raw sales or headcount alone — divide each row\'s sales by its own employees before ranking.' }
-      ]),
-      check: [
-        { q: 'Read units carefully because of:', o: ['labels', 'decimals', 'thousands vs millions', 'ordering', 'colors'], a: 2 },
-        { q: 'Margin definition must come from:', o: ['assumption', 'the stem', 'the largest column', 'memory', 'the title'], a: 1 },
-        { q: 'For yes/no per row, decide:', o: ['one total', 'row by row', 'by guessing', 'only first', 'by font'], a: 1 },
-        { q: 'Before comparing rows, compute:', o: ['one summary metric', 'the sum', 'nothing', 'the label', 'the date'], a: 0 },
-        { q: 'Compound rules need every part:', o: ['optional', 'met', 'ignored', 'estimated', 'vague'], a: 1 }
-      ]
-    }),
+  topic('di-table', 'Table Analysis', 'dataInsights', 'intermediate', {
+    overview: [
+      'Table Analysis (TA) shows a sortable, filterable data table — typically five to ten rows with a handful of numeric columns — and asks you to draw a defensible conclusion from the numbers. It is the most computational of the DI types, and the arithmetic is deliberately clean.',
+      'Two recurring formats dominate: the either/or table, where each row carries a yes/no pull-down or an options column you complete row by row, and the single-conclusion question our course uses for practice — one table, one defensible answer among five.',
+      'Unlike MSR, the table IS the evidence: there are no hidden documents to reconcile, only columns to combine. Margins, shares, ratios, rankings, and threshold checks are computed from two or more columns, so column definitions are everything.',
+      'The header is the first lock: units (dollars vs thousands), the period, and any footnote set the scale of every cell. Misreading a "($ thousands)" header as plain dollars is the single most common error pattern in Table Analysis.',
+      'Reading workflow: lock the header, read the stem for the EXACT metric definition (for example, "margin = (revenue - expenses)/revenue"), then compute one summary metric per row before you compare rows. Answering from raw columns invites the wrong winner.',
+      'Sorting is the great helper: rank the rows by the metric in question and the answer becomes a min/max/middle read. The skill being tested is ranking and threshold application — not gymnastics with the calculator.',
+      'Banking seconds: compute per-row summary values once, in a consistent scratch column, and reuse them across the yes/no verdicts. Most table questions collapse to "which rows pass every clause of the rule?"',
+      'The hardest common twist is the compound rule: a row must satisfy EVERY part — profit above a floor AND margin above a bar — and one row clears the headline number but fails the second condition. Students who check only the first condition pick the decoy row every time.',
+      'Rounding discipline: percent questions punish early rounding. Compute the exact ratio, then convert; round only the final reported value. And re-read HIGHEST versus LOWEST, margin versus profit, and "at least" versus "at most" before locking your answer.'
+    ],
+    formulas: [
+      { term: 'Margin', def: '(revenue - expenses)/revenue x 100' },
+      { term: 'Per-unit metric', def: 'column value / count (profit per employee, sales per square foot)' },
+      { term: 'Share', def: 'cell / total x 100 — using the SAME base in every comparison' },
+      { term: 'Percent change', def: '(new - old)/old x 100 — old is always the base' },
+      { term: 'Threshold compare', def: 'cell value vs the stem\'s floor or cap → pass or fail per row' },
+      { term: 'Compound rule', def: 'every clause must pass; one failure eliminates the row' },
+      { term: 'Ranking', def: 'sort rows by the metric, then read the extreme or middle' },
+      { term: 'Header scale', def: '"($ thousands)" means the cell 90 represents $90,000' },
+      { term: 'Same-basis rule', def: 'never compare percentages or ratios built on different denominators' },
+      { term: 'Column arithmetic', def: 'totals add only within the same unit and period' },
+      { term: 'Inclusive bounds', def: '"at least"/"at most" include the boundary — equality passes' },
+      { term: 'Sort hint', def: 'use the table\'s sort/filter affordance instead of re-ranking everything manually' }
+    ],
+    strategies: [
+      'Read the header before the stem: units, period, and footnotes set the scale of every cell.',
+      'Quote the stem\'s metric definition verbatim; never assume the real-world meaning of "margin," "yield," or "rate."',
+      'Build a scratch summary column (margin, ratio, share) for every row before comparing anything.',
+      'For high/low questions, sort the rows by the metric in your head and read off the extreme.',
+      'Apply threshold rules row by row, and check EVERY clause of a compound rule for each row.',
+      'When a rule has two conditions, first mark rows that pass condition 1, then require condition 2 before finalizing.',
+      'Convert percentages to actual units early when a total is involved; never compare percentages of different bases.',
+      'Carry one or two decimals while working and round only the final reported value.',
+      'Distinguish "highest margin" from "highest profit" — different metrics routinely crown different rows.',
+      'Use column totals to sanity-check row claims: the rows must reconcile to the headline total.',
+      'For yes/no-per-row tables, treat each row as an independent decision against the identical rule set.',
+      'Watch the classic hunting pair: the row that wins on raw size often loses on the per-unit metric.'
+    ],
+    traps: [
+      'Treating a "($ thousands)" header as plain dollars — a 1,000x scale error.',
+      'Confusing profit (absolute amount) with margin (percentage) — the raw winner is often not the margin winner.',
+      'Using the wrong base in percent change: divide by the OLD value, not the new one.',
+      'Comparing rows on different bases (share of one row vs share of a column).',
+      'Checking only the first condition of a compound rule.',
+      'Rounding mid-computation and letting the error flip a near-threshold row.',
+      'Picking "largest revenue" when the stem asks for the best per-employee figure.',
+      'Mixing periods — adding June and July values into one total.',
+      'Reading "at most" as exclusive when equality is allowed.',
+      'Averaging rows to answer a total question.',
+      'Letting the table\'s row order mislead ranking questions — sort before judging.',
+      'Assuming the largest margin passes a yes/no rule check without testing the rule on each row.'
+    ],
+    examples: examplesFor([
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nQuestion: Margin = (revenue - expenses)/revenue. Which branch has the highest margin?',
+        o: ['Kilo (33.3%)', 'Lima (30%)', 'Mike (36%)', 'November (22.5%)', 'Kilo and Mike tie'],
+        a: 'C',
+        r: 'Kilo profit = 90,000 - 60,000 = 30,000 → 30,000/90,000 = 33.3%. Lima = 18,000/60,000 = 30%. Mike = 18,000/50,000 = 36%. November = 9,000/40,000 = 22.5%. Mike leads at 36%. Answer C.' },
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nQuestion: Profit per employee = (revenue - expenses)/employees. Which branch leads?',
+        o: ['Kilo', 'Lima', 'Mike', 'November', 'Mike and Kilo tie'],
+        a: 'A',
+        r: 'Kilo = 30,000/6 = $5,000. Lima = 18,000/9 = $2,000. Mike = 18,000/4 = $4,500. November = 9,000/5 = $1,800. Kilo leads at $5,000. Answer A.' },
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nQuestion: Margin = (revenue - expenses)/revenue. What is Lima\'s margin?',
+        o: ['20%', '25%', '30%', '33%', '36%'],
+        a: 'C',
+        r: 'Lima profit = 60,000 - 42,000 = 18,000. Margin = 18,000/60,000 = 0.30 = 30%. Answer C.' },
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nQuestion: Kilo\'s revenue is what percentage of the four branches\' total revenue?',
+        o: ['30%', '33.3%', '37.5%', '40%', '45%'],
+        a: 'C',
+        r: 'Total revenue = 90,000 + 60,000 + 50,000 + 40,000 = 240,000. Kilo share = 90,000/240,000 = 0.375 = 37.5%. Answer C.' },
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nRule: a branch must restock if profit is below $15,000 OR if margin is below 25%. Which branch must restock?',
+        o: ['Kilo', 'Lima', 'Mike', 'November', 'No branch restocks'],
+        a: 'D',
+        r: 'Kilo profit 30,000, margin 33.3% — no trigger. Lima profit 18,000, margin 30% — no. Mike profit 18,000, margin 36% — no. November profit 9,000 is below $15,000 (and its margin 22.5% is below 25%) — restock. Answer D.' },
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nRules: a branch earns bonus X if profit is at least $20,000, and bonus Y if profit per employee is at least $4,000. Which branch earns exactly one bonus?',
+        o: ['Kilo', 'Lima', 'Mike', 'November', 'None'],
+        a: 'C',
+        r: 'Kilo profit 30,000 ≥ 20,000 (X) and 5,000 ≥ 4,000 (Y) → both. Lima 18,000 (no X) and 2,000 (no Y) → none. Mike 18,000 (no X) but 4,500 ≥ 4,000 (Y) → exactly one. November 9,000 and 1,800 → none. Answer C.' },
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nQuestion: Expenses are at least 50% of revenue in how many branches?',
+        o: ['1', '2', '3', '4', 'None'],
+        a: 'D',
+        r: 'Kilo 60,000/90,000 = 66.7% ≥ 50%. Lima 42,000/60,000 = 70%. Mike 32,000/50,000 = 64%. November 31,000/40,000 = 77.5%. All four qualify. Answer D.' },
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nQuestion: If Mike\'s expenses had been 10% higher, what margin would Mike have shown?',
+        o: ['27.6%', '28.4%', '29.6%', '31.2%', '36.0%'],
+        a: 'C',
+        r: 'New expenses = 32,000 x 1.10 = 35,200. Profit = 50,000 - 35,200 = 14,800. Margin = 14,800/50,000 = 0.296 = 29.6%. Answer C.' },
+      { q: 'Table — branch figures (July):\nBranch | Revenue ($) | Expenses ($) | Employees\nKilo | 90,000 | 60,000 | 6\nLima | 60,000 | 42,000 | 9\nMike | 50,000 | 32,000 | 4\nNovember | 40,000 | 31,000 | 5\nQuestion: How much more profit did Kilo post than November?',
+        o: ['$12,000', '$18,000', '$21,000', '$23,000', '$30,000'],
+        a: 'C',
+        r: 'Kilo profit = 90,000 - 60,000 = 30,000. November profit = 40,000 - 31,000 = 9,000. Difference = 30,000 - 9,000 = $21,000. Answer C.' }
+    ]),
+    check: [
+      { q: 'From the July table, Kilo\'s margin (33.3%) corresponds to the ratio:', o: ['30/60', '30/90', '20/90', '18/90', '18/60'], a: 1 },
+      { q: 'Total revenue across the four branches (Kilo 90,000; Lima 60,000; Mike 50,000; November 40,000) is:', o: ['$210,000', '$220,000', '$230,000', '$240,000', '$250,000'], a: 3 },
+      { q: 'Which branch posts the LOWEST profit per employee?', o: ['Kilo', 'Lima', 'Mike', 'November', 'None'], a: 3 },
+      { q: 'A "($ thousands)" header means the cell reading 90 actually represents:', o: ['$90', '$900', '$90,000', '$900,000', '$9,000'], a: 2 },
+      { q: 'How many branches show a margin below 25%?', o: ['0', '1', '2', '3', '4'], a: 1 }
+    ]
+  }),
 
-    topic('di-graphics', 'Graphics Interpretation', 'dataInsights', 'intermediate', {
-      overview: [
-        'Graphics Interpretation replaces the questions with a scatterplot, bar chart, line graph, pie chart, or a statistical curve. Reading slopes, scales, and trends matters more than raw memorized formulas.',
-        'The GMAT Focus uses only clean, labeled charts. Expected tasks: read a value, compute a change or rate, compare shares, and (with statistical curves) apply mean/SD/percentile ideas.',
-        'For scatterplots, extract the trend: two well-spaced points give a slope; extrapolate along that trend for predictions, being aware the estimate weakens far from the data.',
-        'On bar/line charts, be careful about scale breaks and baseline zeros; for pie charts, percentages must sum to 100%.'
-      ],
-      formulas: [
-        { term: '% change from chart', def: '(new − old)/old × 100' },
-        { term: 'Share from pie', def: 'sector % × total' },
-        { term: 'Trend extrapolation', def: 'y_new ≈ y₁ + slope × Δx' },
-        { term: '±1 SD in normal curve', def: '≈68% within one SD; ±2 SD ≈95%' }
-      ],
-      strategies: [
-        'Convert every value to numbers on your scratch area BEFORE manipulating.',
-        'Identify the axes units first — a misread scale destroys an otherwise easy item.',
-        'For trend lines, prefer two data points that are far apart to estimate slope.',
-        'Percentages on pie charts: convert to absolute numbers when the total is given.'
-      ],
-      traps: [
-        'Confusing the axes (x vs y).',
-        'Reading the line vs. the gridline behind it.',
-        'Extrapolating far beyond the data range as if certain.',
-        'Using percentages of different bases in one comparison.'
-      ],
-      examples: examplesFor([
-        { q: 'Pie: 1,200 respondents; Online 55%, TV 25%, Print 15%, Radio 5%. TV − Radio = ?',
-          o: ['120', '240', '300', '360', '480'],
-          a: 'B',
-          r: 'TV = 25%×1200 = 300; Radio = 5%×1200 = 60; difference 240.' },
-        { q: 'Scatter: (10, 80) and (30, 120). Predicted y at 40?',
-          o: ['120', '130', '140', '150', '160'],
-          a: 'C',
-          r: 'Slope = 40/20 = 2 per unit; at x=30 y=120 → at 40, y = 140.' },
-        { q: 'Bar chart: Jan 40, Feb 55. "% increase from Jan to Feb"?',
-          o: ['15%', '20%', '27.5%', '37.5%', '50%'],
-          a: 'D',
-          r: 'Change = 15 on a base of 40 → 15/40 = 37.5%. The base for % increase is always the starting value.' }
-      ]),
-      check: [
-        { q: 'First read on any chart:', o: ['title only', 'axes and units', 'colors', 'the largest bar', 'the legend last'], a: 1 },
-        { q: 'Pie: sector 12% of 400 = ?', o: ['40', '48', '50', '60', '120'], a: 1 },
-        { q: '±1 SD holds about:', o: ['50%', '68%', '95%', '99%', '33%'], a: 1 },
-        { q: 'Trend estimates are:', o: ['exact', 'approximate', 'always wrong', 'irrelevant', 'fixed'], a: 1 },
-        { q: '% change from 50 to 60:', o: ['10%', '16.7%', '20%', '25%', '50%'], a: 2 }
-      ]
-    }),
+  topic('di-graphics', 'Graphics Interpretation', 'dataInsights', 'intermediate', {
+    overview: [
+      'Graphics Interpretation (GI) grounds the item in a displayed chart or graph — bar chart, line graph, scatterplot, histogram, or pie — and the data is the prop: reading values and computing with them is the task, not memorizing formulas.',
+      'On the GMAT Focus the figure is annotated, and the question asks for typed values or dropdown pairs. In our course each GI item is a single-correct choice computed from the chart\'s numbers, so the skill transfers directly: read, compute, compare, choose.',
+      'Axis discipline is the first move: name the axes — what is measured, in what units, on what scale. A bar axis that starts at 90 instead of 0 (a truncated baseline) makes tiny differences look enormous; read the labeled values, never the eyeballed heights.',
+      'Sub-formats: value reads (locate a bar or point), percent change between two periods, shares of a total (pie charts), trend extrapolation (scatter and line charts), and statistical applications (standard deviation bands on a normal curve).',
+      'Pie charts: the sector percentages always sum to 100, and converting a sector percent against the stated total yields absolute counts. This ratio conversion is the most routine GI algebra — drill it to automatic.',
+      'Scatterplots: two well-separated points define the trend line; slope = change in y divided by change in x, and a prediction slides along the line. Extrapolations weaken with distance from the plotted range, but the exam\'s clean figures usually want the straight-line value computed exactly.',
+      'Standard deviation is a spread measurement, not a location: for a normal distribution, about 68% of the data sits within one standard deviation of the mean and about 95% within two. Memorize both bands; GI rarely goes further.',
+      'Banking seconds: transcribe the needed values to scratch in consistent units (drop the "thousands"), then compute. Chart reading is fast; the arithmetic slips are the real time sink, so uniform scratch units protect you.',
+      'The hardest common twist is percent change in a DECLINE: when new is less than old, the base is still the old value and the change is (new - old)/old, expressed as a negative. Students who flip the base mis-state the decline badly — 90 to 60 is a 33.3% decline, not a 50% one.'
+    ],
+    formulas: [
+      { term: 'Percent change', def: '(new - old)/old x 100 — old is the base even for declines' },
+      { term: 'Pie sector count', def: 'sector% / 100 x total' },
+      { term: 'Pie check', def: 'all sector percentages sum to 100%' },
+      { term: 'Value read', def: 'follow the axis value at the bar top or plotted point, not the gridline behind it' },
+      { term: 'Trend slope', def: 'm = (y2 - y1)/(x2 - x1) computed from two far-apart points' },
+      { term: 'Extrapolation', def: 'predicted y = y1 + m x (x - x1) along the trend line' },
+      { term: 'Normal bands', def: 'about 68% within +/-1 SD; about 95% within +/-2 SD' },
+      { term: 'Truncated axis', def: 'a baseline cut at c makes heights show (value - c) — read the label, not the bar' },
+      { term: 'Units conversion', def: 'a chart in thousands multiplies the read value by 1,000' },
+      { term: 'Points vs percent', def: 'a move from 20% to 25% is 5 percentage points but a 25% relative rise' },
+      { term: 'Trend strength', def: 'the tighter the points hug the line, the more reliable the estimate' }
+    ],
+    strategies: [
+      'Name the axes and units first — a mis-scaled read destroys an otherwise easy item.',
+      'Transcribe the needed values to scratch in uniform units before any manipulation.',
+      'For percent change, always divide by the EARLIER value.',
+      'For pies, convert sector percentages to absolute counts with the stated total.',
+      'Read a scatter slope from the two points farthest apart for a stable estimate.',
+      'When a question asks for a predicted value, compute it from the trend line, not from a stray nearby point.',
+      'On bar charts verify the baseline includes zero; if not, use the labeled values, never the bar heights.',
+      'Keep the same unit on both sides of every ratio or rate you compute.',
+      'Fluency patterns: 40 to 60 is +50%, 60 to 90 is +50%, 90 to 60 is -33.3% — these recur constantly.',
+      'For SD and percentile items, place the target value relative to the mean in SD units before choosing a band.',
+      'Round once — at the end — matching the answer\'s precision.',
+      'Check the direction word (increase/decrease, above/below) before locking an answer.'
+    ],
+    traps: [
+      'Reading a bar\'s height on a truncated axis as though it started at zero.',
+      'Swapping old and new values in percent change — especially on declines.',
+      'Confusing the axes, or misreading the series legend.',
+      'Extrapolating far past the plotted range as if the estimate were certain.',
+      'Applying a pie\'s percentage to the wrong total (all respondents instead of a subgroup).',
+      'Mixing units — summing thousands with single units.',
+      'Reporting percentage-point moves as relative percent changes (and vice versa).',
+      'Forgetting that a decline can still be reported as a magnitude when the stem asks for "the decrease."',
+      'Reading the gridline behind a bar instead of the bar\'s top.',
+      'Placing the +/-1 SD band at 95%, or the +/-2 SD band at 68%.',
+      'Choosing a scatter answer from a global average instead of the local trend segment.',
+      'Assuming the biggest bar means the biggest share without checking the pie\'s chart total.'
+    ],
+    examples: examplesFor([
+      { q: 'Chart — quarterly app downloads (in thousands): Q1 40, Q2 60, Q3 90, Q4 60.\nQuestion: The percent increase in downloads from Q1 to Q2 is:',
+        o: ['25%', '40%', '50%', '60%', '100%'],
+        a: 'C',
+        r: 'Change = 60 - 40 = 20; base is the old value 40. 20/40 = 50%. Answer C.' },
+      { q: 'Chart — quarterly app downloads (in thousands): Q1 40, Q2 60, Q3 90, Q4 60.\nQuestion: The percent decline in downloads from Q3 to Q4 is:',
+        o: ['25%', '30%', '33.3%', '40%', '50%'],
+        a: 'C',
+        r: 'Change = 60 - 90 = -30; base is the old value 90. 30/90 = 33.3% decline. Answer C.' },
+      { q: 'Chart — quarterly app downloads (in thousands): Q1 40, Q2 60, Q3 90, Q4 60.\nQuestion: The mean of the four quarterly download figures is:',
+        o: ['57.5', '60.0', '62.5', '65.0', '70.0'],
+        a: 'C',
+        r: 'Sum = 40 + 60 + 90 + 60 = 250. Mean = 250/4 = 62.5. Answer C.' },
+      { q: 'Chart — quarterly app downloads (in thousands): Q1 40, Q2 60, Q3 90, Q4 60.\nQuestion: The median of the four quarterly download figures is:',
+        o: ['50', '55', '60', '65', '75'],
+        a: 'C',
+        r: 'Sorted: 40, 60, 60, 90. Even count → median is the average of the middle two: (60 + 60)/2 = 60. Answer C.' },
+      { q: 'Chart — Q4 device mix (total Q4 downloads = 60,000): Android 50%, iOS 37.5%, Tablets 12.5%.\nQuestion: How many Q4 downloads were on Android?',
+        o: ['25,000', '30,000', '33,750', '37,500', '45,000'],
+        a: 'B',
+        r: 'Android = 50% of 60,000 = 0.50 x 60,000 = 30,000. Answer B.' },
+      { q: 'Chart — Q4 device mix (total Q4 downloads = 60,000): Android 50%, iOS 37.5%, Tablets 12.5%.\nQuestion: How many Q4 downloads were on tablets?',
+        o: ['6,000', '6,750', '7,500', '7,875', '9,000'],
+        a: 'C',
+        r: 'Tablets = 12.5% of 60,000 = 0.125 x 60,000 = 7,500. Answer C.' },
+      { q: 'Scatter — fuel efficiency: a 2,000-lb car gets 40 mpg; a 3,000-lb car gets 30 mpg.\nQuestion: Under a linear trend through these two points, a 4,000-lb car is predicted to get:',
+        o: ['15', '20', '25', '30', '35'],
+        a: 'B',
+        r: 'Slope = (30 - 40)/(3,000 - 2,000) = -10/1,000 = -0.01 mpg per lb. At 4,000 lb: 40 - 0.01 x (4,000 - 2,000) = 40 - 20 = 20 mpg. Answer B.' },
+      { q: 'Bar chart — two widget sales figures with the axis running from 90 to 100 (no zero): Widget A 90, Widget B 100.\nQuestion: The actual percent increase from A to B is:',
+        o: ['0%', '10%', '11%', '100%', '1000%'],
+        a: 'C',
+        r: 'The truncated axis makes the bars look wildly different, but the labeled values give the truth: (100 - 90)/90 = 10/90 ≈ 11.1%. Answer C.' },
+      { q: 'Line graph — monthly shipments: Jan 50, Feb 60, Mar 72, Apr 60.\nQuestion: The overall percent change in shipments from Jan to Mar is:',
+        o: ['22%', '44%', '50%', '60%', '44.4%'],
+        a: 'B',
+        r: 'Use endpoints only: (72 - 50)/50 = 22/50 = 44%. The interim month figures do not affect the overall change. Answer B.' }
+    ]),
+    check: [
+      { q: 'If Q2 = 60 and Q3 = 90 (thousands), the percent increase Q2 to Q3 is:', o: ['30%', '40%', '50%', '60%', '90%'], a: 2 },
+      { q: 'Total downloads Q1 through Q4 (40, 60, 90, 60 thousands) =', o: ['220,000', '230,000', '240,000', '250,000', '260,000'], a: 3 },
+      { q: 'iOS drew 37.5% of the 60,000 Q4 downloads:', o: ['18,750', '22,500', '26,250', '28,500', '30,000'], a: 1 },
+      { q: 'When a bar chart\'s axis starts at 90 instead of 0, you should:', o: ['trust the bar heights', 'read the labeled value, not the height', 'discard the chart', 'double each value', 'assume the baseline is zero'], a: 1 },
+      { q: 'The percent decline from 90 to 60 is:', o: ['25%', '30%', '33.3%', '40%', '50%'], a: 2 }
+    ]
+  }),
 
-    topic('di-twopart', 'Two-Part Analysis', 'dataInsights', 'advanced', {
-      overview: [
-        'Two-Part Analysis gives one scenario and asks for two linked values (quant+quant, verbal+verbal, or mixed). You answer both columns together; partial credit is possible but both selections should be coherent.',
-        'Quant pairs are usually small systems: two unknowns, two conditions. Identify totals/constraints and solve, then place values in the correct column.',
-        'Verbal pairs ask for pairings like "best objection and best reply," or "most strengthens and most weakens." The two answers must be compatible in direction.',
-        'Test your chosen pair against BOTH conditions before locking in — a quick sanity check prevents careless column swaps.'
-      ],
-      formulas: [
-        { term: 'Two equations', def: 'x + y = T (total) and a·x + b·y = V (value)' },
-        { term: 'Column check', def: 'each selected value must satisfy every stated constraint' },
-        { term: 'Verbal pairing', def: 'the two parts must be mutually consistent' }
-      ],
-      strategies: [
-        'For quant pairs, write both equations down and solve; then plug back.',
-        'Restrict to the allowed list when solving — often only a few of the provided values work.',
-        'For verbal pairs, first choose the more distinctive column (e.g., the objection), then match its reply.',
-        'Never leave one column empty; treat both selections as one decision set.'
-      ],
-      traps: [
-        'Swapping the two answers between columns.',
-        'Satisfying one condition but not the other (e.g., correct total, wrong value sum).',
-        'Choosing a second answer that contradicts the first in verbal pairs.',
-        'Forgetting domain restrictions (whole numbers, positive amounts).'
-      ],
-      examples: examplesFor([
-        { q: 'Two-part: tickets $5 adult, $3 child; 40 tickets, $160 total. Adult and child?',
-          o: ['20 & 20', '30 & 10', '35 & 5', '25 & 15', '10 & 30'],
-          a: 'A',
-          r: 'a + c = 40; 5a + 3c = 160 → 5a + 3(40−a) = 160 → 2a = 40 → a = 20, c = 20. Check: 20×5 + 20×3 = 100+60 = 160 ✓.' },
-        { q: 'Two-part (verbal-ish): Which claim most strengthens X and which most weakens X?',
-          o: ['pick strongest/weakest pair consistently', 'same answer both', 'skip', 'two weakeners', 'reverse'],
-          a: 'A',
-          r: 'Select the best support for X and the strongest attack on X — the pair must be directionally correct.' },
-        { q: 'Two-part (quant): 2x + y = 10 and x − y = 2. Select x and y.',
-          o: ['x = 4, y = 2', 'x = 3, y = 4', 'x = 2, y = 6', 'x = 5, y = 0', 'x = 1, y = 8'],
-          a: 'A',
-          r: 'Add the equations: 3x = 12 → x = 4, then y = 10 − 2(4) = 2. Sanity check: 4 − 2 = 2 ✓.' }
-      ]),
-      check: [
-        { q: 'Adults 15, kids 25, prices 4 & 3. Total revenue?', o: ['125', '130', '135', '140', '150'], a: 2 },
-        { q: 'Both columns must together satisfy:', o: ['one condition', 'every condition', 'no condition', 'the total', 'just one'], a: 1 },
-        { q: 'Column swap is:', o: ['fine', 'a trap', 'optional', 'easier', 'rare'], a: 1 },
-        { q: 'Best objection & best reply =', o: ['compatible pair', 'same idea', 'unrelated', 'two objections', 'two replies'], a: 0 },
-        { q: 'Before submitting, always:', o: ['plug back in', 'skip', 'guess', 'shorten', 'reverse order'], a: 0 }
-      ]
-    })
-  ];
+  topic('di-twopart', 'Two-Part Analysis', 'dataInsights', 'advanced', {
+    overview: [
+      'Two-Part Analysis (TPA) presents ONE scenario and asks for TWO linked answers — a value pair (quant + quant), a logical pair (strengthen + weaken), or a mixed pair. The two selections form a single decision set; in our course the five options are complete candidate pairs.',
+      'On the real exam the scenario comes with a table of possible values and two labeled columns; you pick one entry for each column. In this course the options package both values together, and the correct pair is the one that satisfies both columns.',
+      'Quant pairs are almost always a tiny system: two unknowns and two conditions — a total (x + y = T) and a value equation (ax + by = V). Write both equations, substitute, solve, and plug the winner back to verify BOTH — this single check kills nearly every careless miss.',
+      'Verbal and analytical pairs (strongest/weakest, objection/reply) require directional consistency: the two choices must be logically compatible. Choosing a strong weakener where the stem asks for a strengthener is a common failure even when each option is individually plausible.',
+      'Column discipline is the quiet killer: "adult tickets" and "child tickets" each have a home. A pair that produces the correct totals but lands the values in the wrong columns is still wrong — mirror pairs are the favorite wrong-answer design.',
+      'Domain restrictions decide many cases up front: whole numbers, positive amounts, integer hours. A pair that satisfies the algebra but produces 48.5 tickets cannot be the answer — check the domain before you solve so you cancel candidate pairs immediately.',
+      'Workflow: read the scenario; name the two unknowns and the two conditions; solve the value equation (the one with coefficients) after substituting the total; restrict to the answer list; then sanity-check the chosen pair against every stated constraint.',
+      'Banking seconds: TPA options are often engineered around the TOTAL (several pairs sum to the same T), so the coefficient equation — not the total — discriminates. Solve the weighted equation first and the list usually collapses fast.',
+      'The hardest twist is the hidden third constraint in the wording — "4 times as many tickets as sponsorships," "Alpha holds 300 more than Beta" — which algebra alone does not enforce. Students who skip the plug-back land on a near-solution that satisfies the totals but violates the ratio or the difference.'
+    ],
+    formulas: [
+      { term: 'Two conditions', def: '(1) total x + y = T; (2) value ax + by = V' },
+      { term: 'Substitution solve', def: 'y = T - x into the value equation, then solve for x' },
+      { term: 'Plug-back', def: 'the chosen x and y must satisfy BOTH equations exactly' },
+      { term: 'Domain check', def: 'integers, positives, and whole units exclude half the candidates before solving' },
+      { term: 'Ratio tag', def: '"x is 4 times y" adds the constraint x = 4y' },
+      { term: 'Difference tag', def: '"Alpha holds 300 more than Beta" adds x - y = 300' },
+      { term: 'Column assignment', def: 'each solved value belongs to its labeled quantity — no swapping' },
+      { term: 'Verbal pair rule', def: 'the two picks must be mutually consistent in direction (support/attack)' },
+      { term: 'Answer-list restriction', def: 'intersect the solved values with the provided candidates' },
+      { term: 'Total-anchoring', def: 'when several options share a total, the coefficient equation decides' },
+      { term: 'Difference shortcut', def: 'with x + y and x - y known: x = (T + d)/2, y = (T - d)/2' },
+      { term: 'Both-columns rule', def: 'no column may stay blank; the two answers are one grading block' }
+    ],
+    strategies: [
+      'Name the unknowns and write the total equation before touching the value equation.',
+      'Prefer the higher-coefficient equation: adult $8, child $5 → 8a + 5c pins the counts much faster than the total does.',
+      'Plug the winning pair into both equations as a final three-second check.',
+      'When the stem adds a ratio ("4 times as many"), write it as its own equation and test every candidate against it.',
+      'Assign the solved values to their labels — adult vs child, Fund X vs Fund Y — before submitting.',
+      'For verbal pairs, fix the more distinctive column first (the objection), then match the reply to it.',
+      'Cancel candidates that violate integer, positive, or whole-unit constraints immediately.',
+      'When candidates share a total, let the coefficient equation discriminate between them.',
+      'For difference pairs, solve as x = (T + d)/2 and y = (T - d)/2, checking parity of T and d.',
+      'Re-read the two column labels after solving to catch a mirror-image swap.',
+      'Spend your saved time on the plug-back — a pair satisfying both equations is the answer.',
+      'If two candidates both fit the algebra, reread the stem: a hidden ratio, minimum, or subset condition is the tie-breaker.'
+    ],
+    traps: [
+      'Swapping the two values between columns after solving correctly.',
+      'Checking only the total — a near-solution can pass the total while failing the coefficient equation.',
+      'Dropping the domain check and "finding" a solution with non-integer or negative counts.',
+      'Forgetting a hidden ratio constraint that disqualifies the algebra-only winner.',
+      'Satisfying one equation but not the other.',
+      'In verbal pairs, choosing a strong weakener where a strengthener belongs.',
+      'Leaving one column blank because "the other determines it" — both columns are required.',
+      'Reading "children" where the column says "adults" and locking a mirror pair.',
+      'Inventing counts instead of using the provided candidate list.',
+      'Double-counting when the scenario overlaps categories (for example, tickets that are also funded passes).',
+      'Choosing a pair that fits the value equation but violates the total.',
+      'Rushing: TPA\'s time pressure invites more column-swap mistakes than any other DI type.'
+    ],
+    examples: examplesFor([
+      { q: 'Admission: adult tickets are $8 and child tickets are $5. A show sold 60 tickets for $375 in total.\nSelect: Column 1 — adult tickets; Column 2 — child tickets.',
+        o: ['25 adult & 35 child', '30 adult & 30 child', '35 adult & 25 child', '20 adult & 40 child', '40 adult & 20 child'],
+        a: 'A',
+        r: 'a + c = 60; 8a + 5c = 375 → 8a + 5(60 - a) = 375 → 3a = 75 → a = 25, c = 35. Check: 25 x 8 = 200; 35 x 5 = 175; 200 + 175 = 375. Answer A.' },
+      { q: 'An investor splits $10,000 between Fund X (3% annual) and Fund Y (7% annual), earning $380 in one year.\nSelect: Column 1 — Fund X; Column 2 — Fund Y.',
+        o: ['Fund X $8,000 & Fund Y $2,000', 'Fund X $6,000 & Fund Y $4,000', 'Fund X $7,000 & Fund Y $3,000', 'Fund X $5,000 & Fund Y $5,000', 'Fund X $9,000 & Fund Y $1,000'],
+        a: 'A',
+        r: 'x + y = 10,000; 0.03x + 0.07y = 380 → 3x + 7(10,000 - x) = 38,000 → 70,000 - 4x = 38,000 → x = 8,000, y = 2,000. Check: 0.03 x 8,000 = 240; 0.07 x 2,000 = 140; total 380. Answer A.' },
+      { q: 'A team of 8 people averaged 78 in round 1 and 84 in round 2.\nSelect: Column 1 — total round-1 score; Column 2 — total improvement from round 1 to round 2.',
+        o: ['624 & 48', '640 & 48', '624 & 64', '600 & 48', '648 & 24'],
+        a: 'A',
+        r: 'Round-1 total = 78 x 8 = 624. Improvement = 84 - 78 = 6 per person → 8 x 6 = 48. Check: 84 x 8 = 672 = 624 + 48. Answer A.' },
+      { q: 'A conference of 200 attendees: 60% registered early at a $300 fee; the rest paid $350 at the door.\nSelect: Column 1 — door-paying attendees; Column 2 — total fees collected.',
+        o: ['80 doors & $64,000', '120 doors & $64,000', '80 doors & $70,000', '100 doors & $65,000', '120 doors & $78,000'],
+        a: 'A',
+        r: 'Early = 60% of 200 = 120; door = 80. Fees = 120 x 300 + 80 x 350 = 36,000 + 28,000 = 64,000. Check: door count 80 matches 200 - 120. Answer A.' },
+      { q: 'Two warehouses hold 900 crates in total, and Alpha holds 300 more crates than Beta.\nSelect: Column 1 — Alpha; Column 2 — Beta.',
+        o: ['600 & 300', '500 & 400', '650 & 250', '700 & 200', '550 & 350'],
+        a: 'A',
+        r: 'a + b = 900; a - b = 300 → a = (900 + 300)/2 = 600; b = (900 - 300)/2 = 300. Check: sum 900, difference 300. Answer A.' },
+      { q: 'A CEO claims prolonged hiring freezes raise productivity. A CFO counters that freezes lower morale.\nSelect: Column 1 — the statement that most strengthens the CEO; Column 2 — the statement that most weakens the CFO.',
+        o: ['(Productivity rose 12% at frozen divisions) & (Morale held steady at frozen divisions)', '(Productivity rose 12%) & (Productivity rose there too)', '(Morale fell) & (Hiring resumed)', '(Turnover spiked) & (Productivity rose)', '(Productivity rose 12%) & (Salaries were unchanged)'],
+        a: 'A',
+        r: 'Column 1 needs direct productivity evidence (the CEO\'s claim), and Column 2 needs evidence contradicting the CFO\'s morale claim. Option A supplies both: productivity rose at frozen divisions and morale there held steady. Every other option fails one column — B and E offer no morale evidence, and C and D offer no productivity support. Answer A.' },
+      { q: 'A festival sells adult passes at $15 and student passes at $9, taking $1,320 from 120 passes.\nSelect: Column 1 — adult passes; Column 2 — student passes.',
+        o: ['40 & 80', '50 & 70', '45 & 75', '55 & 65', '35 & 85'],
+        a: 'A',
+        r: 'a + c = 120; 15a + 9c = 1,320 → 15a + 9(120 - a) = 1,320 → 6a = 240 → a = 40, c = 80. Check: 40 x 15 = 600; 80 x 9 = 720; sum 1,320. Answer A.' },
+      { q: 'A fundraiser sold $125 tickets and $750 sponsorships, collecting $50,000. The number of tickets was 4 times the number of sponsorships.\nSelect: Column 1 — tickets; Column 2 — sponsorships.',
+        o: ['160 & 40', '140 & 35', '120 & 40', '160 & 32', '150 & 50'],
+        a: 'A',
+        r: 't = 4s; 125t + 750s = 50,000 → 125(4s) + 750s = 50,000 → 500s + 750s = 50,000 → s = 40, t = 160. Check: 160 x 125 = 20,000; 40 x 750 = 30,000; total 50,000; 160 = 4 x 40. Answer A.' },
+      { q: 'Two cargo planes together carry 240 boxes, and the heavier jet carries 40 more boxes than the lighter one.\nSelect: Column 1 — heavier jet; Column 2 — lighter jet.',
+        o: ['140 & 100', '130 & 110', '150 & 90', '160 & 80', '140 & 120'],
+        a: 'A',
+        r: 'h + l = 240; h - l = 40 → h = (240 + 40)/2 = 140; l = (240 - 40)/2 = 100. Check: sum 240, difference 40. Answer A.' }
+    ]),
+    check: [
+      { q: 'Items priced $6 and $4; 100 items sold for $560. Column 1 — six-dollar items; Column 2 — four-dollar items:', o: ['80 & 20', '70 & 30', '60 & 40', '50 & 50', '90 & 10'], a: 0 },
+      { q: 'In Two-Part Analysis, the two selected values must:', o: ['each satisfy only one condition', 'jointly satisfy every stated condition', 'be equal whenever possible', 'come from different lists', 'sum to the largest option'], a: 1 },
+      { q: 'Swapping the two selected answers between columns is:', o: ['harmless', 'a classic trap', 'optional', 'only wrong in verbal items', 'allowed if the totals match'], a: 1 },
+      { q: 'If ticket count is 4 times sponsorship count, then 100 tickets implies sponsorships of:', o: ['20', '25', '30', '40', '50'], a: 1 },
+      { q: 'Given x + y = 240 and x - y = 40, the efficient formula for x is:', o: ['x = (240 + 40)/2', 'x = 40/2', 'x + y is enough', 'infinite solutions', 'x = (240 - 40)/2'], a: 0 }
+    ]
+  })
+];
 
-  /* ================================================================
+  /* ================================================================================================================================
      Aggregation & helpers
      ================================================================ */
   const sections = [
