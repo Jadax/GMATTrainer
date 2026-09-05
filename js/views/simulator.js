@@ -77,7 +77,7 @@ function renderSimulatorHub(el) {
       <button class="mode-card" onclick="simStartFull()">
         <span class="mode-icon">🏁</span>
         <span class="mode-title">Full Exam</span>
-        <span class="mode-desc">64 questions · 2h 15m · all three sections, in order, with breaks.</span>
+        <span class="mode-desc">64 questions · 2h 15m · all three sections with breaks. You choose the section order.</span>
       </button>
       <button class="mode-card" onclick="simStart('quant')">
         <span class="mode-icon">🔢</span>
@@ -158,13 +158,52 @@ function buildSimSection(key) {
 }
 
 function simStartFull() {
+  const modal = openModal(`
+    <h3 style="margin-top:0">Choose your section order</h3>
+    <p class="text-muted">The GMAT Focus lets you pick the order of its three 45-minute sections. Sports-science tip: bank your strongest section first for confidence, and put the section that drains you in the middle, not last.</p>
+    <div class="field">
+      <label>1st section</label>
+      <select id="ord0">
+        <option value="quant">🔢 Quantitative · 21 questions</option>
+        <option value="verbal">📖 Verbal · 23 questions</option>
+        <option value="dataInsights">📊 Data Insights · 20 questions</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>2nd section</label>
+      <select id="ord1">
+        <option value="verbal">📖 Verbal · 23 questions</option>
+        <option value="quant">🔢 Quantitative · 21 questions</option>
+        <option value="dataInsights">📊 Data Insights · 20 questions</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>3rd section</label>
+      <select id="ord2">
+        <option value="dataInsights">📊 Data Insights · 20 questions</option>
+        <option value="quant">🔢 Quantitative · 21 questions</option>
+        <option value="verbal">📖 Verbal · 23 questions</option>
+      </select>
+    </div>
+    <div class="row">
+      <button class="btn btn-primary" id="startFullBtn">Start Exam →</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>`);
+  modal.querySelector('#startFullBtn').addEventListener('click', function () {
+    const a = modal.querySelector('#ord0').value;
+    const b = modal.querySelector('#ord1').value;
+    const c = modal.querySelector('#ord2').value;
+    if (new Set([a, b, c]).size !== 3) { closeModal(); toast('Pick three different sections.', 'error'); return; }
+    closeModal();
+    simStartFullOrder([a, b, c]);
+  });
+}
+
+function simStartFullOrder(order) {
   sim = {
     mode: 'full',
-    sections: [
-      buildSimSection('quant'),
-      buildSimSection('verbal'),
-      buildSimSection('dataInsights')
-    ],
+    order: order,
+    sections: order.map(buildSimSection),
     sectionIdx: 0,
     qIdx: 0,
     phase: 'question', // question | review | intermission | done
@@ -268,6 +307,7 @@ function renderQuestion(el) {
       this.classList.add('selected');
       const cb = el.querySelector('#changesBadge');
       if (cb) cb.textContent = 'Changes left: ' + sec.changesLeft;
+      playSound('type');
       simSave();
     });
   });
@@ -308,6 +348,7 @@ function startSimTimer(el, remaining) {
   Timer.start(Math.max(0, remaining), tick, () => {
     const sec = sim.sections[sim.sectionIdx];
     sec.elapsed = sec.timeAllowed;
+    playSound('timeup');
     simSave();
     simGoReview(true);
   });
@@ -431,6 +472,7 @@ function simSubmitSection() {
   // advance
   if (sim.mode === 'full' && sim.sectionIdx < sim.sections.length - 1) {
     sim.phase = 'intermission';
+    playSound('done');
     render();
   } else {
     simFinish();

@@ -1085,3 +1085,119 @@ a.lesson-nav-card:hover { border-color: var(--color-secondary); box-shadow: var(
   .lesson-header h1 { font-size: 1.6rem; }
   .lesson-nav { flex-direction: column; }
 }
+
+/* =====================================================================
+   v1.4.0 Study UX additions: phase banner, pacing, meta tags, hints,
+   keyboard hints, focused modules.
+   ===================================================================== */
+
+/* Study-phase banner */
+.study-phase-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: linear-gradient(120deg, rgba(13,71,161,0.06), rgba(255,111,0,0.05));
+  margin-bottom: 1.5rem;
+}
+.phase-badge {
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  white-space: nowrap;
+}
+.phase-info { flex: 1; min-width: 220px; }
+.phase-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); font-weight: 800; }
+.phase-desc { font-size: 0.95rem; line-height: 1.4; }
+.phase-progress-wrap {
+  flex: 1; min-width: 160px; height: 8px; border-radius: 999px;
+  background: var(--color-border); overflow: hidden;
+}
+.phase-progress-bar { height: 100%; background: linear-gradient(90deg, var(--color-primary), var(--color-accent)); border-radius: 999px; transition: width .4s ease; }
+.phase-next { font-size: 0.8rem; color: var(--color-muted); max-width: 260px; }
+
+/* Pace feedback rows/chips */
+.pace-target-chip { line-height: 1.4; }
+.pace-row {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .4rem .6rem; border-radius: 8px; margin-bottom: .3rem;
+  font-size: .88rem; background: var(--color-card);
+}
+.pace-sec { width: 70px; font-weight: 700; }
+.pace-verdict { margin-left: auto; font-weight: 700; font-size: .8rem; }
+.pace-fast { border-left: 3px solid var(--color-accent); }
+.pace-fast .pace-verdict { color: var(--color-accent); }
+.pace-slow { border-left: 3px solid var(--color-danger); }
+.pace-slow .pace-verdict { color: var(--color-danger); }
+.pace-ok { border-left: 3px solid var(--color-success); }
+.pace-ok .pace-verdict { color: var(--color-success); }
+.pace-line { margin: .5rem 0; font-size: .85rem; color: var(--color-muted); }
+
+/* Post-answer meta tag rows */
+.meta-tag-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem;
+  margin: .7rem 0; padding: .6rem 0; border-top: 1px dashed var(--color-border);
+}
+.meta-label { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--color-muted); min-width: 96px; }
+.meta-btn {
+  border: 1px solid var(--color-border); background: var(--color-card);
+  border-radius: 999px; padding: .35rem .8rem; font-size: .85rem; cursor: pointer;
+  color: var(--color-text); transition: all .15s ease;
+}
+.meta-btn:hover { border-color: var(--color-secondary); }
+.meta-btn.active { background: var(--color-secondary); color: #fff; border-color: var(--color-secondary); }
+.mt-careless.active { background: #F9A825; border-color: #F9A825; color: #212121; }
+.mt-conceptual.active { background: #3949AB; border-color: #3949AB; color: #fff; }
+.mt-timing.active { background: #E53935; border-color: #E53935; color: #fff; }
+.mt-misread.active { background: #7B1FA2; border-color: #7B1FA2; color: #fff; }
+
+/* Note row */
+.note-row { display: flex; flex-direction: column; gap: .5rem; margin: .7rem 0; }
+.note-row textarea {
+  width: 100%; resize: vertical; min-height: 52px;
+  border: 1px solid var(--color-border); border-radius: 8px;
+  padding: .6rem .75rem; font: inherit; font-size: .9rem; color: var(--color-text); background: var(--color-card);
+}
+
+/* Hint panel */
+.hint-panel {
+  margin: .8rem 0; padding: .8rem 1rem; border-radius: 10px;
+  background: rgba(255, 193, 7, 0.12); border: 1px dashed var(--color-accent);
+  display: flex; gap: .6rem; align-items: flex-start;
+  animation: fadeIn .2s ease;
+}
+.hint-icon { font-size: 1.1rem; }
+.hint-text { font-size: .95rem; line-height: 1.5; flex: 1; }
+.verdict-row { font-size: 1.05rem; font-weight: 700; }
+.explanation-body { margin-top: .5rem; line-height: 1.55; }
+.practice-actions-row {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .9rem;
+}
+.kbd-hint { font-size: .75rem; color: var(--color-muted); }
+.kbd-hint kbd {
+  background: var(--color-card); border: 1px solid var(--color-border); border-bottom-width: 2px;
+  border-radius: 4px; padding: 0 .35rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72rem;
+}
+
+/* Feedback bottom action row */
+.feedback-actions { gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
+.feedback-actions .btn { margin: 0; }
+.flagged-active { background: rgba(197, 48, 48, 0.15); }
+
+/* Focused modules from dashboard */
+.fs-large { font-size: 1.15rem; }
+.mt-2 { margin-top: .5rem; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+
+/* v1.4.0 touch targets + question readability */
+.option, .opt { min-height: 44px; padding: .65rem .85rem; font-size: 1.02rem; }
+.question-text { font-size: 1.12rem; line-height: 1.5; }
+.passage-text, .clue-box { font-size: 1.02rem; }
+.feedback-actions .btn, .mode-card .btn, .question-topbar .btn { min-height: 40px; }

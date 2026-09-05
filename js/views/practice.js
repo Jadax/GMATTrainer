@@ -72,6 +72,21 @@ function composeQuestions(config) {
   } else if (config.mode === 'flagged') {
     const ids = new Set(loadState().practice.flagged);
     pool = qb.all.filter(q => ids.has(q.id));
+  } else if (config.mode === 'due') {
+    const dueIds = new Set(questionDueIds());
+    pool = qb.all.filter(q => dueIds.has(q.id));
+  } else if (config.mode === 'weak') {
+    // two lowest-accuracy topics that you have actually attempted
+    const st = loadState();
+    const topics = ['arithmetic', 'algebra', 'wordproblems', 'numbers', 'stats', 'rc', 'cr', 'ds', 'ms', 'ta', 'gi', 'tp'];
+    const acc = {};
+    topics.forEach(t => {
+      const d = st.stats.byTopic[t];
+      if (d && d.attempts >= 3) acc[t] = d.correct / d.attempts;
+    });
+    const ranked = Object.keys(acc).sort((a, b) => acc[a] - acc[b]);
+    const weakest = ranked.slice(0, 2);
+    pool = weakest.length ? qb.all.filter(q => weakest.indexOf(q.topic) >= 0).slice(0, 12) : qb.all.slice();
   } else if (config.mode === 'diagnostic') {
     // 1 quant + 1 verbal + 1 DI worth of a quick baseline: 9 questions
     pool = sample(qb.quant, 3).concat(sample(qb.verbal, 3), sample(qb.dataInsights, 3));
@@ -114,6 +129,8 @@ function renderPracticeHub(el) {
   const st = loadState();
   const errCount = st.practice.errorLog.length;
   const flagCount = st.practice.flagged.length;
+  const dueCount = questionDueCount();
+  const phase = studyPhase();
 
   const availableTopics = curriculum.sections.map(s => ({
     key: s.key,
@@ -128,6 +145,18 @@ function renderPracticeHub(el) {
       <p class="text-muted">Solidify your skills with realistic GMAT Focus questions, topic by topic.</p>
     </div>
 
+    <div class="study-phase-banner">
+      <div class="phase-badge">${phase.icon} ${phase.title}</div>
+      <div class="phase-info">
+        <div class="phase-label">Where you are now</div>
+        <div class="phase-desc">${esc(phase.desc)}</div>
+      </div>
+      <div class="phase-progress-wrap" title="${esc(phase.next)}">
+        <div class="phase-progress-bar" style="width:${Math.max(4, phase.pct)}%"></div>
+      </div>
+      <div class="phase-next">${esc(phase.next)}</div>
+    </div>
+
     <h2 class="section-title">Quick Start</h2>
     <div class="mode-grid">
       <button class="mode-card" onclick="startQuick()">
@@ -139,6 +168,16 @@ function renderPracticeHub(el) {
         <span class="mode-icon">🩺</span>
         <span class="mode-title">Diagnostic (9Q)</span>
         <span class="mode-desc">3-quant / 3-verbal / 3-DI baseline. See where you stand.</span>
+      </button>
+      <button class="mode-card" onclick="startDue()">
+        <span class="mode-icon">🔁</span>
+        <span class="mode-title">Spaced Review ${dueCount ? `<span class="badge badge-primary">${dueCount}</span>` : ''}</span>
+        <span class="mode-desc">Questions due today from your spaced-repetition schedule. 1→3→7→14→30 day intervals.</span>
+      </button>
+      <button class="mode-card" onclick="startWeak()">
+        <span class="mode-icon">🎯</span>
+        <span class="mode-title">Weak Areas</span>
+        <span class="mode-desc">Your two lowest-accuracy topics. Drilling these moves your score fastest.</span>
       </button>
       <button class="mode-card" onclick="location.hash='#/practice/error'">
         <span class="mode-icon">🔍</span>
@@ -251,6 +290,16 @@ function startQuick() {
 function startDiagnostic() {
   beginSession({ mode: 'diagnostic', difficulty: 'any', count: 9, perQSeconds: 0 });
 }
+function startDue() {
+  beginSession({ mode: 'due', difficulty: 'any', count: 0, perQSeconds: 0 });
+}
+function startWeak() {
+  beginSession({ mode: 'weak', difficulty: 'any', count: 0, perQSeconds: 0 });
+}
+/** Focused drill: same topic at a specific difficulty (post-answer action). */
+function startFocused(topicId, difficulty) {
+  beginSession({ mode: 'topic', topic: topicId, difficulty: difficulty || 'any', count: 5, perQSeconds: 0 });
+}
 function startCustom() {
   const diff = document.getElementById('cfDiff').value;
   const fmt = document.getElementById('cfFormat').value;
@@ -278,6 +327,7 @@ function renderPracticeSession(el) {
   const qn = ps.idx + 1;
   const total = ps.questions.length;
   const mode = ps.config && ps.config.mode;
+  const paceTarget = paceTargetFor(current);
 
   let passageHtml = '';
   if (current.passage) {
@@ -294,10 +344,11 @@ function renderPracticeSession(el) {
           <span class="badge badge-secondary">Question ${qn}/${total}</span>
           <span class="badge ${difficultyClass(current.difficulty)}">${difficultyLabel(current.difficulty)}</span>
           <span class="badge badge-ghost">${topicTagName(current.topic)}</span>
+          <span class="badge badge-ghost pace-target-chip" title="Recommended time for this question">⏱ ~${fmtShort(paceTarget)}</span>
         </div>
         <div class="row" style="align-items:center;gap:.75rem">
           ${ps.config && ps.config.perQSeconds ? `<span class="timer-display" id="qTimer">${fmtClockForTimer(ps.config.perQSeconds)}</span>` : `<span class="timer-display" id="qTimer">${fmtClockForTimer(0)}</span>`}
-          <button class="btn btn-sm btn-ghost ${isFlagged(current.id) ? 'flagged-active' : ''}" id="flagBtn" title="Flag for later review">🚩</button>
+          <button class="btn btn-sm btn-ghost ${isFlagged(current.id) ? 'flagged-active' : ''}" id="flagBtn" title="Flag for later review (F)">🚩</button>
           <button class="btn btn-sm btn-outline" onclick="quitSession()">Exit</button>
         </div>
       </div>
@@ -313,6 +364,12 @@ function renderPracticeSession(el) {
             <span>${esc(o)}</span>
           </button>`).join('')}
       </div>
+
+      <div class="practice-actions-row">
+        ${current.hint ? `<button class="btn btn-sm btn-ghost" id="hintBtn" title="Show a nudge (H)">💡 Hint</button>` : ''}
+        <span class="kbd-hint">1–5 select · Enter next · N next · S skip · F flag ${current.hint ? '· H hint' : ''} · ? help</span>
+      </div>
+      <div id="hintPanel" style="display:none" class="hint-panel"></div>
 
       <div id="feedback" style="display:none"></div>
     </div>`;
@@ -360,15 +417,62 @@ function renderPracticeSession(el) {
 
   // Answer selection (single selection - click to commit)
   const optionsBox = el.querySelector('#options');
-  let answered = false;
   optionsBox.querySelectorAll('.option').forEach(btn => {
     btn.addEventListener('click', function () {
-      if (answered) return;
+      if (ps.answers && ps.answers[ps.idx]) return;
       const oi = +this.getAttribute('data-o');
       submitAnswer(oi, false);
     });
   });
+
+  // Hint reveal (graded — never spoils the answer letter)
+  const hintBtn = el.querySelector('#hintBtn');
+  if (hintBtn) {
+    hintBtn.addEventListener('click', revealHint);
+  }
+  function revealHint() {
+    if (ps.answers && ps.answers[ps.idx]) return;
+    ps._hintUsed = true;
+    playSound('select');
+    const panel = el.querySelector('#hintPanel');
+    panel.style.display = 'block';
+    panel.innerHTML = `<div class="hint-icon">💡</div>
+      <div class="hint-text">${esc(current.hint)}</div>
+      <button class="btn btn-sm btn-ghost" type="button" onclick="document.getElementById('hintPanel').style.display='none'">Hide</button>`;
+  }
+
+  // Keyboard shortcuts (1-5 / A-E select, Enter/next, N next, S skip, F flag, H hint)
+  const onKey = (e) => {
+    if (!ps) return;
+    const qAnswered = !!(ps.answers && ps.answers[ps.idx]);
+    const k = e.key.toLowerCase();
+    if (k === 'enter') {
+      e.preventDefault();
+      if (qAnswered) { nextQuestion(); }
+      return;
+    }
+    if (k === 'n') { e.preventDefault(); if (qAnswered) nextQuestion(); return; }
+    if (k === 's') { e.preventDefault(); skipQuestion(); return; }
+    if (k === 'f') { e.preventDefault(); const fb = el.querySelector('#flagBtn'); if (fb) fb.click(); return; }
+    if (k === 'h') { e.preventDefault(); if (hintBtn && !qAnswered) revealHint(); return; }
+    if (k === '?') {
+      e.preventDefault();
+      toast('1–5 / A–E select · Enter or N next · S skip · F flag · H hint', 'info');
+      return;
+    }
+    if (!qAnswered && /^[1-5a-e]$/.test(k)) {
+      const idx = /^[a-e]$/.test(k) ? k.charCodeAt(0) - 97 : +k - 1;
+      const t = el.querySelector('#options .option[data-o="' + idx + '"]');
+      if (t) { playSound('type'); t.classList.add('selected'); t.click(); }
+    }
+  };
+  __kbdHandler = onKey;
 }
+
+let __kbdHandler = null;
+document.addEventListener('keydown', function (e) {
+  if (__kbdHandler) __kbdHandler(e);
+});
 
 function isFlagged(id) {
   return loadState().practice.flagged.includes(id);
@@ -379,18 +483,20 @@ function submitAnswer(chosen, timedOut) {
   const q = ps.questions[ps.idx];
   const secs = Math.round((Date.now() - ps.thinkStart) / 1000);
   const correct = !timedOut && chosen === q.correct;
+  const hintUsed = !!(ps._hintUsed || false);
+  ps._hintUsed = false;
 
   // Stopwatch cleanup
   if (ps._stopwatch) { clearInterval(ps._stopwatch); ps._stopwatch = null; }
   if (ps.config && ps.config.perQSeconds) Timer.stop();
 
   const sectionKey = sectionForQuestion(q);
-  recordAnswer(q, correct, secs, sectionKey);
-  if (timedOut || !correct) {
-    if (!timedOut) addErrorLog(q.id, chosen, sectionKey);
-  }
+  saveAnswerDetailed(q, sectionKey, {
+    selected: chosen, timedOut: timedOut, secs: secs, hintUsed: hintUsed,
+    felt: null, errorTag: null, confidence: null
+  });
 
-  ps.answers.push({ chosen: chosen, correct: correct, secs: secs, ts: Date.now() });
+  ps.answers.push({ chosen: chosen, correct: correct, secs: secs, ts: Date.now(), hintUsed: hintUsed });
   ps.thinkStart = Date.now();
   persistSession();
 
@@ -405,24 +511,120 @@ function submitAnswer(chosen, timedOut) {
     if (oi === chosen && chosen !== q.correct) btn.classList.add('incorrect');
   });
 
+  playSound(correct ? 'correct' : 'incorrect');
+
   const fb = el.querySelector('#feedback');
   fb.style.display = '';
   const expl = esc(q.explanation || '');
-  const ttl = q.text.slice(0, 60);
+  const target = paceTargetFor(q);
+  const pc = paceClass(secs, target);
+  const paceMsg = secs < 15 ? 'Blink answer — under 15s. Make sure you solved it, not pattern-matched.'
+    : pc === 'pace-fast' ? 'Faster than recommended — good, but slow down if it means guessing.'
+    : pc === 'pace-slow' ? 'Over the ~target. Before answering, name the approach: which concept, which formula.'
+    : 'Right pace for this question.';
+  const topicKey = curriculum.topicKeyForQTopic(q.topic);
+  const correctLetter = String.fromCharCode(65 + q.correct);
+
   fb.innerHTML = `
     <div class="clue-box ${correct ? 'lesson-box-success' : 'lesson-box-danger'}" style="margin:1rem 0">
-      <div style="font-weight:700;font-size:1.05rem;margin-bottom:.4rem">
-        ${timedOut ? '⏰ Time up!' : correct ? '✅ Correct — well done!' : '❌ Incorrect.'}  ${!correct && !timedOut ? 'Correct answer: <span class="example-answer">' + String.fromCharCode(65 + q.correct) + '</span>' : ''}
+      <div class="verdict-row">
+        ${timedOut ? '⏰ Time up!' : correct ? '✅ Correct — well done!' : '❌ Incorrect.'}
+        ${!correct && !timedOut ? ' Correct answer: <span class="example-answer">' + correctLetter + '</span>' : ''}
       </div>
-      <div>${expl}</div>
-      <div class="text-muted mt-1" style="margin-top:.5rem">${ps.idx === ps.questions.length - 1 ? '' : ''}</div>
+      <div class="pace-line pace-${pc}">⏱ You took ${fmtShort(secs)} · recommended ~${fmtShort(target)} — ${esc(paceMsg)}</div>
+      <div class="explanation-body">${expl}</div>
     </div>
-    <div class="row">
+
+    ${!correct ? `
+    <div class="meta-tag-row" id="errTagRow">
+      <span class="meta-label">Why wrong?</span>
+      <button class="meta-btn mt-careless" data-err="careless" title="Silly/rushed mistake">😅 Careless</button>
+      <button class="meta-btn mt-conceptual" data-err="conceptual" title="Didn't know the concept">📚 Conceptual</button>
+      <button class="meta-btn mt-timing" data-err="timing" title="Ran out of time">⏱ Timing</button>
+      <button class="meta-btn mt-misread" data-err="misread" title="Misunderstood the question">🔍 Misread</button>
+    </div>` : ''}
+
+    <div class="meta-tag-row">
+      <span class="meta-label">Felt difficulty</span>
+      <button class="meta-btn" data-felt="1" title="Very easy">😊</button>
+      <button class="meta-btn" data-felt="2" title="Easy">🙂</button>
+      <button class="meta-btn" data-felt="3" title="Medium">😐</button>
+      <button class="meta-btn" data-felt="4" title="Hard">😤</button>
+      <button class="meta-btn" data-felt="5" title="Very hard">🥵</button>
+    </div>
+
+    <div class="meta-tag-row">
+      <span class="meta-label">Confidence</span>
+      <button class="meta-btn" data-conf="sure">✓ Sure</button>
+      <button class="meta-btn" data-conf="unsure">~ Unsure</button>
+      <button class="meta-btn" data-conf="guessed">? Guessed</button>
+    </div>
+
+    <div class="note-row">
+      <textarea id="qNote" maxlength="500" rows="2" placeholder="Note to self — strategy, trap, formula (helps your Error Journal)"></textarea>
+      <button class="btn btn-sm btn-outline" id="noteSave">Save note</button>
+    </div>
+
+    <div class="row feedback-actions">
       ${ps.idx < ps.questions.length - 1
-        ? `<button class="btn btn-primary" onclick="nextQuestion()">Next →</button>`
-        : `<button class="btn btn-primary" onclick="showResults()">See Results 🏁</button>`}
-      ${isFlagged(q.id) ? `<button class="btn btn-sm btn-ghost" onclick="unflagQuestion('${q.id}')">Unflag</button>` : ''}
+        ? `<button class="btn btn-primary" id="fbNext">Next →</button>`
+        : `<button class="btn btn-primary" id="fbResults">See Results 🏁</button>`}
+      <button class="btn btn-sm btn-ghost" data-act="theory">📚 Theory</button>
+      ${topicKey ? `<button class="btn btn-sm btn-ghost" data-act="topic">↺ Practice topic</button>` : ''}
+      <button class="btn btn-sm btn-ghost" data-act="hard" ${!topicKey ? 'disabled' : ''}>↑ Harder</button>
+      <button class="btn btn-sm btn-ghost" data-act="easy" ${!topicKey ? 'disabled' : ''}>↓ Easier</button>
+      ${isFlagged(q.id) ? `<button class="btn btn-sm btn-ghost" id="fbUnflag">Unflag</button>` : ''}
     </div>`;
+
+  // Wire meta-tag interactions (persist immediately — feeds the SR + error journal)
+  fb.querySelectorAll('[data-err]').forEach(b => {
+    b.addEventListener('click', function () {
+      fb.querySelectorAll('[data-err]').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+      updateReviewMeta(q.id, { errorTag: this.getAttribute('data-err') });
+      if (!correct) playSound('select');
+    });
+  });
+  fb.querySelectorAll('[data-felt]').forEach(b => {
+    b.addEventListener('click', function () {
+      fb.querySelectorAll('[data-felt]').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+      updateReviewMeta(q.id, { felt: +this.getAttribute('data-felt') });
+      playSound('select');
+    });
+  });
+  fb.querySelectorAll('[data-conf]').forEach(b => {
+    b.addEventListener('click', function () {
+      fb.querySelectorAll('[data-conf]').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+      updateReviewMeta(q.id, { confidence: this.getAttribute('data-conf') });
+      playSound('select');
+    });
+  });
+  const noteBtn = fb.querySelector('#noteSave');
+  if (noteBtn) {
+    noteBtn.addEventListener('click', function () {
+      const v = fb.querySelector('#qNote').value.trim();
+      updateReviewMeta(q.id, { note: v });
+      this.textContent = v ? '✓ Note saved' : 'Save note';
+      playSound('type');
+    });
+  }
+
+  const nextBtn = fb.querySelector('#fbNext');
+  if (nextBtn) nextBtn.addEventListener('click', nextQuestion);
+  const resBtn = fb.querySelector('#fbResults');
+  if (resBtn) resBtn.addEventListener('click', showResults);
+  fb.querySelectorAll('[data-act]').forEach(b => {
+    if (b.disabled) return;
+    b.addEventListener('click', function () {
+      const act = this.getAttribute('data-act');
+      if (act === 'theory' && topicKey) { location.hash = '#/learn/' + topicKey; return; }
+      if (topicKey) startFocused(topicKey, act === 'hard' ? 'hard' : act === 'easy' ? 'easy' : 'any');
+    });
+  });
+  const unflagBtn = fb.querySelector('#fbUnflag');
+  if (unflagBtn) unflagBtn.addEventListener('click', function () { unflagQuestion(q.id); });
 
   if (isFlagged(q.id)) {
     const flagBtn = el.querySelector('#flagBtn');
@@ -430,8 +632,19 @@ function submitAnswer(chosen, timedOut) {
   }
 }
 
+function skipQuestion() {
+  if (!ps || !ps.questions) return;
+  if (ps.answers[ps.idx]) return; // already answered this one
+  ps._hintUsed = false;
+  ps.idx += 1;
+  if (ps.idx >= ps.questions.length) { showResults(); return; }
+  ps.thinkStart = Date.now();
+  persistenceAndNav();
+}
+
 function nextQuestion() {
   if (!ps) return;
+  ps._hintUsed = false;
   ps.idx += 1;
   if (ps.idx >= ps.questions.length) { showResults(); return; }
   persistenceAndNav();
@@ -472,6 +685,7 @@ function quitSession() {
   if (!ps) { location.hash = '#/practice'; return; }
   if (ps.answers.length > 0) recordSessionStats();
   clearSession();
+  __kbdHandler = null;
   render();
 }
 
@@ -480,6 +694,23 @@ function showResults() {
   lastConfig = ps.config;
   lastSnapshot = { questions: ps.questions, answers: ps.answers };
   recordSessionStats();
+  // set-level history for the dashboard spacer card
+  recordSetHistory({
+    mode: (ps.config && ps.config.mode) || 'practice',
+    count: ps.questions.length,
+    correct: ps.answers.filter(a => a.correct).length,
+    seconds: ps.answers.reduce((s, a) => s + (a.secs || 0), 0),
+    secsBySection: (function () {
+      const m = {};
+      ps.questions.forEach((q, i) => {
+        const a = ps.answers[i];
+        if (!a) return;
+        const k = sectionForQuestion(q);
+        m[k] = (m[k] || 0) + (a.secs || 0);
+      });
+      return m;
+    })()
+  });
 
   const total = ps.questions.length;
   const answered = ps.answers.length;
@@ -488,11 +719,31 @@ function showResults() {
   const xpEarned = correct * gamification.xpRules.questionCorrect + (answered - correct) * gamification.xpRules.questionIncorrect;
   const hh = Math.round((Date.now() - ps.startedAt) / 1000);
 
+  // section pacing vs official targets (answered-only)
+  const paceRows = (function () {
+    const secs = {}; const cnt = {};
+    ps.questions.forEach((q, i) => {
+      const a = ps.answers[i];
+      if (!a) return;
+      const k = sectionForQuestion(q);
+      secs[k] = (secs[k] || 0) + a.secs;
+      cnt[k] = (cnt[k] || 0) + 1;
+    });
+    return ['quant', 'verbal', 'dataInsights'].map(k => {
+      if (!cnt[k]) return null;
+      const avg = secs[k] / cnt[k];
+      const target = PACE_TARGETS[k];
+      const pc = paceClass(avg, target);
+      const verdict = pc === 'pace-ok' ? 'On target' : pc === 'pace-fast' ? 'Too fast — check if you guessed' : 'Needs work — shave time';
+      return { k, avg, target, pc, verdict };
+    }).filter(Boolean);
+  })();
+
   const el = document.getElementById('app');
   el.innerHTML = `
     <div class="practice-summary question-view">
       <h1>Set Complete 🏁</h1>
-      <div class="grid grid-3" style="margin-top:.5rem">
+      <div class="grid grid-2" style="margin-top:.5rem">
         <div class="card text-center">
           <div class="stat-value">${correct}/${total}</div>
           <div class="stat-label">Correct</div>
@@ -501,14 +752,27 @@ function showResults() {
           <div class="stat-value">${pct}%</div>
           <div class="stat-label">Accuracy</div>
         </div>
+      </div>
+      <div class="grid grid-2">
         <div class="card text-center">
           <div class="stat-value">+${xpEarned}</div>
           <div class="stat-label">XP earned</div>
         </div>
+        <div class="card text-center">
+          <div class="stat-value">${fmtShort(hh)}</div>
+          <div class="stat-label">Wall-clock</div>
+        </div>
       </div>
-      <div class="clue-box mt-2" style="margin-top:1rem">
-        <div class="text-muted">⏱ Wall-clock: ${fmtClockForTimer(hh)}</div>
-      </div>
+      ${paceRows.length ? `<div class="card mt-2" style="margin-top:1rem">
+        <h3 class="card-title">Pace vs target</h3>
+        ${paceRows.map(r => `
+          <div class="pace-row pace-${r.pc}">
+            <span class="pace-sec">${r.k === 'dataInsights' ? 'DI' : r.k.charAt(0).toUpperCase() + r.k.slice(1)}</span>
+            <span>${fmtShort(Math.round(r.avg))} avg / ${fmtShort(r.target)} target</span>
+            <span class="pace-verdict">${r.verdict}</span>
+          </div>`).join('')}
+        <div class="text-muted mt-1" style="margin-top:.5rem;font-size:.85rem">Targets: Quant 21q/45min · Verbal 23q/45min · DI 20q/45min</div>
+      </div>` : ''}
       <div class="row mt-2" style="margin-top:1rem;justify-content:center">
         <button class="btn btn-primary" onclick="location.hash='#/practice'">Back to Practice</button>
         <button class="btn btn-outline" onclick="location.hash='#/analytics'">View Analytics</button>
@@ -533,6 +797,7 @@ function showResults() {
   });
 
   clearSession();
+  __kbdHandler = null;
 }
 
 function sameConfigAgain() {
@@ -674,6 +939,10 @@ window.reviewQuestion = reviewQuestion;
 window.unflagQuestion = unflagQuestion;
 window.clearErrorLog = clearErrorLog;
 window.beginErrorSession = beginErrorSession;
+window.startDue = startDue;
+window.startWeak = startWeak;
+window.startFocused = startFocused;
+window.skipQuestion = skipQuestion;
 
 /* Register route */
 App.register('practice', {

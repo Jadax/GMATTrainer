@@ -102,8 +102,12 @@ function renderDashboard(el) {
   const q = parseInt(st.stats.totalCorrect / Math.max(1, st.stats.totalAnswered) * 100) || 0;
   const monthAgo = Date.now() - 30 * 86400000;
   const monthQuestions = st.stats.history.filter(h => h.ts > monthAgo).length;
+  const dueCount = questionDueCount();
+  const phase = studyPhase();
 
   const feed = st.stats.history.slice(0, 5);
+  const setFeed = st.practice.history.slice(0, 4);
+  const modeLabel = m => ({ practice: 'Mixed', diagnostic: 'Diagnostic', topic: 'Topic', section: 'Section', error: 'Error fix', flagged: 'Flagged', due: 'Spaced review', weak: 'Weak areas' }[m] || 'Practice');
 
   el.innerHTML = `
     <section class="card">
@@ -113,6 +117,7 @@ function renderDashboard(el) {
           <p class="text-muted">Track your GMAT Focus journey — one question at a time.</p>
         </div>
         <div class="row" style="margin-left:auto">
+          <span class="badge badge-ghost" title="${esc(phase.desc)}">${phase.icon} ${phase.title}</span>
           <button class="btn btn-outline" onclick="location.hash='#/practice'">Start Practice</button>
           <button class="btn btn-primary" onclick="location.hash='#/simulator'">Full Simulator</button>
         </div>
@@ -183,6 +188,28 @@ function renderDashboard(el) {
             <span>${topicTagLabel(t.tag)} <span class="text-muted">(${t.attempts} Qs)</span></span>
             <span class="text-danger fw-bold">${Math.round(t.pct * 100)}%</span>
           </div>`).join('') : '<p class="text-muted">No data yet.</p>'}
+        ${weaknesses.length ? `<button class="btn btn-sm btn-outline mt-2" onclick="startWeak()">🎯 Drill weakest topics →</button>` : ''}
+      </div>
+    </section>
+
+    <section class="grid grid-2">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🔁 Spaced Review Due</h2>
+          <span class="badge badge-primary">${dueCount}</span>
+        </div>
+        ${dueCount ? `<p class="text-muted">Questions from your 1→3→7→14→30 schedule coming due. Reviewing on time is what makes recall stick.</p>
+          <button class="btn btn-sm btn-primary mt-2" onclick="startDue()">Review ${dueCount} due →</button>`
+        : '<p class="text-muted">Nothing due right now. Keep answering questions and your spaced-review queue builds itself.</p>'}
+      </div>
+      <div class="card">
+        <div class="card-header"><h2 class="card-title">🏋️ Practice Rhythm</h2></div>
+        ${setFeed.length ? setFeed.map(h => `
+          <div class="feed-item">
+            <span class="feed-icon">${h.correct >= h.count / 2 ? '✅' : '📝'}</span>
+            <span>${modeLabel(h.mode)} · ${h.correct}/${h.count}</span>
+            <span class="feed-time">${new Date(h.ts).toLocaleString(undefined, {month:'short', day:'numeric'})}</span>
+          </div>`).join('') : '<p class="text-muted">Finished sets will appear here with accuracy and pace.</p>'}
       </div>
     </section>
 
@@ -245,6 +272,10 @@ function editProfile() {
       <label for="dateInput">Target test date (optional)</label>
       <input type="date" id="dateInput" value="${st.user.targetDate || ''}">
     </div>
+    <div class="field" style="flex-direction:row;align-items:center;gap:.5rem;margin-top:.4rem">
+      <input type="checkbox" id="soundInput" ${st.settings && st.settings.sound === false ? '' : 'checked'}>
+      <label for="soundInput" style="margin:0">Sound effects (correct / time-up / button clicks)</label>
+    </div>
     <div class="row">
       <button class="btn btn-primary" id="saveProfile">Save</button>
       <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
@@ -253,9 +284,11 @@ function editProfile() {
     const name = modal.querySelector('#nameInput').value.trim() || 'GMAT Candidate';
     const target = parseInt(modal.querySelector('#targetInput').value, 10) || 705;
     const date = modal.querySelector('#dateInput').value;
+    const sound = modal.querySelector('#soundInput').checked;
     if (target < 205 || target > 805) { toast('Target must be 205–805.', 'error'); return; }
     updateState(s => {
       s.user.name = name; s.user.targetScore = target; s.user.targetDate = date || null;
+      s.settings.sound = sound;
     });
     closeModal();
     toast('Profile saved.', 'success');

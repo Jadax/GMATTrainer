@@ -82,6 +82,19 @@ function renderAnalytics(el) {
 
   const trendLine = trendBarLine(trend, acc);
 
+  // Pacing vs official GMAT targets (avg seconds/sec answered)
+  const paceRows = ['quant', 'verbal', 'dataInsights'].map(k => {
+    const s = stats.bySection[k];
+    if (!s.attempts) return null;
+    const avg = Math.round((s.seconds || 0) / s.attempts);
+    const target = PACE_TARGETS[k];
+    const pc = paceClass(avg, target);
+    return {
+      k: k, avg: avg, target: target, pc: pc,
+      verdict: pc === 'pace-ok' ? 'On target' : pc === 'pace-fast' ? 'Too fast' : 'Needs time'
+    };
+  }).filter(Boolean);
+
   el.innerHTML = `
     <div class="page-header">
       <h1>Analytics</h1>
@@ -120,6 +133,16 @@ function renderAnalytics(el) {
             </div>`).join('')}
         </div>
         <p class="text-muted fs-small mt-1">Section scores: Q ${stats.bySection.quant.attempts ? gamification.sectionScoreFromAccuracy(stats.bySection.quant.correct / stats.bySection.quant.attempts) : '—'} · V ${stats.bySection.verbal.attempts ? gamification.sectionScoreFromAccuracy(stats.bySection.verbal.correct / stats.bySection.verbal.attempts) : '—'} · DI ${stats.bySection.dataInsights.attempts ? gamification.sectionScoreFromAccuracy(stats.bySection.dataInsights.correct / stats.bySection.dataInsights.attempts) : '—'}</p>
+        ${paceRows.length ? `<div class="mt-1" style="margin-top:.75rem">
+          <div style="font-weight:700;font-size:.85rem;margin-bottom:.35rem">⏱ Pace vs target <span class="text-muted fs-small">(avg sec/question)</span></div>
+          ${paceRows.map(r => `
+            <div class="pace-row pace-${r.pc}">
+              <span class="pace-sec">${r.k === 'dataInsights' ? 'DI' : r.k.charAt(0).toUpperCase() + r.k.slice(1)}</span>
+              <span>${fmtShort(r.avg)} / ${fmtShort(r.target)}</span>
+              <span class="pace-verdict">${r.verdict}</span>
+            </div>`).join('')}
+          <div class="text-muted fs-small">Targets: Quant 21q/45min · Verbal 23q/45min · DI 20q/45min</div>
+        </div>` : ''}
       </div>
       <div class="card">
         <div class="card-header"><h2 class="card-title">Accuracy Trend <span class="text-muted fs-small">last 10 sets</span></h2></div>

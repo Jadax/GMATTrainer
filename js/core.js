@@ -34,7 +34,8 @@ function buildDefaultState() {
       theme: 'light',
       calculator: true,       // allow on-screen calculator (DI only anyway)
       breaksBetweenSims: true, // 5-minute break option
-      spacedRepetition: true
+      spacedRepetition: true,  // surfaces due questions for review at growing intervals
+      sound: true             // simple WebAudio feedback (correct / time-up / select)
     },
     stats: {
       totalAnswered: 0,
@@ -63,9 +64,13 @@ function buildDefaultState() {
     },
     practice: {
       history: [],        // one entry per completed set {ts, mode, section, total, correct, seconds, topic, difficulty}
-      errorLog: [],       // [{questionId, ts, youChose, section}]
+      errorLog: [],       // [{questionId, ts, youChose, section, correct, secs, felt, errorTag, confidence}]
       flagged: [],        // [questionId] user bookmarks
-      adaptiveLevel: {}   // { topicTag: difficultyIndex }
+      adaptiveLevel: {},  // { topicTag: difficultyIndex }
+      review: {}          // per-question spaced-repetition records:
+                          //  { qid: { intervalDays, stepsIndex, reps, streak, wrongCount,
+                          //           due, lastCorrect, attempts: [{ts, correct, secs, hintUsed,
+                          //           felt, errorTag, confidence, note}] } }
     },
     learning: {},        // { topicId: {status: not-started|in-progress|mastered, lastLessonAt, due} }
     sims: [],            // completed full-length attempts {ts, sections, totalScore, sectionScores, accuracy}
@@ -160,6 +165,13 @@ function fmtTime(seconds) {
   return m + ':' + pad(s);
 }
 
+function fmtShort(totalSeconds) {
+  totalSeconds = Math.max(0, Math.round(totalSeconds || 0));
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return m > 0 ? m + ':' + String(s).padStart(2, '0') : s + 's';
+}
+
 function fmtClockForTimer(totalSeconds) {
   // mm:ss
   totalSeconds = Math.max(0, Math.round(totalSeconds || 0));
@@ -208,36 +220,158 @@ function addStudySession(questions, seconds, sectionKey) {
   });
 }
 
+/* ---------------------------------------------------------------------
+   Answer recording
+   --------------------------------------------------------------------- */
+
+/** Aggregate one answer into stats (topics/difficulty/section/XP/streak/feed). */
+function _aggregateAnswer(st, question, correct, secs, sectionKey) {
+  const qt = st.stats.byTopic[question.topic] || (st.stats.byTopic[question.topic] = { attempts: 0, correct: 0, seconds: 0 });
+  qt.attempts += 1;
+  if (correct) qt.correct += 1;
+  qt.seconds += secs;
+
+  const df = st.stats.byDifficulty[question.difficulty];
+  if (df) { df.attempts += 1; if (correct) df.correct += 1; }
+
+  const sec = st.stats.bySection[sectionKey];
+  if (sec) { sec.attempts += 1; if (correct) sec.correct += 1; }
+
+  st.stats.totalCorrect += (correct ? 1 : 0);
+
+  if (question.difficulty === 'hard' && correct) st.stats.hardCorrect += 1;
+
+  const now = new Date();
+  if (now.getHours() >= 22 || now.getHours() < 4) st.stats.nightAnswers += 1;
+
+  if (correct) {
+    grantXp(gamification.xpRules.questionCorrect, st);
+    pushPerfectContext(st, true);
+  } else {
+    grantXp(gamification.xpRules.questionIncorrect, st);
+    pushPerfectContext(st, false);
+  }
+  recalcStreak(st);
+}
+
+const SR_STEPS = [1, 3, 7, 14, 30]; // growing review intervals (days)
+
+/** Spaced-repetition scheduling for a single question. */
+function _scheduleQuestion(st, qid, correct) {
+  if (!st.settings || st.settings.spacedRepetition === false) return;
+  if (!st.practice.review[qid]) {
+    st.practice.review[qid] = {
+      intervalDays: 0, stepsIndex: 0, reps: 0, streak: 0, wrongCount: 0,
+      lastCorrect: null, due: Date.now(), attempts: []
+    };
+  }
+  const rec = st.practice.review[qid];
+  if (correct) {
+    rec.stepsIndex = Math.min((rec.stepsIndex || 0) + 1, SR_STEPS.length - 1);
+    rec.intervalDays = SR_STEPS[rec.stepsIndex];
+    rec.reps += 1;
+    rec.streak += 1;
+    rec.lastCorrect = true;
+  } else {
+    rec.stepsIndex = 0;
+    rec.intervalDays = 1; // relearn next day
+    rec.reps += 1;
+    rec.streak = 0;
+    rec.wrongCount += 1;
+    rec.lastCorrect = false;
+  }
+  rec.due = Date.now() + rec.intervalDays * 86400000;
+}
+
 function recordAnswer(question, correct, secs, sectionKey) {
   updateState(st => {
-    const qt = st.stats.byTopic[question.topic] || (st.stats.byTopic[question.topic] = { attempts: 0, correct: 0, seconds: 0 });
-    qt.attempts += 1;
-    if (correct) qt.correct += 1;
-    qt.seconds += secs;
-
-    const df = st.stats.byDifficulty[question.difficulty];
-    if (df) { df.attempts += 1; if (correct) df.correct += 1; }
-
-    const sec = st.stats.bySection[sectionKey];
-    if (sec) { sec.attempts += 1; if (correct) sec.correct += 1; }
-
-    st.stats.totalCorrect += (correct ? 1 : 0);
-
-    if (question.difficulty === 'hard' && correct) st.stats.hardCorrect += 1;
-
-    const now = new Date();
-    if (now.getHours() >= 22 || now.getHours() < 4) st.stats.nightAnswers += 1;
-
-    if (correct) {
-      grantXp(gamification.xpRules.questionCorrect, st);
-      pushPerfectContext(st, true);
-    } else {
-      grantXp(gamification.xpRules.questionIncorrect, st);
-      pushPerfectContext(st, false);
-    }
-    recalcStreak(st);
+    _aggregateAnswer(st, question, correct, secs, sectionKey);
   });
   App.emit('state', loadState());
+}
+
+/**
+ * Full per-answer recording used by practice sessions.
+ * meta: { selected, timedOut, secs, hintUsed, felt, errorTag, confidence, note }
+ */
+function saveAnswerDetailed(question, sectionKey, meta) {
+  const correct = !meta.timedOut && meta.selected === question.correct;
+  updateState(st => {
+    _aggregateAnswer(st, question, correct, meta.secs, sectionKey);
+    _scheduleQuestion(st, question.id, correct);
+
+    // rich error-log entry (deduped per question)
+    if (!correct) {
+      st.practice.errorLog = st.practice.errorLog.filter(e => e.questionId !== question.id);
+      st.practice.errorLog.push({
+        questionId: question.id,
+        youChose: meta.selected,
+        ts: Date.now(),
+        section: sectionKey,
+        correct: false,
+        secs: meta.secs,
+        hintUsed: !!meta.hintUsed,
+        felt: meta.felt || null,
+        errorTag: meta.errorTag || null,
+        confidence: meta.confidence || null
+      });
+      st.stats.errorLogCount = st.practice.errorLog.length;
+    }
+
+    // append to the review record's attempt history
+    const rec = st.practice.review[question.id] || (st.practice.review[question.id] = {
+      intervalDays: 0, stepsIndex: 0, reps: 0, streak: 0, wrongCount: 0,
+      lastCorrect: null, due: Date.now(), attempts: []
+    });
+    rec.attempts.push({
+      ts: Date.now(), correct: correct, secs: meta.secs,
+      hintUsed: !!meta.hintUsed, felt: meta.felt || null,
+      errorTag: meta.errorTag || null, confidence: meta.confidence || null,
+      note: meta.note || ''
+    });
+  });
+  checkBadges();
+  App.emit('state', loadState());
+}
+
+/** Patch review meta (felt / errorTag / confidence / note) after the fact. */
+function updateReviewMeta(qid, patch) {
+  updateState(st => {
+    const rec = st.practice.review[qid];
+    if (rec && rec.attempts.length) {
+      const last = rec.attempts[rec.attempts.length - 1];
+      Object.keys(patch).forEach(k => { if (patch[k] !== undefined) last[k] = patch[k]; });
+      // keep errorLog in sync for tagging
+      const e = st.practice.errorLog.find(x => x.questionId === qid);
+      if (e) {
+        if (patch.felt !== undefined) e.felt = patch.felt;
+        if (patch.errorTag !== undefined) e.errorTag = patch.errorTag;
+        if (patch.confidence !== undefined) e.confidence = patch.confidence;
+      }
+    }
+  });
+}
+
+/** Number of questions currently due for spaced review. */
+function questionDueCount() {
+  const st = loadState();
+  if (!st.practice.review) return 0;
+  const now = Date.now();
+  return Object.keys(st.practice.review).filter(id => {
+    const r = st.practice.review[id];
+    return r && r.due <= now && r.attempts.length > 0;
+  }).length;
+}
+
+/** Due question ids, soonest first. */
+function questionDueIds() {
+  const st = loadState();
+  const now = Date.now();
+  return Object.keys(st.practice.review)
+    .map(id => ({ id: id, due: st.practice.review[id] ? st.practice.review[id].due : Infinity, attempts: st.practice.review[id] ? st.practice.review[id].attempts.length : 0 }))
+    .filter(r => r.attempts > 0 && r.due <= now)
+    .sort((a, b) => a.due - b.due)
+    .map(r => r.id);
 }
 
 /** Track perfect sets: any contiguous run where every answer was correct within a session. */
@@ -378,8 +512,122 @@ function markTopicLearned(topicId) {
 function scheduleRepetition(topicId) {
   updateState(st => {
     const t = st.learning[topicId] || (st.learning[topicId] = {});
-    t.due = Date.now() + (t.reviews === 1 ? 7 : 3) * 86400000;
-    t.reviews = (t.reviews || 0) + 1;
+    const reviews = (t.reviews || 0) + 1;
+    t.reviews = reviews;
+    // growing review cycle: 3 → 7 → 14 → 30 days
+    const steps = [3, 7, 14, 30];
+    const days = steps[Math.min(reviews - 1, steps.length - 1)];
+    t.due = Date.now() + days * 86400000;
+  });
+}
+
+/* ---------------------------------------------------------------------
+   Study phase model (Foundation → Core → Speed)
+   Mirrors the phase system used by serious drill trainers.
+   --------------------------------------------------------------------- */
+function studyPhase() {
+  const st = loadState();
+  const totalQ = st.stats.totalAnswered || 0;
+  const acc = totalQ ? st.stats.totalCorrect / totalQ : 0;
+  if (totalQ < 50 || acc < 0.5) {
+    return {
+      key: 'foundation',
+      title: 'Foundation Phase',
+      icon: '🌱',
+      desc: 'Accuracy first. Learn the concepts before worrying about speed.',
+      pct: totalQ < 50 ? Math.round(totalQ / 50 * 100) : Math.round(acc * 100),
+      next: 'Answer 50+ questions at ≥50% accuracy to advance.'
+    };
+  }
+  if (totalQ < 200 || acc < 0.7) {
+    return {
+      key: 'core',
+      title: 'Core Phase',
+      icon: '🚀',
+      desc: 'Build reliable accuracy across topics. Review every miss — that is where gains live.',
+      pct: totalQ < 200 ? Math.round(totalQ / 200 * 100) : Math.round(acc * 100),
+      next: 'Reach 200+ questions at ≥70% accuracy to unlock Speed.'
+    };
+  }
+  return {
+    key: 'speed',
+    title: 'Speed Phase',
+    icon: '⚡',
+    desc: 'Lock in accuracy against the clock. Focus on pacing and stamina with full-section sets.',
+    pct: 100,
+    next: 'Maintain ≥70% accuracy while cutting time per question.'
+  };
+}
+
+/* ---------------------------------------------------------------------
+   Pacing targets (aligned with official per-section timing + practice docs)
+   --------------------------------------------------------------------- */
+function paceTargetFor(q) {
+  if (q.timeEstimate) return q.timeEstimate;      // per-question recommended seconds
+  const t = q.topic;
+  if (t === 'ms') return 360;                     // ~6 min multi-source
+  if (t === 'tp') return 180;                     // ~3 min two-part
+  if (t === 'ta' || t === 'gi') return 150;
+  if (t === 'ds') return 120;
+  if (t === 'rc') return 105;
+  if (t === 'cr') return 120;
+  return 128;                                     // quant problem solving
+}
+
+const PACE_TARGETS = {
+  quant: 128,          // 21 Q / 45 min
+  verbal: 117,         // 23 Q / 45 min
+  dataInsights: 135    // 20 Q / 45 min
+};
+
+function paceClass(secs, target) {
+  if (!target) return 'pace-ok';
+  const r = secs / target;
+  if (r < 0.5) return secs < 10 ? 'pace-ok' : 'pace-fast';     // too fast → maybe guessed
+  if (r <= 1.2) return 'pace-ok';
+  return 'pace-slow';
+}
+
+/* ---------------------------------------------------------------------
+   Lightweight WebAudio sounds (no asset files needed)
+   --------------------------------------------------------------------- */
+let __audioCtx = null;
+function __ac() {
+  if (!__audioCtx) { try { __audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } }
+  return __audioCtx;
+}
+function playSound(kind) {
+  const st = loadState();
+  if (!(st.settings && st.settings.sound)) return;
+  const ctx = __ac();
+  if (!ctx) return;
+  const note = (freq, start, dur, type, vol) => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, ctx.currentTime + start);
+    g.gain.exponentialRampToValueAtTime(vol || 0.12, ctx.currentTime + start + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(ctx.currentTime + start);
+    o.stop(ctx.currentTime + start + dur + 0.05);
+  };
+  try {
+    if (kind === 'correct') { note(880, 0, 0.12, 'triangle'); note(1320, 0.1, 0.16, 'triangle'); }
+    else if (kind === 'incorrect') { note(220, 0, 0.22, 'square', 0.07); note(180, 0.02, 0.24, 'square', 0.06); }
+    else if (kind === 'timeup') { note(440, 0, 0.35, 'sawtooth', 0.05); note(330, 0.2, 0.35, 'sawtooth', 0.05); }
+    else if (kind === 'select') { note(660, 0, 0.06, 'triangle', 0.06); }
+    else if (kind === 'type') { note(520, 0, 0.05, 'sine', 0.05); }
+    else if (kind === 'done') { note(740, 0, 0.1, 'triangle'); note(588, 0.09, 0.14, 'triangle'); }
+  } catch (e) { /* audio never blocks the app */ }
+}
+
+/* Record a completed practice set into practice.history (set-level). */
+function recordSetHistory(entry) {
+  updateState(st => {
+    st.practice.history.unshift(Object.assign({ ts: Date.now() }, entry));
+    if (st.practice.history.length > 200) st.practice.history.length = 200;
   });
 }
 
@@ -483,7 +731,7 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.4.0';
 
 const SECTION_META = {
   quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: '🔢', count: 21, time: 2700 },
@@ -546,6 +794,16 @@ window.dateKeyFromOffset = dateKeyFromOffset;
 window.getStudyDay = getStudyDay;
 window.addStudySession = addStudySession;
 window.recordAnswer = recordAnswer;
+window.saveAnswerDetailed = saveAnswerDetailed;
+window.updateReviewMeta = updateReviewMeta;
+window.questionDueCount = questionDueCount;
+window.questionDueIds = questionDueIds;
+window.studyPhase = studyPhase;
+window.paceTargetFor = paceTargetFor;
+window.paceClass = paceClass;
+window.PACE_TARGETS = PACE_TARGETS;
+window.playSound = playSound;
+window.recordSetHistory = recordSetHistory;
 window.addErrorLog = addErrorLog;
 window.addFeed = addFeed;
 window.grantXp = grantXp;
