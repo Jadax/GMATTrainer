@@ -1201,3 +1201,68 @@ a.lesson-nav-card:hover { border-color: var(--color-secondary); box-shadow: var(
 .question-text { font-size: 1.12rem; line-height: 1.5; }
 .passage-text, .clue-box { font-size: 1.02rem; }
 .feedback-actions .btn, .mode-card .btn, .question-topbar .btn { min-height: 40px; }
+
+/* v1.5.0 chapter tests (TTP-style difficulty ladder) */
+.ct-banner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem;
+  padding: .7rem 1rem; margin-bottom: 1rem; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(98,0,234,.14), rgba(0,121,107,.12));
+  border: 1px solid var(--color-border);
+}
+.ct-banner-title { font-weight: 800; font-size: .98rem; }
+.ct-banner-meta { font-size: .82rem; color: var(--color-muted); }
+.ct-result { padding: .8rem 1rem; border-radius: 10px; margin: .5rem 0 0; font-size: .95rem; font-weight: 600; }
+.ct-result.pass { background: rgba(0, 140, 60, .14); border: 1px solid rgba(0, 140, 60, .35); }
+.ct-result.fail { background: rgba(197, 48, 48, .12); border: 1px solid rgba(197, 48, 48, .3); }
+.ct-ladder-grid { margin-top: .75rem; }
+.ct-card { padding: 1rem; display: flex; flex-direction: column; gap: .75rem; }
+.ct-icon { font-size: 1.15rem; }
+.ct-label { font-weight: 800; font-size: 1rem; text-transform: capitalize; }
+.ct-note { min-height: 2.4em; line-height: 1.35; }
+.course-road { display: flex; gap: .4rem; flex-wrap: wrap; align-items: stretch; }
+.road-step {
+  display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .6rem; border-radius: 8px;
+  border: 1px solid var(--color-border); background: var(--color-card);
+  color: var(--color-text); text-decoration: none; font-size: .8rem; transition: transform .12s ease, border-color .12s ease;
+}
+.road-step:hover { transform: translateY(-1px); border-color: var(--color-secondary); }
+.road-step.done { opacity: .65; }
+.road-step.done .road-icon { color: #0a7d33; }
+.road-step.doing { border-color: var(--color-accent); }
+.road-step.next { border-color: var(--color-secondary); box-shadow: 0 0 0 2px rgba(71,85,105,.15); background: linear-gradient(135deg, rgba(98,0,234,.12), rgba(255,193,7,.10)); }
+.road-num {
+  min-width: 1.45em; height: 1.45em; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--color-bg); border: 1px solid var(--color-border); font-size: .72rem; font-weight: 700;
+}
+.road-step.next .road-num { background: var(--color-secondary); color: #fff; border-color: var(--color-secondary); }
+.road-name { font-weight: 600; }
+
+/* v1.5.0 simulator: on-screen calculator + post-exam review */
+.sim-calc-wrap { border: 1px solid var(--color-border); border-radius: 10px; padding: 1rem; background: var(--color-bg); }
+.sim-calc { margin-top: .6rem; }
+.sim-calc-display {
+  background: var(--color-card); border: 1px solid var(--color-border); border-radius: 8px;
+  font-size: 1.3rem; font-weight: 700; text-align: right; padding: .5rem .75rem; margin-bottom: .6rem;
+  min-height: 3rem; overflow: hidden; white-space: nowrap;
+}
+.sim-calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .45rem; }
+.calc-key {
+  min-height: 46px; border-radius: 8px; border: 1px solid var(--color-border);
+  background: var(--color-card); color: var(--color-text); font-size: 1.05rem; font-weight: 600;
+  cursor: pointer; transition: transform .08s ease, background .12s ease;
+}
+.calc-key:hover { transform: translateY(-1px); background: var(--color-bg); }
+.calc-key:active { transform: translateY(0); background: var(--color-border); }
+.calc-key.fn { background: rgba(197, 48, 48, .12); color: #c53030; }
+.calc-key.op { background: rgba(98, 0, 234, .1); color: var(--color-primary); }
+.calc-key.eq { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.sim-review-grid { display: flex; flex-wrap: wrap; gap: .4rem; }
+.sim-review-chip {
+  width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--color-border);
+  background: var(--color-card); color: var(--color-text); font-size: .78rem; font-weight: 700;
+  cursor: pointer; transition: transform .08s ease;
+}
+.sim-review-chip:hover { transform: scale(1.15); }
+.chip-ok { background: rgba(0, 140, 60, .18); color: #0a7d33; border-color: rgba(0, 140, 60, .5); }
+.chip-bad { background: rgba(197, 48, 48, .18); color: #c53030; border-color: rgba(197, 48, 48, .5); }
+.chip-un { background: var(--color-bg); color: var(--color-muted); }

@@ -64,6 +64,21 @@ function composeQuestions(config) {
     pool = qb.all.slice();
   } else if (config.mode === 'topic') {
     pool = curriculum.questionsForTopic(config.topic);
+  } else if (config.mode === 'ct') {
+    // TTP-style chapter test: one topic, one difficulty, fixed length.
+    const want = config.count || CHAPTER_TEST_LEN;
+    pool = curriculum.questionsForTopic(config.topic);
+    if (config.difficulty && config.difficulty !== 'any') {
+      const diffPool = pool.filter(q => q.difficulty === config.difficulty);
+      if (diffPool.length >= Math.min(want, 4)) {
+        pool = diffPool;
+      } else if (diffPool.length > 0) {
+        // too thin at this difficulty — top up from the rest of the topic
+        const extra = shuffle(pool.filter(q => q.difficulty !== config.difficulty));
+        pool = diffPool.concat(extra).slice(0, want);
+      }
+    }
+    pool = pool.slice(0, want);
   } else if (config.mode === 'section') {
     pool = qb[config.section] || qb.all;
   } else if (config.mode === 'error') {
@@ -92,7 +107,7 @@ function composeQuestions(config) {
     pool = sample(qb.quant, 3).concat(sample(qb.verbal, 3), sample(qb.dataInsights, 3));
   }
 
-  if (config.difficulty && config.difficulty !== 'any') {
+  if (config.difficulty && config.difficulty !== 'any' && config.mode !== 'ct') {
     pool = pool.filter(q => q.difficulty === config.difficulty);
   }
   // dedupe
@@ -300,6 +315,17 @@ function startWeak() {
 function startFocused(topicId, difficulty) {
   beginSession({ mode: 'topic', topic: topicId, difficulty: difficulty || 'any', count: 5, perQSeconds: 0 });
 }
+/** TTP-style chapter test with unlock gating (Quick Check → Easy → Medium → Hard). */
+function startChapterTest(topicId, difficulty) {
+  const d = difficulty || 'easy';
+  const ctp = chapterTestProgress(topicId);
+  const slot = ctp[d];
+  if (!slot || !slot.unlocked) {
+    toast(d === 'easy' ? 'Complete the Quick Check first to unlock the Easy chapter test.' : 'Pass the previous chapter test to unlock this one.', 'error');
+    return;
+  }
+  beginSession({ mode: 'ct', topic: topicId, difficulty: d, count: CHAPTER_TEST_LEN, perQSeconds: 0 });
+}
 function startCustom() {
   const diff = document.getElementById('cfDiff').value;
   const fmt = document.getElementById('cfFormat').value;
@@ -329,6 +355,14 @@ function renderPracticeSession(el) {
   const mode = ps.config && ps.config.mode;
   const paceTarget = paceTargetFor(current);
 
+  const isCT = mode === 'ct';
+  const ctDiffLabel = isCT && ps.config.difficulty ? ps.config.difficulty.charAt(0).toUpperCase() + ps.config.difficulty.slice(1) : '';
+  const ctName = isCT ? (curriculum.topics.find(t => t.id === ps.config.topic) || {}).name : '';
+  const ctBanner = isCT ? `<div class="ct-banner">
+      <div class="ct-banner-title">🏁 Chapter Test · ${esc(ctName)} · ${ctDiffLabel}</div>
+      <div class="ct-banner-meta">Question ${qn} of ${total} · Pass at ${Math.round(CHAPTER_TEST_PASS * 100)}% or higher</div>
+    </div>` : '';
+
   let passageHtml = '';
   if (current.passage) {
     passageHtml = `<div class="clue-box" style="margin-bottom:1rem">
@@ -339,6 +373,7 @@ function renderPracticeSession(el) {
 
   el.innerHTML = `
     <div class="question-view">
+      ${ctBanner}
       <div class="question-topbar">
         <div class="row" style="align-items:center;gap:.5rem">
           <span class="badge badge-secondary">Question ${qn}/${total}</span>
@@ -719,6 +754,20 @@ function showResults() {
   const xpEarned = correct * gamification.xpRules.questionCorrect + (answered - correct) * gamification.xpRules.questionIncorrect;
   const hh = Math.round((Date.now() - ps.startedAt) / 1000);
 
+  // ---- chapter-test flow: record result + derive next-state UI ----
+  const isCT = ps.config && ps.config.mode === 'ct';
+  let ctOutcome = null, ctPassBanner = '', ctNextLabel = '', ctNextBtn = '';
+  if (isCT) {
+    ctOutcome = recordChapterTest(ps.config.topic, ps.config.difficulty, correct, ps.questions.length);
+    const ctp = chapterTestProgress(ps.config.topic);
+    const nextDiff = ps.config.difficulty === 'easy' ? (ctp.medium.unlocked ? 'medium' : null) : ps.config.difficulty === 'medium' ? (ctp.hard.unlocked ? 'hard' : null) : null;
+    ctPassBanner = ctOutcome.passed
+      ? `<div class="ct-result ${ctOutcome.passed ? 'pass' : ''}">${nextDiff ? `🎉 Passed! The <b>${nextDiff}</b> chapter test is now unlocked.` : '🎉 Passed! Chapter test ladder complete.'}</div>`
+      : `<div class="ct-result fail">Keep going — you need ${Math.ceil(CHAPTER_TEST_PASS * total) - correct} more correct answers to pass (${Math.round(CHAPTER_TEST_PASS * 100)}% required). Review the explanations below, then retry.</div>`;
+    if (nextDiff) { ctNextLabel = nextDiff.charAt(0).toUpperCase() + nextDiff.slice(1); }
+    if (nextDiff) { ctNextBtn = `<button class="btn btn-primary" onclick="startChapterTest('${ps.config.topic}', '${nextDiff}')">Start ${ctNextLabel} Test →</button>`; }
+  }
+
   // section pacing vs official targets (answered-only)
   const paceRows = (function () {
     const secs = {}; const cnt = {};
@@ -742,7 +791,8 @@ function showResults() {
   const el = document.getElementById('app');
   el.innerHTML = `
     <div class="practice-summary question-view">
-      <h1>Set Complete 🏁</h1>
+      <h1>${isCT ? 'Chapter Test Complete 🏁' : 'Set Complete 🏁'}</h1>
+      ${ctPassBanner}
       <div class="grid grid-2" style="margin-top:.5rem">
         <div class="card text-center">
           <div class="stat-value">${correct}/${total}</div>
@@ -774,9 +824,14 @@ function showResults() {
         <div class="text-muted mt-1" style="margin-top:.5rem;font-size:.85rem">Targets: Quant 21q/45min · Verbal 23q/45min · DI 20q/45min</div>
       </div>` : ''}
       <div class="row mt-2" style="margin-top:1rem;justify-content:center">
-        <button class="btn btn-primary" onclick="location.hash='#/practice'">Back to Practice</button>
-        <button class="btn btn-outline" onclick="location.hash='#/analytics'">View Analytics</button>
-        <button class="btn btn-ghost" onclick="sameConfigAgain()">Do it again</button>
+        ${isCT
+          ? `<button class="btn btn-primary" onclick="location.hash='#/learn/${ps.config.topic}'">Back to Lesson</button>
+             ${ctNextBtn}
+             <button class="btn btn-outline" onclick="startChapterTest('${ps.config.topic}', '${ps.config.difficulty}')">Retry ${ps.config.difficulty.charAt(0).toUpperCase() + ps.config.difficulty.slice(1)}</button>
+             <button class="btn btn-ghost" onclick="location.hash='#/learn'">Curriculum</button>`
+          : `<button class="btn btn-primary" onclick="location.hash='#/practice'">Back to Practice</button>
+             <button class="btn btn-outline" onclick="location.hash='#/analytics'">View Analytics</button>
+             <button class="btn btn-ghost" onclick="sameConfigAgain()">Do it again</button>`}
       </div>
       <div class="card mt-2" style="margin-top:1rem">
         <h3 class="card-title">Review breakdown</h3>
@@ -931,6 +986,7 @@ window.startQuick = startQuick;
 window.startDiagnostic = startDiagnostic;
 window.startCustom = startCustom;
 window.beginSession = beginSession;
+window.startChapterTest = startChapterTest;
 window.nextQuestion = nextQuestion;
 window.showResults = showResults;
 window.quitSession = quitSession;

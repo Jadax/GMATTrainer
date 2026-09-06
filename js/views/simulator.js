@@ -18,6 +18,15 @@ const SIM_SECTIONS = {
   dataInsights: { key: 'dataInsights', name: 'Data Insights', icon: '📊', count: 20, time: 2700 }
 };
 
+/* Official counts are fixed; the mix of difficulties inside each section is
+   balanced so every exam contains enough easy, medium and hard items to
+   stress-test the full span of the section (easy / medium / hard). */
+const SIM_BLUEPRINT = {
+  quant: [['easy', 4], ['medium', 12], ['hard', 5]],
+  verbal: [['easy', 4], ['medium', 13], ['hard', 6]],
+  dataInsights: [['easy', 2], ['medium', 13], ['hard', 5]]
+};
+
 function simLoadSession() {
   try {
     const raw = localStorage.getItem(SIM_KEY);
@@ -100,8 +109,10 @@ function renderSimulatorHub(el) {
     <div class="row row-wrap">
       <div class="lesson-box lesson-box-tip">You can change up to <strong>3 answers</strong> per section before submitting.</div>
       <div class="lesson-box lesson-box-tip">Mark questions for review; the review screen lists them at the end.</div>
-      <div class="lesson-box lesson-box-danger">No calculator in Quant. Calculator on-screen in Data Insights only.</div>
+      <div class="lesson-box lesson-box-tip">Difficulty is balanced per section: a mix of easy, medium and hard items.</div>
+      <div class="lesson-box lesson-box-danger">No calculator in Quant or Verbal. An on-screen 4-function calculator appears in the Data Insights section only.</div>
     </div>
+    <p class="text-muted fs-small" style="margin-top:.5rem">Section scores (60–90) are calibrated to the GMAT Focus band scale. They use accuracy as input and are <b>estimates</b> — the real GMAT adaptively adjusts difficulty in real time and is not reproducible by raw-accuracy mapping alone. Trends matter more than any single number.</p>
 
     ${past.length ? `
       <h2 class="section-title">Past Attempts</h2>
@@ -137,8 +148,39 @@ function shuffleQuestions(arr) {
 
 function buildSimSection(key) {
   const meta = SIM_SECTIONS[key];
-  const pool = questionBank[key].slice();
-  const chosen = shuffleQuestions(pool).slice(0, meta.count);
+  const blueprint = SIM_BLUEPRINT[key] || [['any', meta.count]];
+  let chosen = [];
+  const used = new Set();
+  blueprint.forEach(function (pair) {
+    const diff = pair[0], n = pair[1];
+    const pool = diff === 'any' ? questionBank[key].slice() : questionBank[key].filter(q => q.difficulty === diff && !used.has(q.id));
+    const picked = shuffleQuestions(pool).slice(0, n);
+    picked.forEach(q => used.add(q.id));
+    chosen = chosen.concat(picked);
+  });
+  // Guarantee Data Insights covers every item type (DS/MS/TA/GI/TP).
+  if (key === 'dataInsights') {
+    const types = ['ds', 'ms', 'ta', 'gi', 'tp'];
+    const have = new Set(chosen.map(q => q.topic));
+    types.forEach(t => {
+      if (!have.has(t)) {
+        const cand = questionBank.dataInsights.filter(q => q.topic === t && !used.has(q.id));
+        if (cand.length) {
+          const q = cand[0];
+          chosen.unshift(q);
+          used.add(q.id);
+          have.add(t);
+        }
+      }
+    });
+  }
+  // Defensive: never serve a section short of its official length — top up
+  // from the remaining bank (any difficulty) until the count is reached.
+  if (chosen.length < meta.count) {
+    const fill = questionBank[key].filter(q => !used.has(q.id) && !chosen.some(c => c.id === q.id));
+    chosen = chosen.concat(shuffleQuestions(fill).slice(0, meta.count - chosen.length));
+  }
+  chosen = chosen.slice(0, meta.count);
   return {
     key: key,
     questions: chosen.map(function (q) {
@@ -150,11 +192,26 @@ function buildSimSection(key) {
     }),
     answers: new Array(chosen.length).fill(null),
     marked: new Array(chosen.length).fill(false),
+    qTime: new Array(chosen.length).fill(0),
+    qSeenAt: new Array(chosen.length).fill(null),
     changesLeft: 3,
     elapsed: 0,
     submitted: false,
     timeAllowed: meta.time
   };
+}
+
+/* Per-question clock: accumulate the seconds spent on whichever question is
+   on screen, then carry that value into the post-exam review. */
+function simStampTime() {
+  if (!sim) return;
+  const sec = sim.sections[sim.sectionIdx];
+  if (!sec || sim.qIdx === undefined) return;
+  if (sec.qSeenAt[sim.qIdx] != null) {
+    const delta = Math.max(0, Math.round((Date.now() - sec.qSeenAt[sim.qIdx]) / 1000));
+    sec.qTime[sim.qIdx] = (sec.qTime[sim.qIdx] || 0) + delta;
+  }
+  sec.qSeenAt[sim.qIdx] = Date.now();
 }
 
 function simStartFull() {
@@ -248,6 +305,7 @@ function renderQuestion(el) {
   const q = sec.questions[sim.qIdx];
   const qn = sim.qIdx + 1;
   const total = sec.questions.length;
+  simStampTime();
 
   let passageHtml = '';
   if (q.passage) {
@@ -256,6 +314,34 @@ function renderQuestion(el) {
       <div style="white-space:pre-line">${esc(q.passage)}</div>
     </div>`;
   }
+
+  const calcHtml = sec.key === 'dataInsights' ? `
+      <div class="sim-calc-wrap" style="margin-top:1rem">
+        <button class="btn btn-sm btn-outline" type="button" id="simCalcToggle">🧮 Calculator <span id="simCalcCaret">▼</span></button>
+        <div class="sim-calc" id="simCalc" style="display:none">
+          <div class="sim-calc-display" id="simCalcDisp">0</div>
+          <div class="sim-calc-grid">
+            <button class="calc-key fn" data-k="C" type="button">C</button>
+            <button class="calc-key fn" data-k="BS" type="button">⌫</button>
+            <button class="calc-key op" data-k="/" type="button">÷</button>
+            <button class="calc-key op" data-k="*" type="button">×</button>
+            <button class="calc-key" data-k="7" type="button">7</button>
+            <button class="calc-key" data-k="8" type="button">8</button>
+            <button class="calc-key" data-k="9" type="button">9</button>
+            <button class="calc-key op" data-k="-" type="button">−</button>
+            <button class="calc-key" data-k="4" type="button">4</button>
+            <button class="calc-key" data-k="5" type="button">5</button>
+            <button class="calc-key" data-k="6" type="button">6</button>
+            <button class="calc-key op" data-k="+" type="button">+</button>
+            <button class="calc-key" data-k="1" type="button">1</button>
+            <button class="calc-key" data-k="2" type="button">2</button>
+            <button class="calc-key" data-k="3" type="button">3</button>
+            <button class="calc-key eq" data-k="=" type="button">=</button>
+            <button class="calc-key" data-k="0" type="button">0</button>
+            <button class="calc-key" data-k="." type="button">.</button>
+          </div>
+        </div>
+      </div>` : '';
 
   el.innerHTML = `
     <div class="question-view">
@@ -282,6 +368,8 @@ function renderQuestion(el) {
             <span>${esc(o)}</span>
           </button>`).join('')}
       </div>
+
+      ${calcHtml}
 
       <div class="row" style="justify-content:space-between;margin-top:1rem">
         <button class="btn btn-outline" id="simPrev" ${sim.qIdx === 0 ? 'disabled' : ''}>← Prev</button>
@@ -319,14 +407,89 @@ function renderQuestion(el) {
   });
   // Nav
   el.querySelector('#simPrev').addEventListener('click', function () {
-    if (sim.qIdx > 0) { sim.qIdx -= 1; simSave(); render(); }
+    if (sim.qIdx > 0) { simStampTime(); sim.qIdx -= 1; simSave(); render(); }
   });
   el.querySelector('#simNext').addEventListener('click', function () {
-    if (sim.qIdx < total - 1) { sim.qIdx += 1; simSave(); render(); }
+    if (sim.qIdx < total - 1) { simStampTime(); sim.qIdx += 1; simSave(); render(); }
     else simGoReview();
   });
 
+  // On-screen calculator (Data Insights only)
+  const calcToggle = el.querySelector('#simCalcToggle');
+  if (calcToggle) {
+    bindSimCalc(el);
+    calcToggle.addEventListener('click', function () {
+      const panel = el.querySelector('#simCalc');
+      const open = panel.style.display !== 'none';
+      panel.style.display = open ? 'none' : '';
+      el.querySelector('#simCalcCaret').textContent = open ? '▼' : '▲';
+    });
+  }
+
   startSimTimer(el, sec.timeAllowed - secElapsedNow(sim.sectionIdx));
+}
+
+const SIM_CALC = { acc: 0, op: null, entry: '', fresh: false };
+
+function simCalcApply(a, b, op) {
+  let r = 0;
+  if (op === '+') r = a + b;
+  else if (op === '-') r = a - b;
+  else if (op === '*') r = a * b;
+  else if (op === '/') r = b === 0 ? NaN : a / b;
+  if (isNaN(r) || !isFinite(r)) return NaN;
+  return Math.round(r * 1e10) / 1e10;
+}
+
+function simCalcRender() {
+  const d = document.querySelector('#simCalcDisp');
+  if (d) d.textContent = SIM_CALC.entry !== '' ? SIM_CALC.entry : String(SIM_CALC.acc);
+}
+
+function simCalcKey(k) {
+  if (SIM_CALC.fresh) { SIM_CALC.acc = 0; SIM_CALC.op = null; SIM_CALC.entry = ''; SIM_CALC.fresh = false; }
+  if (k >= '0' && k <= '9') {
+    if (SIM_CALC.entry.length >= 12) { simCalcRender(); return; }
+    SIM_CALC.entry = SIM_CALC.entry === '0' ? k : SIM_CALC.entry + k;
+  } else if (k === '.') {
+    if (SIM_CALC.entry.indexOf('.') < 0) SIM_CALC.entry = (SIM_CALC.entry === '' ? '0' : SIM_CALC.entry) + '.';
+  } else if (k === '+' || k === '-' || k === '*' || k === '/') {
+    const v = SIM_CALC.entry === '' ? SIM_CALC.acc : parseFloat(SIM_CALC.entry);
+    if (SIM_CALC.op && SIM_CALC.entry !== '' && !isNaN(v)) {
+      const r = simCalcApply(SIM_CALC.acc, v, SIM_CALC.op);
+      if (isNaN(r)) { SIM_CALC.acc = 0; SIM_CALC.op = null; SIM_CALC.entry = ''; SIM_CALC.fresh = true; }
+      else { SIM_CALC.acc = r; SIM_CALC.entry = ''; }
+    } else {
+      if (SIM_CALC.entry !== '') SIM_CALC.acc = v;
+      SIM_CALC.entry = '';
+    }
+    SIM_CALC.op = k;
+  } else if (k === '=') {
+    const v = SIM_CALC.entry === '' ? SIM_CALC.acc : parseFloat(SIM_CALC.entry);
+    if (SIM_CALC.op !== null) {
+      const r = simCalcApply(SIM_CALC.acc, v, SIM_CALC.op);
+      if (isNaN(r)) { SIM_CALC.acc = 0; SIM_CALC.op = null; SIM_CALC.entry = ''; SIM_CALC.fresh = true; }
+      else { SIM_CALC.acc = r; SIM_CALC.op = null; SIM_CALC.entry = ''; SIM_CALC.fresh = true; }
+    } else {
+      SIM_CALC.acc = isNaN(v) ? 0 : v;
+      SIM_CALC.entry = '';
+      SIM_CALC.fresh = true;
+    }
+  } else if (k === 'C') {
+    SIM_CALC.acc = 0; SIM_CALC.op = null; SIM_CALC.entry = ''; SIM_CALC.fresh = false;
+  } else if (k === 'BS') {
+    SIM_CALC.entry = SIM_CALC.entry.slice(0, -1);
+  }
+  simCalcRender();
+}
+
+function bindSimCalc(el) {
+  el.querySelectorAll('.sim-calc .calc-key').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      simCalcKey(this.getAttribute('data-k'));
+      playSound('select');
+    });
+  });
 }
 
 function secElapsedNow(secIdx) {
@@ -389,6 +552,7 @@ function renderReview(el) {
 
 function simJumpBackToQuestions() {
   Timer.stop();
+  simStampTime();
   sim.phase = 'question';
   sim.qIdx = 0;
   simSave();
@@ -397,6 +561,7 @@ function simJumpBackToQuestions() {
 
 function simJumpToQuestion(i) {
   Timer.stop();
+  simStampTime();
   sim.phase = 'question';
   sim.qIdx = i;
   simSave();
@@ -406,6 +571,7 @@ function simJumpToQuestion(i) {
 function simGoReview(autoTimeUp) {
   if (!sim) return;
   const sec = sim.sections[sim.sectionIdx];
+  simStampTime();
   sec.elapsed = secElapsedNow(sim.sectionIdx);
   Timer.stop();
   sim.phase = 'review';
@@ -431,6 +597,7 @@ function renderIntermission(el) {
 }
 
 function simBeginNextSection() {
+  simStampTime();
   sim.sectionIdx += 1;
   sim.qIdx = 0;
   sim.phase = 'question';
@@ -451,6 +618,7 @@ function simAbandon() {
 function simSubmitSection() {
   if (!sim) return;
   const sec = sim.sections[sim.sectionIdx];
+  simStampTime();
   sec.elapsed = secElapsedNow(sim.sectionIdx);
   Timer.stop();
 
@@ -467,11 +635,12 @@ function simSubmitSection() {
   });
   if (answeredCount > 0) addStudySession(answeredCount, sec.elapsed, sec.key);
   sec.submitted = true;
-  simSave();
 
-  // advance
+  // advance after the phase transition so the persisted state is never stale
+  // (renderSimulatorRun re-loads from storage on every render)
   if (sim.mode === 'full' && sim.sectionIdx < sim.sections.length - 1) {
     sim.phase = 'intermission';
+    simSave();
     playSound('done');
     render();
   } else {
@@ -492,14 +661,26 @@ function simFinish() {
   const st = loadState();
   const sectionScores = {};
   const totals = { attempts: 0, correct: 0 };
+  const reviewRows = [];
 
   sim.sections.forEach(sec => {
     let att = 0, cor = 0;
     sec.questions.forEach((q, i) => {
-      if (sec.answers[i] !== null) {
+      const chosen = sec.answers[i];
+      const answered = chosen !== null;
+      if (answered) {
         att += 1;
-        if (sec.answers[i] === q.correct) cor += 1;
+        if (chosen === q.correct) cor += 1;
       }
+      reviewRows.push({
+        section: sec.key,
+        question: q,
+        chosen: chosen,
+        correct: answered ? chosen === q.correct : false,
+        unanswered: !answered,
+        diff: q.difficulty,
+        secs: (sec.qTime && sec.qTime[i]) || 0
+      });
     });
     const acc = att ? cor / att : 0;
     sectionScores[sec.key] = gamification.sectionScoreFromAccuracy(acc);
@@ -508,12 +689,16 @@ function simFinish() {
   });
 
   const accuracy = totals.attempts ? totals.correct / totals.attempts : 0;
-  let total;
+  let total, basis;
   if (sim.mode === 'full') {
-    total = gamification.projectedTotalScore(st.stats);
+    // Official endpoints: 60+60+60 → 205, 90+90+90 → 805, monotonic in between.
+    const sum = ['quant', 'verbal', 'dataInsights'].reduce((s, k) => s + (sectionScores[k] || 60), 0);
+    total = Math.max(205, Math.min(805, Math.round(205 + (sum - 180) / 90 * 600)));
+    basis = 'full';
   } else {
-    // single-section: still project, but bias by section count
+    // Single section only: treat as directional, not a real total.
     total = gamification.projectedTotalScore(st.stats);
+    basis = 'single';
   }
 
   updateState(s => {
@@ -522,7 +707,8 @@ function simFinish() {
       mode: sim.mode,
       total: total,
       sectionScores: sectionScores,
-      accuracy: accuracy
+      accuracy: accuracy,
+      basis: basis
     });
     s.stats.simsCompleted += 1;
     grantXp(gamification.xpRules.simCompleted);
@@ -530,47 +716,138 @@ function simFinish() {
   });
   checkBadges();
 
-  // save result for the results view
-  sim._result = { total: total, sectionScores: sectionScores, accuracy: accuracy };
+  // save result + full per-question data for the post-exam review
+  sim._result = {
+    total: total,
+    sectionScores: sectionScores,
+    accuracy: accuracy,
+    basis: basis,
+    mode: sim.mode,
+    secOrder: sim.sections.map(s => s.key),
+    review: reviewRows
+  };
+  lastSimResult = sim._result;
   sim.phase = 'done';
   simSave();
   render();
 }
 
+let lastSimResult = null;
+
 function renderSimDone(el) {
-  const r = sim._result;
-  const st = loadState();
-  const secOrder = sim.sections.map(s => s.key);
-  const cards = Object.keys(SIM_SECTIONS).filter(k => secOrder.includes(k));
-  el.innerHTML = `
-    <div class="lesson-container text-center">
-      <div class="stat-display" style="font-size:3rem">🏁</div>
-      <h1>Exam Complete</h1>
-      <p class="text-muted">${new Date().toLocaleString()}</p>
-      <div class="row" style="justify-content:center;align-items:baseline;gap:1rem;margin:1.5rem 0">
-        <div>
-          <div class="stat-display" style="font-size:3rem;color:var(--color-primary)">${r.total}</div>
-          <div class="stat-label">GMAT Focus Total</div>
+  const r = (sim && sim._result) || lastSimResult;
+  if (!r) { location.hash = '#/simulator'; return; }
+  const secOrder = r.secOrder;
+  const bySec = {};
+  r.review.forEach(row => { (bySec[row.section] = bySec[row.section] || []).push(row); });
+
+  const answered = r.review.length;
+  const correctCount = r.review.filter(x => x.correct).length;
+
+  const secPanels = secOrder.map(key => {
+    const rows = bySec[key] || [];
+    const att = rows.filter(x => !x.unanswered).length;
+    const cor = rows.filter(x => x.correct).length;
+    const totSecs = rows.reduce((s, x) => s + (x.secs || 0), 0);
+    return `
+      <div class="card" style="margin-top:1rem">
+        <div class="row" style="align-items:center;gap:.5rem;flex-wrap:wrap">
+          <h3 style="margin:0">${SIM_SECTIONS[key].icon} ${SIM_SECTIONS[key].name}</h3>
+          <span class="badge ${cor / Math.max(1, att) >= 0.7 ? 'badge-success' : 'badge-ghost'}">${cor}/${att}</span>
+          <span class="text-muted fs-small" style="margin-left:auto">${fmtShort(totSecs)} total · avg ${fmtShort(att ? Math.round(totSecs / att) : 0)}/q</span>
         </div>
-        <div class="text-muted" style="font-size:1.4rem">/ 805</div>
+        <div class="sim-review-grid" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem">
+          ${rows.map((row, i) => `
+            <button class="sim-review-chip ${row.unanswered ? 'chip-un' : row.correct ? 'chip-ok' : 'chip-bad'}" data-sec="${key}" data-i="${i}" type="button" title="${esc(row.question.text.slice(0, 90))}">
+              ${row.unanswered ? '—' : String.fromCharCode(65 + row.chosen)}
+            </button>`).join('')}
+        </div>
+        <div class="text-muted fs-small" style="margin-top:.5rem">Chips show your answer letter · green = correct, red = wrong, grey = unanswered. Click one to review it.</div>
+      </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="lesson-container">
+      <div class="text-center">
+        <div class="stat-display" style="font-size:3rem">🏁</div>
+        <h1>Exam Complete</h1>
+        <p class="text-muted">${new Date().toLocaleString()}</p>
+        <div class="row" style="justify-content:center;align-items:baseline;gap:1rem;margin:1.5rem 0">
+          <div>
+            <div class="stat-display" style="font-size:3rem;color:var(--color-primary)">${r.total}</div>
+            <div class="stat-label">GMAT Focus Total ${r.basis === 'single' ? '(directional)' : ''}</div>
+          </div>
+          <div class="text-muted" style="font-size:1.4rem">/ 805</div>
+        </div>
       </div>
+
       <div class="grid grid-2" style="max-width:520px;margin:0 auto 1rem">
-        ${cards.map(k => `
+        ${secOrder.map(k => `
           <div class="card text-center">
             <div class="stat-value">${r.sectionScores[k]}</div>
             <div class="stat-label">${SIM_SECTIONS[k].icon} ${SIM_SECTIONS[k].name}</div>
-            <div class="text-muted fs-small">Section score (60–90)</div>
+            <div class="text-muted fs-small">Section score (60–90) · est.</div>
           </div>`).join('')}
       </div>
-      <div class="text-muted">Overall accuracy: ${Math.round(r.accuracy * 100)}%</div>
-      <p class="text-muted">Section scores are heuristic projections from your accuracy.<br>On the real GMAT, Section Adaptive Scoring calibrates every question.</p>
-      <div class="row" style="justify-content:center;margin-top:1rem">
+      <div class="text-center">
+        <div class="text-muted">Overall accuracy: ${Math.round(r.accuracy * 100)}% · ${correctCount}/${answered} correct</div>
+        <p class="text-muted fs-small" style="max-width:640px;margin:1rem auto 0">
+          Scores here are <b>estimates</b>. On the real GMAT Focus, the Section Adaptive algorithm
+          recalibrates each question to your ability, so identical accuracy can map to different
+          scores. Use this number to <b>track trends</b>, not as a guaranteed forecast.
+          ${r.basis === 'single' ? '<b>You completed one section</b> — the total is projected directionally from practice history.' : ''}
+        </p>
+      </div>
+
+      <div style="margin-top:1.5rem">
+        <h2>Post-Exam Review</h2>
+        ${secPanels}
+        <div id="simReviewDetail"></div>
+      </div>
+
+      <div class="row" style="justify-content:center;margin-top:1.5rem">
         <button class="btn btn-primary" onclick="location.hash='#/practice/error'">Review Missed Questions</button>
         <button class="btn btn-outline" onclick="location.hash='#/analytics'">Analytics</button>
-        <button class="btn btn-ghost" onclick="simClear();location.hash='#/simulator'">Back to Simulator</button>
+        <button class="btn btn-ghost" onclick="simAbandon()">Back to Simulator</button>
       </div>
     </div>`;
+
+  el.querySelectorAll('.sim-review-chip').forEach(chip => {
+    chip.addEventListener('click', function () {
+      const key = this.getAttribute('data-sec');
+      const i = +this.getAttribute('data-i');
+      const rows = bySec[key];
+      if (!rows) return;
+      renderSimReviewDetail(el, rows[i]);
+    });
+  });
+
   simClear();
+}
+
+function renderSimReviewDetail(el, row) {
+  const q = row.question;
+  const box = el.querySelector('#simReviewDetail');
+  box.innerHTML = `
+    <div class="example-block" style="margin-top:1rem">
+      <div class="row" style="align-items:center;gap:.5rem;flex-wrap:wrap">
+        <span class="badge ${q.difficulty === 'hard' ? 'badge-hard' : q.difficulty === 'medium' ? 'badge-medium' : 'badge-easy'}">${difficultyLabel(q.difficulty)}</span>
+        <span class="badge badge-ghost">${topicTagName(q.topic)}</span>
+        <span class="badge badge-ghost">⏱ ${fmtShort(row.secs || 0)}</span>
+        <span class="text-muted fs-small" style="margin-left:auto">You answered: ${row.unanswered ? '—' : String.fromCharCode(65 + row.chosen)} · Correct: ${String.fromCharCode(65 + q.correct)}</span>
+      </div>
+      ${q.passage ? `<div class="clue-box" style="margin:1rem 0"><div style="font-weight:700;margin-bottom:.5rem">📄 ${esc(q.passageTitle || 'Passage')}</div><div style="white-space:pre-line">${esc(q.passage)}</div></div>` : ''}
+      <div class="example-question">${esc(q.text)}</div>
+      <div>
+        ${q.options.map((o, oi) => `
+          <div class="option ${oi === q.correct ? 'correct' : ''} ${row.chosen === oi && oi !== q.correct ? 'incorrect' : ''} disabled">
+            <span class="option-letter">${String.fromCharCode(65 + oi)}</span>
+            <span>${esc(o)} ${oi === q.correct ? '<span class="badge badge-success">Correct answer</span>' : row.chosen === oi ? '<span class="badge badge-error">Your answer</span>' : ''}</span>
+          </div>`).join('')}
+      </div>
+      <div class="example-reason" style="margin-top:.5rem">${esc(q.explanation || '')}</div>
+      <button class="btn btn-sm btn-ghost" type="button" onclick="document.getElementById('simReviewDetail').innerHTML=''">✕ Close review</button>
+    </div>`;
 }
 
 /* ---------------------------------------------------------------------

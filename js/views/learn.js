@@ -21,11 +21,39 @@ function renderLearnHome(el) {
   }
   const prog = topicProgressStats();
 
+  const order = [];
+  sections.forEach(s => s.topics.forEach(t => order.push(t.id)));
+  const nextUp = order.find(id => learningStatus(id).status !== 'mastered') || null;
+
   el.innerHTML = `
     <div class="page-header">
       <h1>Learn the GMAT Focus Curriculum</h1>
       <p class="text-muted">A complete 0→100 syllabus across all three sections. Master topics section by section.</p>
     </div>
+
+    <section class="card" style="margin-bottom:1rem">
+      <div class="row" style="align-items:center;gap:.5rem;flex-wrap:wrap">
+        <div>
+          <h3 style="margin:0">🗺️ Suggested Course Path</h3>
+          <p class="text-muted" style="margin:.25rem 0 0">Work each chapter's lesson, then climb its chapter tests (Easy → Medium → Hard).</p>
+        </div>
+        ${nextUp ? `<a class="btn btn-sm btn-outline" style="margin-left:auto" href="#/learn/${nextUp}">Continue: ${esc((allTopics.find(t => t.id === nextUp) || {}).name || '')} →</a>` : ''}
+      </div>
+      <div class="course-road" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem;align-items:stretch">
+        ${order.map((id, i) => {
+          const t = allTopics.find(x => x.id === id);
+          const st_ = learningStatus(id);
+          const done = st_.status === 'mastered' ? 'done' : st_.status === 'in-progress' ? 'doing' : '';
+          const isNext = nextUp === id;
+          return `<a class="road-step ${done} ${isNext ? 'next' : ''}" href="#/learn/${id}" title="${esc((t || {}).name || '')}">
+            <span class="road-num">${i + 1}</span>
+            <span class="road-name">${esc((t || {}).name || '')}</span>
+            <span class="road-icon">${done === 'done' ? '✅' : isNext ? '▶️' : done === 'doing' ? '◐' : '○'}</span>
+          </a>`;
+        }).join('')}
+      </div>
+      <div class="text-muted fs-small" style="margin-top:.5rem">Tip: a chapter is fully cleared once you pass its <b>Hard</b> chapter test — that is your TTP-style mastery checkpoint.</div>
+    </section>
 
     <section class="card">
       <div class="row row-wrap" style="align-items:center;gap:.5rem 1rem">
@@ -103,6 +131,7 @@ function renderTopicLesson(el, args) {
     return;
   }
   const ls = learningStatus(topicId);
+  const ctp = chapterTestProgress(topicId);
   const skillMap = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
   const diffClass = { beginner: 'badge-easy', intermediate: 'badge-medium', advanced: 'badge-hard' };
   const levelLabel = skillMap[topic.level] || topic.level;
@@ -117,6 +146,7 @@ function renderTopicLesson(el, args) {
   if (topic.traps.length) toc.push(['lesson-traps', '⚠️ Traps']);
   toc.push(['lesson-examples', '✍️ Examples']);
   toc.push(['lesson-check', '🎯 Quick Check']);
+  toc.push(['lesson-tests', '🏁 Chapter Tests']);
 
   el.innerHTML = `
     <div class="lesson-progress-fixed" id="lessonProgressBar" aria-hidden="true"></div>
@@ -185,6 +215,10 @@ function renderTopicLesson(el, args) {
         <div id="quickCheck"></div>
       </div>
 
+      <div class="lesson-section" id="lesson-tests">
+        ${chapterTestsBlock(topic, ctp)}
+      </div>
+
       <div class="lesson-practice-cta">
         <div>
           <div class="lesson-nav-label">Feeling sharp?</div>
@@ -207,6 +241,49 @@ function renderTopicLesson(el, args) {
   renderLessonNav(el, topicId);
   initQuickCheck(el, topic);
   initLessonScroll(el);
+}
+
+function chapterTestsBlock(topic, ctp) {
+  const diffs = [
+    { d: 'easy', label: 'Easy', icon: '🟢', why: 'Locked until you complete the Quick Check above.' },
+    { d: 'medium', label: 'Medium', icon: '🟡', why: 'Locked until you pass the Easy chapter test.' },
+    { d: 'hard', label: 'Hard', icon: '🔴', why: 'Locked until you pass the Medium chapter test.' }
+  ];
+  const pool = curriculum.questionsForTopic(topic.id);
+  return `
+    <div class="row" style="align-items:center;gap:.5rem;flex-wrap:wrap">
+      <h3 style="margin:0">🏁 <span>Chapter Tests</span></h3>
+      <span class="badge badge-ghost fs-small">${CHAPTER_TEST_LEN} questions · pass at ${Math.round(CHAPTER_TEST_PASS * 100)}%</span>
+    </div>
+    <p class="text-muted">Ascend the difficulty ladder to prove chapter mastery. Each test draws fresh questions from this chapter's real bank.</p>
+    <div class="ct-ladder-grid" style="display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+      ${diffs.map(function (c) {
+        const slot = ctp[c.d];
+        const qAvail = pool.filter(q => q.difficulty === c.d).length;
+        const attempts = slot.totalAttempts;
+        let status, btn, note;
+        if (!slot.unlocked) {
+          status = '<span class="badge badge-ghost">🔒 Locked</span>';
+          btn = '<button class="btn btn-sm btn-ghost" type="button" disabled>Locked</button>';
+          note = c.why;
+        } else if (slot.passed) {
+          status = '<span class="badge badge-success">Passed ✓</span>';
+          btn = '<button class="btn btn-sm btn-outline" type="button" onclick="startChapterTest(\'' + topic.id + '\',\'' + c.d + '\')">Retake</button>';
+          note = 'Best ' + slot.best + '/' + CHAPTER_TEST_LEN + (attempts > 1 ? ' · ' + attempts + ' attempts' : '');
+        } else {
+          status = attempts ? '<span class="badge badge-accent">Best ' + slot.best + '/' + CHAPTER_TEST_LEN + '</span>' : '<span class="badge badge-ghost">Not attempted</span>';
+          btn = '<button class="btn btn-sm btn-primary" type="button" onclick="startChapterTest(\'' + topic.id + '\',\'' + c.d + '\')">Start ' + c.label + ' test →</button>';
+          note = qAvail >= 4 ? qAvail + ' ' + c.label.toLowerCase() + ' questions in the bank' : 'Chapter bank calibrated for this level';
+        }
+        return '<div class="card ct-card">' +
+          '<div class="row" style="align-items:center;gap:.5rem">' +
+            '<span class="ct-icon">' + c.icon + '</span><span class="ct-label">' + c.label + '</span>' + status +
+          '</div>' +
+          '<div class="ct-note fs-small text-muted">' + note + '</div>' +
+          btn +
+        '</div>';
+      }).join('')}
+    </div>`;
 }
 
 function lessonPara(p) {
@@ -297,7 +374,7 @@ function initLessonScroll(el) {
     const max = Math.max(0, doc.scrollHeight - winH);
     const bar = document.getElementById('lessonProgressBar');
     if (bar) bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0).toFixed(1) + '%';
-    const ids = ['lesson-overview', 'lesson-formulas', 'lesson-strategies', 'lesson-traps', 'lesson-examples', 'lesson-check'];
+    const ids = ['lesson-overview', 'lesson-formulas', 'lesson-strategies', 'lesson-traps', 'lesson-examples', 'lesson-check', 'lesson-tests'];
     let cur = ids[0];
     ids.forEach(function (id) {
       const node = document.getElementById(id);
@@ -364,6 +441,12 @@ function initQuickCheck(el, topic) {
       if (answers[qi] === undefined) {
         answers[qi] = ci === q.a;
         answered += 1;
+        updateState(st => {
+          const r = st.learning[topic.id] || (st.learning[topic.id] = { status: 'not-started' });
+          r.qc = r.qc || { answers: 0, correct: 0 };
+          r.qc.answers += 1;
+          if (ci === q.a) r.qc.correct += 1;
+        });
       }
       const prog = el.querySelector('#qcProgress');
       if (prog) prog.textContent = answered + '/' + topic.check.length + ' answered';

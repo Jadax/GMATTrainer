@@ -24,7 +24,8 @@ const gamification = (function () {
     simCompleted: 120,
     dailyGoalHit: 40,
     perfectSet: 25,
-    flashcardReview: 2
+    flashcardReview: 2,
+    chapterTestPassed: 40
   };
 
   /* ---------- Badges / achievements ---------- */
@@ -101,11 +102,33 @@ const gamification = (function () {
     section accuracy 25% → 60, 40% → 65, 55% → 70, 70% → 75, 85% → 80, 95% → 85,
     then total = sum with a base and a "consistency" readjustment.
   */
+  /* Focus Edition section scores are adaptive and computed by GMAC's
+     algorithm, so any simulator mapping is a heuristic. We use a simple,
+     transparent, monotone band calibration (documented + labeled as an
+     estimate in the UI). Key points:
+       0%   → 60    ·    60% → 72    ·    85% → 81
+       25%  → 63    ·    70% → 75    ·    92% → 84
+       40%  → 66    ·    78% → 78    ·    96% → 87
+       50%  → 69    ·                     100% → 90
+     Linear interpolation between anchor points. */
+  var SECTION_SCORE_BANDS = [
+    [0.00, 60], [0.25, 63], [0.40, 66], [0.50, 69],
+    [0.60, 72], [0.70, 75], [0.78, 78], [0.85, 81],
+    [0.92, 84], [0.96, 87], [1.00, 90]
+  ];
   function sectionScoreFromAccuracy(acc) {
     var x = Math.max(0, Math.min(1, acc));
-    // Logistic-ish curve pressed into [60, 90]
-    var s = 90 - 30 / (1 + Math.pow(x / 0.6, 2.6));
-    return Math.max(60, Math.min(90, Math.round(s)));
+    var out = 60;
+    for (var i = 0; i < SECTION_SCORE_BANDS.length - 1; i++) {
+      var a = SECTION_SCORE_BANDS[i], b = SECTION_SCORE_BANDS[i + 1];
+      if (x >= a[0] && x <= b[0]) {
+        var t = b[0] === a[0] ? 0 : (x - a[0]) / (b[0] - a[0]);
+        out = a[1] + t * (b[1] - a[1]);
+        break;
+      }
+      if (x > b[0]) out = b[1];
+    }
+    return Math.max(60, Math.min(90, Math.round(out)));
   }
 
   function projectedTotalScore(stat) {

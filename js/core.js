@@ -509,6 +509,58 @@ function markTopicLearned(topicId) {
   scheduleRepetition(topicId);
 }
 
+/* TTP-style difficulty ladder: Quick Check → Easy → Medium → Hard chapter tests.
+   Pass mark = at least 80% of questions correct. Medium unlocks on Easy pass,
+   Hard unlocks on Medium pass, and passing Hard finishes the chapter. */
+const CHAPTER_TEST_LEN = 6;
+const CHAPTER_TEST_PASS = 0.8;
+
+function chapterTestProgress(topicId) {
+  const rec = loadState().learning[topicId] || {};
+  const tests = rec.tests || {};
+  const topic = curriculum.topics.find(x => x.id === topicId);
+  const qcDone = !!(topic && topic.check.length > 0 && rec.qc && (rec.qc.answers || 0) >= topic.check.length);
+  const snap = d => ({
+    best: (tests[d] && tests[d].best) || 0,
+    totalAttempts: (tests[d] && tests[d].attempts) || 0,
+    passed: !!(tests[d] && tests[d].passed)
+  });
+  const easy = snap('easy');
+  const medium = snap('medium');
+  const hard = snap('hard');
+  return {
+    easy: Object.assign({ unlocked: qcDone || easy.passed || medium.passed || hard.passed }, easy),
+    medium: Object.assign({ unlocked: easy.passed }, medium),
+    hard: Object.assign({ unlocked: medium.passed }, hard),
+    qcDone: qcDone
+  };
+}
+
+function recordChapterTest(topicId, difficulty, correct, total) {
+  const required = Math.ceil(CHAPTER_TEST_PASS * (total || CHAPTER_TEST_LEN));
+  let outcome = { difficulty: difficulty, passed: false, best: correct, required: required };
+  updateState(st => {
+    const r = st.learning[topicId] || (st.learning[topicId] = { status: 'not-started' });
+    r.tests = r.tests || {};
+    const prev = r.tests[difficulty] || { best: 0, attempts: 0, passed: false };
+    const passed = correct >= required;
+    r.tests[difficulty] = {
+      best: Math.max(prev.best, correct),
+      attempts: prev.attempts + 1,
+      passed: prev.passed || passed,
+      ts: Date.now()
+    };
+    outcome.passed = r.tests[difficulty].passed;
+    outcome.best = r.tests[difficulty].best;
+    if (passed) {
+      grantXp(gamification.xpRules.chapterTestPassed, st);
+      st.stats.history.unshift({ icon: '🏁', text: 'Chapter test passed (' + difficulty + '): ' + topicName(topicId), ts: Date.now() });
+      if (st.stats.history.length > 12) st.stats.history.length = 12;
+    }
+  });
+  return outcome;
+}
+
 function scheduleRepetition(topicId) {
   updateState(st => {
     const t = st.learning[topicId] || (st.learning[topicId] = {});
@@ -731,7 +783,7 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.5.0';
 
 const SECTION_META = {
   quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: '🔢', count: 21, time: 2700 },
