@@ -73,6 +73,7 @@ function buildDefaultState() {
                           //           felt, errorTag, confidence, note}] } }
     },
     learning: {},        // { topicId: {status: not-started|in-progress|mastered, lastLessonAt, due} }
+    diagnostic: null,    // placement diagnostic result {ts, quant:{correct,total,level}, verbal:{...}, started}
     sims: [],            // completed full-length attempts {ts, sections, totalScore, sectionScores, accuracy}
     planner: null,       // { goalDate, hoursPerWeek, generatedAt, week: [...] }
     flashcards: [],      // [{front, back, due, reviews}]
@@ -783,7 +784,7 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.6.0';
 
 const SECTION_META = {
   quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: '🔢', count: 21, time: 2700 },

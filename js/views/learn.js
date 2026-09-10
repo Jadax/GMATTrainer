@@ -23,7 +23,12 @@ function renderLearnHome(el) {
 
   const order = [];
   sections.forEach(s => s.topics.forEach(t => order.push(t.id)));
-  const nextUp = order.find(id => learningStatus(id).status !== 'mastered') || null;
+  let nextUp = order.find(id => learningStatus(id).status !== 'mastered') || null;
+  // a completed placement diagnostic pins the recommended starting topic
+  const diag = st.diagnostic;
+  const diagStart = diag && diag.started && diag.started !== 'quant-pct' && learningStatus(diag.started).status !== 'mastered'
+    ? diag.started : null;
+  const startId = diagStart || nextUp;
 
   el.innerHTML = `
     <div class="page-header">
@@ -31,20 +36,32 @@ function renderLearnHome(el) {
       <p class="text-muted">A complete 0→100 syllabus across all three sections. Master topics section by section.</p>
     </div>
 
+    ${!diag ? `
+    <section class="card diag-cta" style="margin-bottom:1rem;border-left:4px solid var(--color-secondary)">
+      <div class="row row-wrap" style="align-items:center;gap:.5rem 1rem">
+        <span style="font-size:1.8rem" aria-hidden="true">🧭</span>
+        <div style="flex:1;min-width:200px">
+          <h3 style="margin:0">Not sure where to start?</h3>
+          <p class="text-muted" style="margin:.25rem 0 0">Take the 16-minute placement diagnostic and get a personalized starting point.</p>
+        </div>
+        <a class="btn btn-primary" href="#/diagnostic">Take the placement diagnostic →</a>
+      </div>
+    </section>` : ''}
+
     <section class="card" style="margin-bottom:1rem">
       <div class="row" style="align-items:center;gap:.5rem;flex-wrap:wrap">
         <div>
           <h3 style="margin:0">🗺️ Suggested Course Path</h3>
           <p class="text-muted" style="margin:.25rem 0 0">Work each chapter's lesson, then climb its chapter tests (Easy → Medium → Hard).</p>
         </div>
-        ${nextUp ? `<a class="btn btn-sm btn-outline" style="margin-left:auto" href="#/learn/${nextUp}">Continue: ${esc((allTopics.find(t => t.id === nextUp) || {}).name || '')} →</a>` : ''}
+        ${startId ? `<a class="btn btn-sm btn-outline" style="margin-left:auto" href="#/learn/${startId}">${diagStart ? 'Your recommended start: ' : 'Continue: '}${esc((allTopics.find(t => t.id === startId) || {}).name || '')} →</a>` : ''}
       </div>
       <div class="course-road" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem;align-items:stretch">
         ${order.map((id, i) => {
           const t = allTopics.find(x => x.id === id);
           const st_ = learningStatus(id);
           const done = st_.status === 'mastered' ? 'done' : st_.status === 'in-progress' ? 'doing' : '';
-          const isNext = nextUp === id;
+          const isNext = startId === id;
           return `<a class="road-step ${done} ${isNext ? 'next' : ''}" href="#/learn/${id}" title="${esc((t || {}).name || '')}">
             <span class="road-num">${i + 1}</span>
             <span class="road-name">${esc((t || {}).name || '')}</span>
@@ -104,7 +121,7 @@ function learnTopicCard(t) {
   const ls = learningStatus(t.id);
   const stateIcon = { 'not-started': '○', 'in-progress': '◐', 'mastered': '●' }[ls.status] || '○';
   const stateLabel = { 'not-started': 'Not started', 'in-progress': 'In progress', 'mastered': 'Mastered' }[ls.status] || ls.status;
-  const skillMap = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
+  const skillMap = { foundation: 'Foundations', beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
   return `
     <a class="card card-hover topic-card" href="#/learn/${t.id}" style="text-decoration:none">
       <div class="row" style="align-items:center">
@@ -132,8 +149,8 @@ function renderTopicLesson(el, args) {
   }
   const ls = learningStatus(topicId);
   const ctp = chapterTestProgress(topicId);
-  const skillMap = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
-  const diffClass = { beginner: 'badge-easy', intermediate: 'badge-medium', advanced: 'badge-hard' };
+  const skillMap = { foundation: 'Foundations', beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
+  const diffClass = { foundation: 'badge-ghost', beginner: 'badge-easy', intermediate: 'badge-medium', advanced: 'badge-hard' };
   const levelLabel = skillMap[topic.level] || topic.level;
   const sec = curriculum.sections.find(s => s.topics.some(t => t.id === topicId));
   const secName = sec ? sec.name : '';

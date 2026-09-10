@@ -296,7 +296,13 @@ function beginSession(config) {
     thinkStart: Date.now()
   };
   persistSession();
-  location.hash = '#/practice/session';
+  const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  const onSession = parts[0] === 'practice' && parts[1] === 'session';
+  if (onSession) {
+    window.render(); // same-route restart (e.g. Retry from results) - hash won't change
+  } else {
+    location.hash = '#/practice/session';
+  }
 }
 
 function startQuick() {

@@ -2336,7 +2336,694 @@ const curriculum = (function () {
   /* ================================================================================================================================
      Aggregation & helpers
      ================================================================ */
+  /* ================================================================
+     FOUNDATIONS tier — the "from zero" runway before GMAT content.
+     Level: foundation (below beginner). Nash squarely at the
+     pre-GMAT skills a 500-scorer needs to survive the real material.
+     ================================================================ */
+  const foundationTopics = [
+  /* ================================================================
+     F1. NUMBER SENSE & CORE OPERATIONS
+     ================================================================ */
+  topic('found-ops', 'Number Sense & Core Operations', 'foundations', 'foundation', {
+    overview: [
+      'This chapter rebuilds your arithmetic floor: place value, the four operations, negatives, order of operations, and estimation. Nothing here is GMAT-specific; everything here is assumed by every GMAT question. If the numbers scare you, this is where you start.',
+      'Place value makes decimals and big numbers readable: in 4,205 the 2 means 2 hundreds, the 4 means 4 thousands. Reading a number as thousands/hundreds/tens/ones before any calculation prevents the most humiliating arithmetic errors.',
+      'Addition and subtraction are exact skills: line numbers up by their right-hand digit, carry when a column exceeds 9, borrow when a digit is too small. Do these by hand — calculators hide the mechanical fluency you are actually building.',
+      'Multiplication and division are the next floor. Memorize your times table through 12 × 12 cold, treat division as asking "how many times does the divisor fit?", and always sanity-check a quotient by multiplying it back.',
+      'Negative numbers move left on the number line. Adding a negative pulls left; subtracting a negative is the same as adding its positive twin (−7 − (−5) = −7 + 5 = −2). Products of two negatives are positive; a negative times a positive is negative. These three facts settle nearly every sign trap on the test.',
+      'Order of operations is a locked contract: parentheses, exponents, multiplication/division (left to right), addition/subtraction (left to right) — PEMDAS. In 12 + 3 × 4 you multiply first: 12 + 12 = 24, never (12 + 3) × 4 = 60.',
+      'Estimation is the licensed shortcut: 399 × 8 is clearly near 3200, so an option of 2740 or 2140 is dead on arrival without any exact arithmetic. Estimate BEFORE you compute, then compute exactly only if two options survive.',
+      'Perfect squares and small powers deserve drill: the squares through 15² and the cubes of 2, 3, 4, 5 appear constantly, and recognizing 2⁵ = 32 instantly beats re-multiplying every time.',
+      'Test-day insight: the GMAT never tests arithmetic for its own sake — it tests whether you can keep thousands of place-value and sign facts stable under pressure. Speed at this tier comes from automation, not cleverness.'
+    ],
+    formulas: [
+      { term: 'Place value', def: 'in 4,205 the digits mean 4 thousands + 2 hundreds + 0 tens + 5 ones' },
+      { term: 'Commutative +', def: 'a + b = b + a: order never changes a sum' },
+      { term: 'Commutative ×', def: 'a × b = b × a: order never changes a product' },
+      { term: 'Associative (+)', def: '(a + b) + c = a + (b + c): grouping never changes a sum' },
+      { term: 'Distributive', def: 'a(b + c) = ab + ac — the glue between arithmetic and algebra' },
+      { term: 'Adding negatives', def: 'a + (−b) = a − b: a negative pulls you left on the number line' },
+      { term: 'Subtracting negatives', def: 'a − (−b) = a + b: minus a negative is plus its positive' },
+      { term: 'Sign product', def: 'negative × negative = positive; negative × positive = negative' },
+      { term: 'Division as reverse', def: '72 ÷ 8 = 9 because 9 × 8 = 72; quotient × divisor = dividend' },
+      { term: 'Order (PEMDAS)', def: 'parentheses → exponents → ×/÷ left-to-right → +/− left-to-right' },
+      { term: 'Estimate up', def: 'round only ONE operand to a clean neighbor for a bound you can trust' },
+      { term: 'Perfect squares', def: '12²=144, 13²=169, 14²=196, 15²=225; squares through 15 by heart' }
+    ],
+    strategies: [
+      'Do every arithmetic step on paper or silently — automation is the goal, not "clever" mental tricks.',
+      'Line up place values before adding or subtracting; append zeros so columns match.',
+      'Estimate the answer BEFORE computing, then reject options outside one clean rounding.',
+      'Re-check sign rules on products: count the negatives — an even count makes the product positive.',
+      'Convert "subtract a negative" to "add the positive" in one stroke the moment you see −(−).',
+      'For ×/÷ and +/− in one expression, step left to right WITHIN each binding class after parentheses and exponents.',
+      'Memorize squares through 15² and powers 2¹→2¹⁰ so recognition beats re-multiplication.',
+      'Attack division by asking "what number times the divisor gives the dividend?" instead of long-guessing.',
+      'Round sensibly when estimating: 399 → 400, 7.1 → 7; keep the rounding small enough to stay within shouting distance.',
+      'When an answer "can\'t be" any of the estimates, re-read the problem — a sign or order slip usually hides there.'
+    ],
+    traps: [
+      'Adding/subtracting decimals without aligning decimal points (0.7 vs 0.69 misread as 0.76).',
+      'Treating −3² as +9: exponents bind before the minus sign, so −3² = −9 while (−3)² = 9.',
+      'Doing +/− before ×/÷: 12 + 3 × 4 is 24, not 60.',
+      'Assuming a negative × a negative is negative "because it feels negative."',
+      'Saying 0 × n is "n" because "anything times nothing is itself."',
+      'Reading the division order backwards: 36 ÷ 6 ÷ 2 is 3 when done left-to-right, not 36.',
+      'Multiplying 45 × 6, carrying incorrectly, and proudly writing 250.',
+      'Using an estimate with both operands rounded the same direction, overshooting the true value on purpose.',
+      'Skipping the sanity check: after computing, multiply a quotient back to verify the dividend.'
+    ],
+    examples: examplesFor([
+      { q: 'What is 23 + 89 + 7?',
+        o: ['118', '119', '120', '121', '122'],
+        a: 'B',
+        r: 'Group friendly numbers first: 23 + 7 = 30, and 30 + 89 = 119. This "make ten-ish" regrouping is faster than lining up three numbers and carrying.' },
+      { q: 'What is the value of 12 + 3 × 4?',
+        o: ['60', '48', '32', '24', '20'],
+        a: 'D',
+        r: 'PEMDAS: no parentheses or exponents, so multiply first: 3 × 4 = 12, then add: 12 + 12 = 24. The 60 option comes from adding before multiplying (15 × 4).' },
+      { q: 'What is −7 − (−5)?',
+        o: ['−12', '12', '−2', '2', '−11'],
+        a: 'C',
+        r: 'Subtracting a negative becomes adding its positive twin: −7 − (−5) = −7 + 5 = −2. The 2 option drops the trailing minus sign; 12 misreads the operation twice.' },
+      { q: 'In the number 4,205, what does the digit 2 represent?',
+        o: ['Two thousands', 'Two hundreds', 'Two tens', 'Two ones', 'Twenty'],
+        a: 'B',
+        r: 'Digits read thousands, hundreds, tens, ones: 4 | 2 | 0 | 5, so the 2 sits in the hundreds place and means two hundreds. Picking "twenty" ignores that the 0 in the tens column makes it 200.' },
+      { q: 'Which is closest to 399 × 8?',
+        o: ['2740', '3000', '3200', '3600', '4200'],
+        a: 'C',
+        r: 'Round 399 to 400: 400 × 8 = 3200. Since we rounded UP by 1, the true value is 3192, still closest to 3200. Estimates reject 2740 (≈ 343 × 8) and 4200 (≈ 525 × 8) instantly.' },
+      { q: 'What is |−9| + |3|?',
+        o: ['−6', '6', '12', '−12', '15'],
+        a: 'C',
+        r: 'Absolute value is distance from zero, always non-negative: |−9| = 9 and |3| = 3, so 9 + 3 = 12. The −6 and −12 options read absolute value as if it flipped the sign.' }
+    ]),
+    check: [
+      { q: 'What is 23 + 89?', o: ['102', '112', '122', '132', '101'], a: 1 },
+      { q: 'What is 45 × 6?', o: ['240', '250', '260', '270', '280'], a: 3 },
+      { q: 'What is −7 + 3?', o: ['−10', '−4', '4', '10', '−3'], a: 1 },
+      { q: 'What is the value of (−3)²?', o: ['−9', '−6', '6', '9', '27'], a: 3 },
+      { q: 'What is 12 + 3 × 4?', o: ['60', '32', '24', '20', '48'], a: 2 }
+    ]
+  }),
+
+  /* ================================================================
+     F2. FRACTIONS, DECIMALS & PERCENTS — BASICS
+     ================================================================ */
+  topic('found-frac', 'Fractions, Decimals & Percents — Basics', 'foundations', 'foundation', {
+    overview: [
+      'Fractions, decimals, and percents are three costumes for the same ideas — parts of a whole. Fluency at this tier means switching between them without pausing: seeing 0.75, 3/4, and 75% as three names for the same number.',
+      'A fraction is a part over a whole: in 3/4 the 3 counts the parts you have and the 4 counts equal parts the whole is cut into. Equivalent fractions are the same value written in thicker slices: 3/4 = 6/8 = 9/12.',
+      'To add or subtract fractions the slices must match in size, so you find a common denominator: 1/2 + 1/4 = 2/4 + 1/4 = 3/4. Multiplying just multiplies the tops and the bottoms: 1/3 × 3/5 = 3/15 = 1/5. Dividing flips the second fraction and multiplies.',
+      'Decimals extend place value to the right of the point: the first place after the decimal is tenths, the second hundredths, the third thousandths. Every decimal is secretly a fraction over a power of ten (0.45 = 45/100 = 9/20).',
+      'A percent is a fraction with denominator 100 by definition: 30% means 30/100. Translating "30% of 40" into 0.30 × 40 = 12 turns a scary sentence into a multiplication problem you already know.',
+      'The three translations that matter the most: "percent of" → multiply, "what percent is A of B" → divide A by B and switch to hundredths, and "increase/decrease by p%" → multiply by (1 ± p/100). Every real application reduces to one of these three.',
+      'Benchmark equivalencies deserve flashcard-level drilling: 1/4 = 0.25 = 25%, 1/2 = 0.5 = 50%, 3/4 = 0.75 = 75%, 1/5 = 0.2 = 20%, 1/8 = 0.125 = 12.5%, 1/3 ≈ 0.333 = 33⅓%, 2/3 ≈ 0.667 = 66⅔%.',
+      'Test-day insight: the goal of this chapter is zero-friction conversion speed, because percentages on the real test are almost never tested alone — they are nested inside ratios, algebra, and data. Nail the conversions here and the later chapters get twice as easy.'
+    ],
+    formulas: [
+      { term: 'Fraction meaning', def: 'a/b means a equal parts out of b equal parts of one whole' },
+      { term: 'Equivalent fractions', def: '3/4 = 6/8 = 9/12: multiply OR divide top and bottom by the same nonzero number' },
+      { term: 'Add / subtract', def: 'common denominator first; only the numerators combine' },
+      { term: 'Multiply', def: 'numerator × numerator over denominator × denominator, then reduce' },
+      { term: 'Divide', def: 'flip the fraction on the right and multiply: a/b ÷ c/d = a/b × d/c' },
+      { term: 'Decimal places', def: '1st = tenths, 2nd = hundredths, 3rd = thousandths; 0.45 = 45/100' },
+      { term: 'Decimal → fraction', def: 'write the digits over 10, 100, 1000… then reduce: 0.45 = 45/100 = 9/20' },
+      { term: 'Percent definition', def: 'p% = p/100: a percent is a fraction over 100' },
+      { term: 'Percent of', def: 'p% of n = p/100 × n  ("of" means multiply)' },
+      { term: 'Percent from ratio', def: 'A is what % of B → (A/B) × 100' },
+      { term: 'Percent change', def: '(new − old) ÷ old × 100 — base is always the original' },
+      { term: 'Change multiplier', def: 'up p% → × (1 + p/100); down p% → × (1 − p/100)' }
+    ],
+    strategies: [
+      'Convert everything to ONE costume before computing — usually fractions for exact work, decimals for speed.',
+      'Memorize the benchmark equivalencies (quarters, fifths, eighths, thirds) like your own name.',
+      'Add and subtract fractions by rewriting with a common denominator BEFORE touching the numerators.',
+      'Cancel diagonally before multiplying fractions to keep the numbers small (3/17 × 34/15 → 1/17 × 34/5 → 2/5).',
+      'Translate "p% of n" mechanically into (p/100) × n and reach for the calculator-free benchmark when possible.',
+      'For percent change, always divide by the ORIGINAL (the "before" number), never the new one.',
+      'When an amount is awkward, set it to 100; percentages become plain arithmetic and traps become visible.',
+      'Reduce every fraction to lowest terms at the end so your answer matches the cleaner answer options.',
+      'Compare fractions by cross-multiplying instead of hunting for a shared denominator every time.',
+      'Sanity-check a percent result: a percent is always between 0% and 100% when it is a part-of-a-whole, so a "52%" answer for "half of 80" is wrong on its face.'
+    ],
+    traps: [
+      'Adding fractions by adding the tops and bottoms: 1/2 + 1/3 is 5/6, never 2/5.',
+      'Dividing by a fraction and forgetting to flip it: 1/2 ÷ 1/4 = 2, not 1/8.',
+      'Reading 0.45 as 45 tenth-something instead of forty-five hundredths.',
+      'Dropping the ×100 when turning a ratio into a percent: 1/5 is 20%, not 0.2%.',
+      'Making the NEW value the base of a percent change: down 20% then back up 20% does NOT return to 100.',
+      'Thinking 25% of 80 is 40 (that is 50%). Percent-of never feels "generous" — check with 100.',
+      'Mixing “20% off” with "pay 20%": 20% off means you pay 80%.',
+      'Reducing only the numerators (or only the denominators) of a fraction.',
+      'Saying 1/3 and 1/7 "look clean so they must terminate as decimals" — only 2s and 5s in the denominator terminate.'
+    ],
+    examples: examplesFor([
+      { q: 'Which fraction is equivalent to 3/4?',
+        o: ['6/9', '8/12', '9/12', '12/15', '10/12'],
+        a: 'C',
+        r: 'Multiply top and bottom by 3: 3/4 = 9/12. None of 6/9, 8/12 (=2/3), 12/15, 10/12 equals 3/4 — cross-multiply each against 3/4 to check: 6×4 vs 9×3 = 24 vs 27, no match.' },
+      { q: 'What is 1/4 + 1/2?',
+        o: ['1/6', '2/6', '3/4', '2/8', '1/8'],
+        a: 'C',
+        r: 'Rewrite over denominator 4: 1/4 + 2/4 = 3/4. The 1/6 and 2/8 options add tops and bottoms directly — the classic illegal move.' },
+      { q: 'What is 0.45 as a fraction in lowest terms?',
+        o: ['4/5', '9/20', '45/10', '9/4', '5/9'],
+        a: 'B',
+        r: '0.45 = 45/100, reduce by 5 → 9/20. The 4/5 option is 0.8; 45/10 forgets it is hundredths; 9/4 is the reciprocal everyone flips by accident.' },
+      { q: 'What is 50% of 40?',
+        o: ['5', '10', '20', '25', '30'],
+        a: 'C',
+        r: '50% = 1/2, and 1/2 × 40 = 20. Checking with 100: 50% of 100 is 50, so half of 40 is 20 — no calculator needed.' },
+      { q: 'What is (1/3) × (3/5)?',
+        o: ['3/8', '1/5', '1/3', '5/3', '2/5'],
+        a: 'B',
+        r: 'Cancel the 3s diagonally: (1/3) × (3/5) = 1 × 1/5 = 1/5. The 2/5 option adds the denominators; 3/8 multiplies diagonals by mistake.' },
+      { q: 'A class has 30 students and 20% arrive by bus. How many students is that?',
+        o: ['4', '5', '6', '8', '10'],
+        a: 'C',
+        r: '20% = 1/5, and 1/5 × 30 = 6. Check with a benchmark: 10% of 30 is 3, so 20% is double that, 6. The 10 option is 33⅓%; the 8 option is two-off from a miscount.' }
+    ]),
+    check: [
+      { q: 'Which fraction is equivalent to 2/3?', o: ['4/6', '3/4', '5/9', '6/9', '3/5'], a: 0 },
+      { q: 'What is 1/2 + 1/4?', o: ['1/6', '2/6', '3/4', '1/8', '1/3'], a: 2 },
+      { q: '1/4 as a decimal is:', o: ['0.4', '0.25', '0.14', '0.45', '2.5'], a: 1 },
+      { q: 'What is 25% of 80?', o: ['10', '15', '20', '25', '30'], a: 2 },
+      { q: 'A price of $60 increases by 10%. New price?', o: ['$61', '$66', '$70', '$54', '$72'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     F3. ALGEBRA READINESS
+     ================================================================ */
+  topic('found-alg', 'Algebra Readiness', 'foundations', 'foundation', {
+    overview: [
+      'Algebra is nothing more than arithmetic with a stand-in: a letter like x or n is a box that holds a number. If that sounds trivial, it already puts you ahead — the fear of "letters" is the real obstacle, not the math.',
+      'Evaluating an expression means swapping the variable for its given value and doing the arithmetic: if x = 5, then 2x + 3 = 2(5) + 3 = 13. Practice it until the substitution feels like filling in a form.',
+      'Like terms are the same costume in different sizes: 2a and 3a combine because both are "a-times-something," giving 5a. But 2a and 3 (a dog and a cat) do not combine — you can only group identical letter-and-power combos.',
+      'Solving a linear equation is un-doing: to find x when x + 7 = 12, do the opposite of what was done to x — add 7 got here, so subtract 7 to leave. x = 5. Whatever you do to one side you must do to the other; that single rule is the whole game.',
+      'Two-step equations layer the undoing: 3x + 5 = 20. Undo the addition first (subtract 5 → 3x = 15), then undo the multiplication (divide by 3 → x = 5). Always strip the outermost layer before the inner one.',
+      'The distributive property is the bridge from arithmetic to algebra: 3(x + 2) = 3x + 6. It is exactly the "share the 3 to each term inside" move, and mastering it makes combining terms and solving systems later feel mechanical.',
+      'Translating words to math is the transferable skill every word problem needs: "a number" → n, "twice" → 2n, "decreased by 3" → − 3, "is" → =. "Twice a number, decreased by 3" becomes 2n − 3 in one mechanical pass.',
+      'Test-day insight: half of algebra terror is not solving — it is not knowing what the words mean in the first place. This chapter turns the language barrier into a translation checklist before any equation solving matters.'
+    ],
+    formulas: [
+      { term: 'Variable', def: 'a letter holding a number: x = 5 means x and 5 are interchangeable in the expression' },
+      { term: 'Evaluate', def: 'replace each variable with its value, then do the arithmetic: x=5 → 2x+3 = 13' },
+      { term: 'Like terms', def: 'same letter(s) and same powers combine: 2a + 3a = 5a; 2a and 3 do not' },
+      { term: 'Combine', def: 'add or subtract the coefficients, keep the variable part: 2a + 3a = (2+3)a = 5a' },
+      { term: 'Solve x + 7 = 12', def: 'subtract 7 from both sides → x = 5; both sides must change equally' },
+      { term: 'Solve 3x = 21', def: 'divide both sides by 3 → x = 7' },
+      { term: 'Two-step', def: '3x + 5 = 20 → subtract 5, then divide by 3 → x = 5 (undo outer layer first)' },
+      { term: 'Distributive', def: 'a(b + c) = ab + ac: multiply the outside by each inside term' },
+      { term: 'Check', def: 'plug the solution back into the original equation; both sides must agree' },
+      { term: 'Word → algebra', def: 'a number=n, twice=2n, increased by=+, decreased by=−, is ==, of=×' }
+    ],
+    strategies: [
+      'Write the value of every variable you know at the top of the page before evaluating anything.',
+      'Do substitution literally: put parentheses around the variable, then drop the value in: 2(x) + 3 with x = 5.',
+      'Combine like terms by adding coefficients and copying the variable exactly — never "add" the exponents.',
+      'When solving, do the OPPOSITE operation to BOTH sides in the reverse order of the expression\'s construction.',
+      'Strip the outer layer first: in 3x + 5, the +5 and ×3 stacked onto x; un-stack the +5 before the ×3.',
+      'Always plug your answer back in — one 10-second check prevents every algebra embarrassment.',
+      'Translate word problems in a fixed checklist: circle numbers, underline the unknown, convert each phrase, write the equation.',
+      'If the answer options are simple numbers, test them in the equation rather than solving symbolically.',
+      'Keep fractions as fractions while solving; convert to decimals only at the very end.',
+      'On "evaluate" items, do the arithmetic step by step on paper — skipping steps is where sign errors are born.'
+    ],
+    traps: [
+      'Combining 2a and 3 into "5a" — different costumes cannot merge.',
+      'Adding exponents when combining: 2a + 3a is 5a, not 5a².',
+      'Dividing only one side of an equation by the same number.',
+      'Doing the multiplication before the addition in a two-step solve (3x+5=20 solved as x = 5 after dividing — order matters).',
+      'Forgetting − sign distribution: 3 − (x + 2) = 3 − x − 2, not 3 − x + 2.',
+      'Treating 2(x + 3) as 2x + 3 — the distributive property demands 2 applies to BOTH terms.',
+      'Substituting wrong: replacing x with 5 but writing 25 instead of 2(5).',
+      'Solving "x + 7 = 12" by adding 7 more (giving 19) instead of undoing the add.',
+      'Writing "a number decreased by 3" as 3 − n when the natural reading is n − 3.'
+    ],
+    examples: examplesFor([
+      { q: 'If x = 5, what is the value of 2x + 3?',
+        o: ['10', '13', '15', '18', '16'],
+        a: 'B',
+        r: 'Substitute literally: 2(5) + 3 = 10 + 3 = 13. The 10 option evaluates only the 2x part; 18 computes 2x + 3 as if x were 7.5.' },
+      { q: 'Evaluate 3(x + 2) when x = 4.',
+        o: ['14', '18', '20', '24', '9'],
+        a: 'B',
+        r: 'Use the distributive property: 3(4 + 2) = 3 × 6 = 18, or 3(4) + 3(2) = 12 + 6 = 18. The 14 option forgets to multiply the 2; 20 treats x as 5.' },
+      { q: 'Solve for x: x + 7 = 12.',
+        o: ['5', '7', '12', '19', '−5'],
+        a: 'A',
+        r: 'Undo the added 7 on both sides: x + 7 − 7 = 12 − 7, so x = 5. The 19 option adds instead of undoing; 7 copies the constant.' },
+      { q: 'Solve for x: 3x = 21.',
+        o: ['7', '3', '18', '24', '63'],
+        a: 'A',
+        r: 'Divide both sides by 3: 3x/3 = 21/3, so x = 7. Check: 3 × 7 = 21. The 63 option multiplies an extra time; 24 comes from adding 3 to 21.' },
+      { q: 'Combine like terms: 2a + 3a + 4.',
+        o: ['5a + 4', '6a + 4', '5a − 4', '6a', '5a + 7'],
+        a: 'A',
+        r: 'Only the a-terms combine: (2 + 3)a = 5a, and the constant 4 has no partner, so the result is 5a + 4. The 6a + 4 option adds the coefficients to the constant by mistake.' },
+      { q: 'Which expression means "twice a number, decreased by 3"?',
+        o: ['2n − 3', 'n/2 − 3', '3 − 2n', '2(n − 3)', 'n − 6'],
+        a: 'A',
+        r: '"Twice a number" is 2n; "decreased by 3" subtracts 3 at the end: 2n − 3. The 3 − 2n option reverses the order; 2(n − 3) means double the difference, a different idea.' }
+    ]),
+    check: [
+      { q: 'If x = 5, what is 2x + 3?', o: ['10', '13', '15', '18', '16'], a: 1 },
+      { q: 'Evaluate 3(x + 2) when x = 4.', o: ['14', '18', '20', '24', '9'], a: 1 },
+      { q: 'Solve: x + 7 = 12.', o: ['5', '7', '12', '19', '−5'], a: 0 },
+      { q: 'Solve: 3x = 21.', o: ['7', '3', '18', '24', '63'], a: 0 },
+      { q: 'Combine: 2a + 3a + 4.', o: ['5a + 4', '6a + 4', '5a − 4', '6a', '5a + 7'], a: 0 }
+    ]
+  }),
+
+  /* ================================================================
+     E1. GRAMMAR: PARTS OF SPEECH & SENTENCES
+     ================================================================ */
+  topic('found-gram1', 'Grammar Essentials: Parts of Speech & Sentences', 'foundations', 'foundation', {
+    overview: [
+      'This chapter installs the gears that every English sentence runs on: the parts of speech and the shape of a complete sentence. The GMAT Focus has no Sentence Correction, but strong reading — and the discipline of clear writing — rests entirely on these mechanics.',
+      'A sentence expresses a complete thought: it needs a subject (who or what) and a predicate (what they do), as in "The dog slept." A group of words missing either piece — "The tired dog" — is a fragment, not a sentence.',
+      'Nouns name people, places, things, or ideas; verbs carry the action or state; adjectives describe nouns; adverbs describe verbs, adjectives, or other adverbs; prepositions begin small locator phrases (on, under, with); conjunctions glue things together.',
+      'Objects receive the action ("She hit the ball" — ball is the object); transitive verbs need an object to feel finished, while intransitive verbs like "sleep" do not. Spotting the subject-verb-object spine is the single most useful reading habit you can build.',
+      'A clause is a group of words with a subject and a verb. Independent clauses can stand alone as sentences ("She runs fast."); dependent clauses cannot ("Because she runs fast."). Punctuating a dependent clause like a sentence is the classic fragment error.',
+      'Sentences are built from subjects, verbs, objects, and modifiers in predictable slots. When a sentence feels "off," the error is almost always in one of these three places: a missing piece, a misplaced modifier, or a broken connection between clauses.',
+      'Test-day insight: grammar mastery buys reading speed. The brain that can strip "The tired dog, covered in mud, slept on the couch" down to dog-slept reads GMAT passages faster than the brain drowning in adjectives — a skill that pays on RC and CR long before it ever "scores."'
+    ],
+    formulas: [
+      { term: 'Sentence', def: 'a complete thought = subject + predicate; "The dog slept."' },
+      { term: 'Fragment', def: 'a piece too small to stand alone: "The tired dog." / "Because I was late."' },
+      { term: 'Noun', def: 'names a person, place, thing, or idea (dog, city, liberty)' },
+      { term: 'Verb', def: 'the action or state (run, is, been studying)' },
+      { term: 'Adjective', def: 'modifies a noun: the tired dog' },
+      { term: 'Adverb', def: 'modifies a verb/adjective/adverb: runs quickly, very tired' },
+      { term: 'Preposition', def: 'starts a locator phrase (on, under, with, by, of); takes an object' },
+      { term: 'Object', def: 'receives the action: She hit the ball (ball)' },
+      { term: 'Subject-verb-object', def: 'the spinal order of most English: The dog chased the ball.' },
+      { term: 'Independent clause', def: 'can stand alone (has subject + verb + full thought)' },
+      { term: 'Dependent clause', def: 'has subject + verb but needs support: "because she runs fast"' },
+      { term: 'Complete verb phrase', def: 'all helping verbs + main verb: "have been studying"' }
+    ],
+    strategies: [
+      'Ask two questions of every word group you meet: (1) is there a subject? (2) is there a verb? Missing either → fragment.',
+      'Find the verb first, then ask "who or what did it?" — that uncovers the subject in any sentence.',
+      'Underline every "because/although/when/if/that" word — it signals a dependent clause that cannot stand alone.',
+      'Read a sentence at full length before judging it; fragments only appear once you see the whole clause.',
+      'On "choose the correctly written sentence" items, eliminate anything missing a subject OR a verb first.',
+      'Use the spine test: strip modifiers and prepositional phrases and re-read the bare subject + verb sentence.',
+      'Learn the eight parts of speech by hunting them in one newspaper headline — active labeling beats passive flashcards.',
+      'Treat comma+conjunction as the "sentence glue": two independent clauses join cleanly with "and/but/or" (She ran, and he walked).',
+      'On the test, never pick an option that leaves you feeling "almost." Grammar options are exact or wrong.'
+    ],
+    traps: [
+      'Calling a fragment a sentence because it "sounds like a sentence start."',
+      'Labeling the object of a preposition as the subject: "On the table" has no subject at all.',
+      'Thinking "the tired dog" IS a sentence because it has a noun.',
+      'Treating "because/although/when" clauses as complete sentences when they appear alone.',
+      'Confusing adverbs and adjectives: "She runs quick" instead of "She runs quickly."',
+      'Mistaking "very" (adverb) for an adjective when it describes another adverb.',
+      'Assuming a long sentence is complete because it is long: length does not fix a missing verb.',
+      'Dropping the object after verbs that need one: "She put the book" is incomplete until "on the shelf."'
+    ],
+    examples: examplesFor([
+      { q: 'Which of the following is a complete sentence?',
+        o: ['Running fast to the store.', 'She runs fast.', 'Because I was late.', 'The blue sky.', 'On the table.'],
+        a: 'B',
+        r: '"She runs fast." has a subject (she) and a verb (runs) and states a complete thought. Every other option lacks one of the two — no subject, a dependent-clause opener, or noun phrases only.' },
+      { q: 'In "She runs quickly," what part of speech is "quickly"?',
+        o: ['Noun', 'Verb', 'Adjective', 'Adverb', 'Preposition'],
+        a: 'D',
+        r: '"Quickly" tells HOW she runs, modifying the verb "runs," so it is an adverb. Adjectives modify nouns; nothing here is a noun, action, or locator.' },
+      { q: 'What is the subject of "The tired dog slept."?',
+        o: ['The', 'Tired', 'Dog', 'Slept', 'Tired dog'],
+        a: 'C',
+        r: 'Ask "who slept?" — the dog. The subject is the noun doing the action; "tired" is just an adjective decorating it, and "slept" is the verb.' },
+      { q: 'What is the complete verb phrase in "They have been studying."?',
+        o: ['They', 'have', 'studying', 'have been studying', 'been studying'],
+        a: 'D',
+        r: 'All the helping verbs plus the main verb form the complete phrase: "have been studying." A partial phrase like "been studying" ignores the first auxiliary, which carries tense.' },
+      { q: 'Which option is correctly written?',
+        o: ['Whats the score?', 'What is the score?', 'What are the score?', 'Why the score?', 'What the score is?'],
+        a: 'B',
+        r: '"What is the score?" has a subject (score), a verb (is), and correct marking of the question. The uncapitalized-verb and fragment options are structurally broken.' },
+      { q: 'Which of these is a fragment?',
+        o: ['After the movie, we left.', 'The dog that barked.', 'She sings.', 'They are happy.', 'We went home.'],
+        a: 'B',
+        r: '"The dog that barked" has a subject (dog) and a verb (barked) but no complete thought — the "that" makes it a dependent clause promising more. The rest each state a full idea.' }
+    ]),
+    check: [
+      { q: 'Which is a complete sentence?', o: ['Because it rained.', 'The big dog.', 'He left.', 'Under the bridge.', 'Running quickly.'], a: 2 },
+      { q: '"Happy" in "a happy dog" is a(n):', o: ['Noun', 'Verb', 'Adjective', 'Adverb', 'Preposition'], a: 2 },
+      { q: 'The subject of "The cat chased the mouse" is:', o: ['cat', 'chased', 'mouse', 'The cat', 'the mouse'], a: 0 },
+      { q: 'Which is a fragment?', o: ['She smiled.', 'Although she smiled.', 'She smiled and waved.', 'They laughed.', 'We won.'], a: 1 },
+      { q: 'In "They are happy," "are" is a:', o: ['Noun', 'Linking verb', 'Adjective', 'Adverb', 'Preposition'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     E2. GRAMMAR: AGREEMENT & VERB TENSE
+     ================================================================ */
+  topic('found-gram2', 'Grammar Essentials: Agreement & Verb Tense', 'foundations', 'foundation', {
+    overview: [
+      'This chapter polices the two most-diagnosed "off" feelings in English: agreement and tense. Agreement means matching singular to singular and plural to plural; tense means keeping time references straight. Both are 90% habit and 10% rules you can memorize today.',
+      'Subject-verb agreement is decided by the TRUE subject, not the noun nearest the verb: "The list of items IS long" — the subject is "list," not "items," so the verb stays singular. Prepositional phrases between subject and verb are camouflage meant to trick you.',
+      'A handful of singular subjects masquerade as plurals: each, every, either, neither, everyone, nobody. "Each of the boys IS ready" — "each" is one person at a time, so it takes a singular verb.',
+      'Pronouns must agree with what they replace in BOTH number and gender: "When a student submits the essay, he or she must sign it" — or rewrite plural: "When students submit, they must sign." The singular-they error ("a student… they") is the most common modern slip.',
+      'Tense must stay consistent for the timeline the sentence establishes: "Yesterday she WENT to the store" (past), "Tomorrow she WILL GO" (future). Mixing "She WILL HEAR the news yesterday" mixes time-travel — the tense contradicts its own time marker.',
+      'Commonly confused verbs are high-yield vocabulary: lie (recline, no object) vs lay (place, takes an object); affect (verb, "to influence") vs effect (noun, "the result"); who (subject) vs whom (object). Master these pairs and a disproportionate slice of "sound right" confidence returns.',
+      'Test-day insight: on the GMAT you will not be asked to fix grammar directly, but every sentence in RC and CR is background-checked by your built-in grammar radar. If a passage sentence feels broken, your radar has cost you reading speed and misrouted your interpretation of evidence.'
+    ],
+    formulas: [
+      { term: 'Subject-verb agreement', def: 'singular subject → singular verb; plural subject → plural verb' },
+      { term: 'Camouflage', def: 'ignore prepositional phrases between subject and verb: "The list of items IS long"' },
+      { term: 'Each/every/either', def: 'always singular: "Each of the boys IS ready"' },
+      { term: 'Indefinite pronouns', def: 'everyone, nobody, someone, either, neither, none of… take singular verbs' },
+      { term: 'Compound subject', def: '"A and B" is plural: "Tom and Sue ARE here"' },
+      { term: 'Either/or, neither/nor', def: 'verb follows the nearer option: "Neither Tom nor the boys ARE here"' },
+      { term: 'Pronoun agreement', def: 'a pronoun matches its antecedent in number and gender' },
+      { term: 'Singular-they fix', def: 'a student…they → make both plural: "students…they" or use "he or she"' },
+      { term: 'Tense basics', def: 'past (went), present (goes), future (will go); keep one timeline' },
+      { term: 'lie / lay', def: 'I lie down (no object); I lay the book down (object present)' },
+      { term: 'affect / effect', def: 'affect = to influence (verb); effect = the result (noun)' },
+      { term: 'who / whom', def: 'who = subject ("who called"); whom = object ("to whom")' }
+    ],
+    strategies: [
+      'Find the real subject by stripping every "of…" phrase before choosing the verb.',
+      'Test agreement aloud with a dummy sentence containing the same subject noun.',
+      'Watch for each/every/either/neither/nobody — treat them as singular on sight.',
+      'For pronoun checks, draw an arrow from the pronoun to its antecedent and compare number+gender.',
+      'Fix the singular-they problem by pluralizing everything (students → they), the cleanest modern repair.',
+      'Ask "what timeline does this sentence sit on?" before judging a verb form; time marker words (yesterday, now, next week) dethrone a fancy-looking wrong tense.',
+      'Memorize the affect/effect and lie/lay pairs with one sentence each that makes the difference physical.',
+      'On "choose the correct sentence" items, rank checks: agreement first, then tense, then pronoun match.',
+      'When two options both "sound okay," the one with the cleaner subject-verb spaghetti (fewer interrupting words) is usually right.'
+    ],
+    traps: [
+      'Making the verb agree with the closest noun instead of the true subject ("list of items are").',
+      'Using a singular verb after "boys" in "Neither the test nor the boys WAS" — the nearer subject wins for either/neither.',
+      'Saying "Each of the boys are ready" because "boys" sounds plural.',
+      'The modern singular-they: "A student must submit their essay" — number mismatch (acceptable informally, rejected here).',
+      'Mixing tenses within one timeline: "She will go to the store yesterday."',
+      'Saying "lay down" for resting (needs no object) and "lie the book" for placing (needs an object).',
+      'Writing "The affect of the law was immediate" (effect needed for the noun sense).',
+      'Forgetting that collective nouns (team, jury, committee) are singular in GMAT-style usage: "The team IS winning."'
+    ],
+    examples: examplesFor([
+      { q: 'Choose the correctly written sentence.',
+        o: ['The list of items are long.', 'The list of items is long.', 'The list of items were long.', 'The list, of items, are long.', 'The list of items am long.'],
+        a: 'B',
+        r: 'Strip "of items" — the true subject is "list," singular, so the verb is "is." Every option carrying "are/were/am" agrees with the camouflage noun instead.' },
+      { q: 'Choose the correctly written sentence.',
+        o: ['Each of the boys are ready.', 'Each of the boys is ready.', 'Each of the boys were ready.', 'Each of the boys have been ready.', 'Each of the boys are being ready.'],
+        a: 'B',
+        r: '"Each" is always singular — one at a time — so it takes "is." The plurals (are, were, have been) confuse "boys" for the subject.' },
+      { q: 'Which sentence fixes the pronoun error in "When a student submits the essay, they must sign it."?',
+        o: ['When a student submits the essay, he must sign it.', 'When a student submits the essay, it must be signed by they.', 'When students submit the essay, they must sign it.', 'When a student submits the essay, they will signs it.', 'A student submits the essay, and they must signed it.'],
+        a: 'C',
+        r: 'The cleanest fix pluralizes both: "students… they must sign." Option A keeps number but is a partial fix (he only), and the rest break tense or agreement.' },
+      { q: 'Which sentence is consistent in tense?',
+        o: ['She will go to the store yesterday.', 'She went to the store yesterday.', 'She goes to the store yesterday.', 'She had go to the store yesterday.', 'She will gone to the store yesterday.'],
+        a: 'B',
+        r: '"Yesterday" pins the timeline to the past, so the verb must be past: "went." Every other option mixes a future/present form into a past time marker.' },
+      { q: 'Choose the correctly written sentence.',
+        o: ['He has been lying on the sofa all day.', 'He has been laying on the sofa all day.', 'He has been lied on the sofa all day.', 'He has been laying down the sofa.', 'He has been lying the sofa on the floor.'],
+        a: 'A',
+        r: '"Lie" (recline) takes no object, so "lying on the sofa" is correct. "Laying" requires an object being placed: "laying the book down."' },
+      { q: 'Choose the correct word: "The ___ of the new policy was immediate."',
+        o: ['affect', 'effect', 'affects', 'effects', 'affected'],
+        a: 'B',
+        r: 'The sentence needs a noun ("the result"), and that word is "effect." "Affect" is reserved for the verb "to influence," which does not fit the slot after "the."' }
+    ]),
+    check: [
+      { q: 'Correctly written:', o: ['The box of candies are heavy.', 'The box of candies is heavy.', 'The box of candies were heavy.', 'The box of candies have been heavy.', 'The box of candies am heavy.'], a: 1 },
+      { q: 'Correctly written:', o: ['Each of the girls are present.', 'Each of the girls is present.', 'Each of the girls were present.', 'Each of the girls have been present.', 'Each of the girls be present.'], a: 1 },
+      { q: 'Correct pronoun agreement:', o: ['A doctor must wash their hands.', 'Doctors must wash their hands.', 'A doctor must wash they hands.', 'A doctor must wash him hands.', 'Doctors must wash his hands.'], a: 1 },
+      { q: 'Consistent tense:', o: ['I will meet him yesterday.', 'I met him yesterday.', 'I meet him yesterday.', 'I am meet him yesterday.', 'I has met him yesterday.'], a: 1 },
+      { q: 'Correct word: "Please ___ the book on the table."', o: ['lie', 'lay', 'lied', 'lain', 'laying'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     E3. GRAMMAR: MODIFIERS, PARALLELISM & CONCISION
+     ================================================================ */
+  topic('found-gram3', 'Grammar Essentials: Modifiers, Parallelism & Concision', 'foundations', 'foundation', {
+    overview: [
+      'This chapter attacks the three refinements that separate "correct" writing from "tight" writing: modifiers must point at what they describe, lists must stay parallel, and fewer words is usually better. These are the same reflexes the GMAT used to test directly and still reward in reading every day.',
+      'A modifier must sit next to the thing it describes. "Walking home, the rain began" is (accidentally) about rain doing the walking. The fix re-attaches the action to its true doer: "Walking home, I got soaked." Misplaced modifiers create comedy and confusion in equal measure.',
+      'Dangling modifiers are the outlaw cousins of misplaced ones: the thing they describe is not in the sentence at all. "Having studied all night, the exam was easy" implies the exam studied. Add the missing actor ("Having studied all night, I found the exam easy") and the sentence is legal again.',
+      'Lists and parallel structures demand repeated musical form: "She likes hiking, swimming, and biking" — not "hiking, swimming, and to bike." Once you begin a series with gerunds (‑ing), every member must be a gerund. Parallelism means matching form for matching function.',
+      'Comparisons must compare like to like: "His salary is higher than my salary" (or "…than mine"), never "than me." GMAT-style precision demands the sentence state exactly what is being compared, and the classic trap compares a salary to a person.',
+      'Concision is a strong default: "due to the fact that" → "because," "the reason is because" → "because," "in the event that" → "if." Extra words are not style; they are signal noise. The GMAT-sounding best answer is almost always the shortest grammatically complete one.',
+      'Test-day insight: these three instincts (modifier attachment, parallel shape, and concision) are the fastest way to make your own writing clearer, and clear writing is exactly what makes scholarship, essays, and business communications read as "sharp" to evaluators.'
+    ],
+    formulas: [
+      { term: 'Modifier placement', def: 'the modifier sits next to the noun it describes: "the tired dog" (tired next to dog)' },
+      { term: 'Introductory modifier', def: 'a phrase at the start must describe the sentence subject: "Walking home, I…" — I walked' },
+      { term: 'Dangling modifier', def: 'the described noun is missing entirely; add the actor to fix it' },
+      { term: 'Parallelism', def: 'items in a list share one grammatical form: to run, to jump, to skate' },
+      { term: 'Gerund series', def: 'once you start with ‑ing, keep ‑ing: hiking, swimming, biking' },
+      { term: 'Infinitive series', def: 'once you start with to + verb, keep to + verb: to hike, to swim, to bike' },
+      { term: 'Comparison equals', def: 'compare nouns with nouns: "his salary… than mine," never "…than me" for the money' },
+      { term: 'Concision', def: 'due to the fact that → because; in the event that → if; at this point in time → now' },
+      { term: 'Redundancy', def: 'never say the same thing twice: "final outcome," "past history," "true facts"' },
+      { term: 'Voice consistency', def: 'stay active or passive, but do not flip mid-sentence without reason' },
+      { term: 'Idiom: prefer', def: '"prefer X to Y," not "prefer X than Y"' },
+      { term: 'Idiom: as…as', def: '"as tall as," never "as tall than"' }
+    ],
+    strategies: [
+      'For every introductory phrase, ask "who does this action?" — the answer must be the sentence subject.',
+      'Draw an arrow from each modifier to its noun; a dangling arrow means a missing noun — add one.',
+      'In every list, underline the first item\'s form, then insist every later item match it exactly.',
+      'Scan comparisons for "than": whatever sits on both sides of "than" must be the same kind of thing.',
+      'Apply the brevity test: delete a candidate phrase and ask if meaning survived; if yes, the shorter version wins.',
+      'Memorize the top repair pairs: due to the fact that→because, the reason is because→because, at this point in time→now.',
+      'On "best version" items, rank: grammar correct → parallel → concise (in that order).',
+      'When an option adds a word you cannot justify, cut it — unforced words are unforced errors.',
+      'Re-read long sentences aloud mentally; the ear catches a broken parallel run faster than the eye.'
+    ],
+    traps: [
+      'Walking home, the rain began (rain walking). Fix by adding the real doer.',
+      '"Having studied all night, the exam was easy" — dangling; the exam did not study.',
+      'Breaking a ‑ing series with one "to + verb": hiking, swimming, to bike.',
+      'Comparing a noun to a person: "salary higher than me" instead of "…than mine."',
+      'Choosing wordiness because it "sounds formal": "due to the fact that" loses to "because" every time.',
+      '"Past history," "final outcome," "true facts" — redundancy triple threats.',
+      'The idiom trap: "prefer chocolate than vanilla" (wrong; it is "prefer chocolate to vanilla").',
+      'Half-parallel structures where the second half silently bends the form: "to run the report and calling the client."'
+    ],
+    examples: examplesFor([
+      { q: 'Which sentence correctly places the modifier?',
+        o: ['Walking home, the rain began.', 'Walking home, I got soaked by the rain.', 'The rain began, walking home.', 'Walking home, rain began pouring.', 'The rain walking home began.'],
+        a: 'B',
+        r: 'The introductory phrase "Walking home" must describe the sentence subject. Only option B makes the subject the walker ("I"). The others have the rain walking.' },
+      { q: 'Fix the dangling modifier: "Having studied all night, the exam was easy."',
+        o: ['Having studied all night, the exam was easy for me.', 'The exam was easy, having studied all night.', 'Having studied all night, I found the exam easy.', 'Studied all night, the exam was easy.', 'The exam, having studied all night, was easy.'],
+        a: 'C',
+        r: 'The studier must be in the sentence and be the subject: "I found the exam easy." Option A keeps "the exam was easy," still implying the exam studied.' },
+      { q: 'Which sentence is parallel?',
+        o: ['She likes hiking, swimming, and to bike.', 'She likes hiking, to swim, and biking.', 'She likes hiking, swimming, and biking.', 'She likes to hike, swimming, and bike.', 'She likes hiking, swim, and to bike.'],
+        a: 'C',
+        r: 'The series is established with gerunds (hiking), so every member must be a gerund: hiking, swimming, biking. Every other option breaks the form mid-list.' },
+      { q: 'Which comparison is correct?',
+        o: ['His salary is higher than me.', 'His salary is higher than mine.', 'His salary is higher than I am.', 'His salary is higher than my.', 'His salary is more higher than me.'],
+        a: 'B',
+        r: 'Compare noun to noun: salary vs salary, so "than mine" (my salary). "Than me" wrongly compares a salary to a person; "more higher" is a double comparative.' },
+      { q: 'Which sentence is most concise?',
+        o: ['Due to the fact that it rained, the game was cancelled.', 'Because it rained, the game was cancelled.', 'The game was cancelled due to the fact that it rained.', 'On account of the fact that it rained, the game was cancelled.', 'The game, because it rained, was cancelled by officials.'],
+        a: 'B',
+        r: '"Because it rained, the game was cancelled." says it in the fewest words with no meaning lost. The "due to the fact that" and "on account of the fact that" versions are the wordy impostors.' },
+      { q: 'Which article is formally correct?',
+        o: ['I prefer coffee than tea.', 'I prefer coffee to tea.', 'I prefer coffee over tea more than.', 'I prefer coffee as opposed to tea.', 'Coffee is preferred than tea by me.'],
+        a: 'B',
+        r: 'The idiom is "prefer X to Y." "Prefer X than Y" is the classic error; the extra-word options are just padded versions of the same mistake.' }
+    ]),
+    check: [
+      { q: 'Correct modifier placement:', o: ['Having run all morning, the race was starting.', 'Having run all morning, I was ready for the race.', 'The race was beginning, having run all morning.', 'Having run, the race was all morning.', 'Running all morning, the race began.'], a: 1 },
+      { q: 'Parallel series:', o: ['She bought apples, oranges, and to make pie.', 'She bought apples, oranges, and made pie.', 'She bought apples, oranges, and pie crust.', 'She bought apples, oranges, and cooking.', 'She bought apples, oranges, and was baking.'], a: 2 },
+      { q: 'Correct comparison:', o: ['My car is faster than him.', 'My car is faster than his.', 'My car is faster than he is fast.', 'My car is more faster than his.', 'My car is faster than his car driven.'], a: 1 },
+      { q: 'Most concise:', o: ['In the event that it rains, we cancel.', 'If it rains, we cancel.', 'Should the eventuality of rain occur, we cancel.', 'In case that it should happen to rain, we cancel.', 'We cancel in the event that it rains.'], a: 1 },
+      { q: 'Correct idiom:', o: ['She prefers running than swimming.', 'She prefers running to swimming.', 'She prefers running over swimming more.', 'Running is preferred than swimming by her.', 'She prefers running instead than swimming.'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     E4. READING SKILLS: MAIN IDEA TO INFERENCE
+     ================================================================ */
+  topic('found-read', 'Reading Skills: Main Idea to Inference', 'foundations', 'foundation', {
+    overview: [
+      'Reading on the GMAT is a skill with mechanics, not a gift you either have or lack. This chapter installs the four moves that answer every reading question: identifying the main idea, locating the supporting detail, drawing the safe inference, and reading the author\'s tone.',
+      'The main idea is the one-sentence job of the passage — what the author is arguing, not the topic. "Bees and agriculture" is a topic; "urban hives can thrive when cities manage green spaces" is a claim. Ask "what is the author trying to convince me of?" and you have the main idea.',
+      'Supporting details are the evidence warehouse. Detail questions are search missions: identify the keyword from the question, skim the passage for that exact word or a synonym, read the one or two sentences around it, and match the paraphrase to an option. You should NOT answer details from memory.',
+      'An inference is a claim that MUST follow from the text, not one that merely sounds reasonable. If the passage says urban bees produce more honey in cities, the inference "urban forage diversity helps bees" is licensed; "rural bees are unhealthy" is not — the text never says that.',
+      'Tone and purpose questions ask for the author\'s attitude or job: is the passage advocating, explaining, warning, or criticizing? Tone vocabulary is learnable — balanced, skeptical, supportive, neutral — and the signal lives in the verbs and adjectives the author chooses.',
+      'Transitions are the skeleton keys of structure. "However," "but," "yet," "although" signal a turn; "therefore," "because," "since" signal a reason or conclusion; "for example" signals evidence. Reading transition-to-transition gives you the passage\'s skeleton in under a minute.',
+      'Test-day insight: the biggest reading mistakes are editing the text in your head (adding what is not there) and answering from general knowledge. The text is the entire universe of acceptable evidence — an answer that needs outside facts is wrong by construction.'
+    ],
+    formulas: [
+      { term: 'Topic vs claim', def: 'topic = what it is about; main idea = the author\'s one-sentence claim about it' },
+      { term: 'Main idea location', def: 'often start of the last paragraph or the sentence carrying "however/but/therefore"' },
+      { term: 'Detail search', def: 'question keyword → scan for synonym → read 1–2 sentences around the hit' },
+      { term: 'Paraphrase', def: 'the correct option restates the text in new words — it never invents facts' },
+      { term: 'Safe inference', def: 'a claim the text strictly implies; it adds zero outside information' },
+      { term: 'Unsafe inference', def: '"sounds reasonable from real life" but not forced by the text — reject' },
+      { term: 'Tone words', def: 'balanced, skeptical, supportive, neutral, critical, admiring, cautious' },
+      { term: 'Turn signals', def: 'however, but, yet, although, despite → the author swings the other way' },
+      { term: 'Reason signals', def: 'because, since, therefore, thus → cause and effect are being claimed' },
+      { term: 'Evidence signals', def: 'for example, for instance, in fact, such as → supporting data follows' },
+      { term: 'Absolute words', def: 'always, never, all, none, entirely — almost always too strong; treat as suspect' },
+      { term: 'Qualifiers', def: 'some, often, may, tends to, likely — the mark of a defensible answer' }
+    ],
+    strategies: [
+      'Read the passage once for skeleton, not details: first and last sentence of each paragraph plus every transition.',
+      'Paraphrase the main idea out loud in one sentence before touching the questions.',
+      'On detail questions, go back and FIND the sentence — never trust memory for a fact.',
+      'Match paraphrases: the right answer says the same thing in different words, not the same words in a different disguise.',
+      'For inferences, ask "does the text FORCE this?" If the passage could be true with the claim false, the claim is not an inference.',
+      'Flag qualifiers (some, often, likely, may) — options carrying them are far more likely to be defensible.',
+      'Eliminate absolute-flag answers (always, never, all) unless the text is equally absolute.',
+      'Tone questions are won by vocabulary: learn a defensive list of tone words and check the author\'s adjective choices.',
+      'Treat "the passage implies" as "the passage says, but only piece by piece" — trace the pieces before answering.'
+    ],
+    traps: [
+      'Confusing the topic with the main idea and picking a "summary of subject" option.',
+      'Answering a detail question from memory and inventing a plausible-but-absent fact.',
+      'Choosing an outside-knowledge answer that is TRUE but not IN the passage.',
+      'Over-inferring: "urban bees thrive" + "rural bees are sick" (the text says neither about rural health).',
+      'Picking the tempting absolute (always/never) because it sounds confident.',
+      'Missing the "however" turn and choosing an option that states the PRE-turn position.',
+      'Selecting a "both sides equally" option when the author clearly leans one way.',
+      'Choosing a too-narrow option for a main-idea question (the claim about one example, not the whole passage).'
+    ],
+    examples: examplesFor([
+      { q: 'PASSAGE: "Urban beekeeping has grown sharply in recent years. Studies show urban hives often produce MORE honey per hive than rural ones, likely because cities offer a wider variety of flowering plants in small spaces. Yet urban hives carry distinct risks: pesticide exposure and limited winter forage. Careful siting has been shown to blunt these threats." — What is the main idea?',
+        o: ['City bees produce more honey than rural bees in every case.', 'Urban beekeeping can succeed when its risks are managed.', 'Beekeepers should move to the countryside.', 'Pesticides always kill urban hives.', 'The variety of flowering plants is the only factor in honey output.'],
+        a: 'B',
+        r: 'The passage says urban hives can thrive but face risks, and that careful siting blunts them — a balanced "can succeed when managed" claim. Option A overreaches ("every case" is not stated); the absolutes in C/D/E are unsupported.' },
+      { q: 'SAME PASSAGE — According to the passage, why might urban hives produce more honey?',
+        o: ['Urban bees work longer hours.', 'Cities hold a wider variety of flowering plants in small spaces.', 'Rural bees are unhealthy.', 'Urban winters never harm hives.', 'Beekeepers feed urban bees more sugar.'],
+        a: 'B',
+        r: 'The passage states the likely cause directly: cities offer a wider variety of flowering plants in small spaces. Every other option adds information the text never mentions (work hours, rural health, feeding).' },
+      { q: 'SAME PASSAGE — Which of the following can be INFERRED from the passage?',
+        o: ['Managing where a hive is placed can reduce certain urban risks.', 'All urban hives are doomed by pesticides.', 'Rural honey is always superior.', 'Urban bees have no predators.', 'Beekeeping is only profitable in cities.'],
+        a: 'A',
+        r: '"Careful siting has been shown to blunt these threats" licenses the inference that placement can reduce the named risks. B, C, D ignore qualifiers or add facts; E is far outside the text.' },
+      { q: '"The author\'s tone in the passage is best described as:"',
+        o: ['Hostile', 'Balanced and analytical', 'Indifferent', 'Triumphant', 'Sarcastic'],
+        a: 'B',
+        r: 'The author weighs both the upside (more honey) and the downside (risks) before concluding, which is balanced and analytical. "Triumphant" overstates the positivity; "indifferent" ignores the argumentative purpose.' },
+      { q: 'In the sentence "Yet urban hives carry distinct risks," the word "Yet" signals that the author is about to:',
+        o: ['Give more evidence for beekeeping success.', 'Introduce a contrast to what preceded.', 'Restate the main idea.', 'Define a technical term.', 'Conclude the passage.'],
+        a: 'B',
+        r: '"Yet," "however," and "but" are turn signals — they mark a shift of direction. The sentence pivots from honey success to the risks.' },
+      { q: 'Which option best answers "What is the author doing in the final sentence?"',
+        o: ['Casting doubt on the entire field.', 'Offering a mitigating condition.', 'Demanding new legislation.', 'Summarizing a personal anecdote.', 'Refuting a quoted expert.'],
+        a: 'B',
+        r: 'The final sentence says careful siting blunts the threats — it qualifies or mitigates the bad news with a manageable response. Nothing demands legislation or rebuts an expert.' }
+    ]),
+    check: [
+      { q: 'The main idea of a passage is:', o: ['Its topic in one word.', 'The author\'s one-sentence claim about the topic.', 'The longest paragraph.', 'The first sentence, always.', 'A list of every detail.'], a: 1 },
+      { q: 'A safe inference is:', o: ['Anything that sounds plausible.', 'What the text strictly implies, adding no outside facts.', 'A restatement of the title.', 'The most common opinion.', 'Only exact quotable words.'], a: 1 },
+      { q: '"However" signals:', o: ['A continuation of ideas.', 'A turn or contrast.', 'A list of examples.', 'A definition.', 'The passage ending.'], a: 1 },
+      { q: 'On a detail question you should:', o: ['Answer from memory fast.', 'Locate the keyword and read surrounding sentences.', 'Pick the smartest sounding option.', 'Skim only the first paragraph.', 'Use real-world facts.'], a: 1 },
+      { q: 'Which answer is most defensible for an inference?', o: ['Urban bees always die.', 'Some urban hives thrive when managed well.', 'All beekeepers are farmers.', 'Bees never face risks.', 'Honey is sold only in cities.'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     E5. VOCABULARY BUILDER
+     ================================================================ */
+  topic('found-vocab', 'GMAT Vocabulary Builder', 'foundations', 'foundation', {
+    overview: [
+      'A strong vocabulary does not come from memorizing a phone-book-sized list; it comes from learning words in families and meeting them in context. This chapter builds a working GMAT-ready lexicon — the logic and business words that appear across CR, RC, and headlines you will be asked to read.',
+      'Logical reasoning words do heavy lifting in Critical Reasoning: evidence, conclusion, assumption, inference, weaken, strengthen. Knowing what "assumption" means precisely — an unstated necessary idea — is half the battle on assumption questions.',
+      'Tone words let you read an author fast: skeptical, cautious, supportive, neutral, critical, dismissive, tentative. Attach one to every passage you read and the tone question answers itself.',
+      'Business and economics vocabulary shows up in RC passages: surplus, deficit, subsidy, incentive, revenue, margin, diversified, saturated. Understanding the mechanics (revenue − cost = margin; subsidy = government money) makes passages readable instead of decoding.',
+      'Words in context are learned by meeting them; the opposite of reading a definition cold. When you meet the chance, the learning is in the sentence. Whenever you hit an unfamiliar word on a practice passage, write the sentence, guess the meaning, then verify — that three-step habit outperforms decks.',
+      'Cognates and suffixes give you free words: ‑ate, ‑tion, ‑ous, ‑ize endings signal word classes, and unhappy/sufficient/return families multiply your reach. Treat a family (assume → assumption → presumably) as one acquisition event, not several.',
+      'Test-day insight: vocabulary is a force multiplier — roughly a third of wrong RC answers happen because a single critical word was a blur. The words that stop you are almost always the same recurring ones; meet them in sentences and they become predictable friends.'
+    ],
+    formulas: [
+      { term: 'assumption', def: 'an unstated idea the argument NEEDS to be true' },
+      { term: 'inference', def: 'what the argument strictly implies; no outside facts' },
+      { term: 'evidence', def: 'the facts offered in support of a conclusion' },
+      { term: 'conclusion', def: 'the claim the argument is trying to establish' },
+      { term: 'skeptical', def: 'doubting; unwilling to accept at face value' },
+      { term: 'tentative', def: 'cautious and hedged, not fully committed' },
+      { term: 'compelling', def: 'convincing enough to win agreement' },
+      { term: 'concise', def: 'brief and to the point; no wasted words' },
+      { term: 'diligent', def: 'steady, careful, thorough in effort' },
+      { term: 'surplus / deficit', def: 'surplus = more than needed; deficit = less than needed' },
+      { term: 'incentive', def: 'something that motivates action' },
+      { term: 'subsidy', def: 'government money granted to support an activity' }
+    ],
+    strategies: [
+      'Learn words in families: assume → assumption → presumably is one bite, not three.',
+      'Meet every new word in a sentence you wrote; context is the storage room, flashcards are the checkout line.',
+      'Attach a tone word to every passage you read in practice — force the habit until it is automatic.',
+      'Precise math words first: assumption, evidence, conclusion, inference, weaken, strengthen are the engine of CR.',
+      'For RC vocabulary-in-context, guess the meaning FROM the sentence before using the dictionary.',
+      'When a passage is dense, underline the five hardest words and translate each into your own phrase.',
+      'Use suffixes to orient: ‑tion (noun), ‑ive (adjective), ‑ize (verb), ‑ly (adverb).',
+      'Restate a local government headline with three vocab swaps a day — the daily 3-word routine.',
+      'On the test, treat a word you half-know as a location: its prefix, root, and context clue it before you panic.'
+    ],
+    traps: [
+      'Memorizing lists of definitions without ever meeting the words in sentences.',
+      'Confusing "skeptical" with "hostile" (doubt vs aggression) or "tentative" with "timid".',
+      'Assuming "compelling" means only interesting — it means convincing.',
+      'Reading "diligent" as "intelligent" when it means careful and persistent.',
+      'Treating every unknown word as the end of the passage — context almost always gives the meaning.',
+      'Selecting an RC tone option that requires knowing a rare emotion word (uncharacteristic assertiveness) instead of the author\'s straightforward lean.',
+      'Forgetting that "incentive" and "subsidy" are not synonyms (motivation vs government money).',
+      'Choosing a verb when the slot calls for its "‑tion" noun because both "sound smart."'
+    ],
+    examples: examplesFor([
+      { q: 'Choose the word closest in meaning to "compelling" as used in "She made a compelling argument."',
+        o: ['Confusing', 'Convincing', 'Comedy', 'Lengthy', 'Obvious'],
+        a: 'B',
+        r: 'A "compelling argument" is one that wins agreement — convincing. "Interesting" is a tempting near-miss that misses the persuasive force, and the rest are off-base.' },
+      { q: 'In "The report was concise and to the point," the word "concise" most nearly means:',
+        o: ['Long-winded', 'Detailed', 'Brief and exact', 'Important', 'Difficult'],
+        a: 'C',
+        r: '"Concise" means brief and to the point — and the sentence itself ("to the point") is the context clue. Answering from the sentence beats memory on every vocab-in-context item.' },
+      { q: 'Which word fits: "Her ___ approach — reviewing every question twice — paid off in a 40-point score jump."',
+        o: ['diligent', 'abrupt', 'frivolous', 'hasty', 'guilty'],
+        a: 'A',
+        r: 'Reviewing twice every time is steady, careful effort — diligent. "Hasty" and "frivolous" contradict the example; "abrupt" means sudden, not thorough.' },
+      { q: 'An "assumption" in a GMAT argument is best described as:',
+        o: ['The final conclusion.', 'An unstated idea the argument needs to be true.', 'The strongest evidence.', 'A restatement of the question.', 'Any fact in the passage.'],
+        a: 'B',
+        r: 'Assumptions are the hidden necessary ideas — the argument breaks if they are false. They are not the conclusion, evidence, or a paraphrase; that is exactly what makes assumption questions distinct.' },
+      { q: 'The author\'s tone is "skeptical." This most likely means she:',
+        o: ['Agrees enthusiastically.', 'Doubts the claim in question.', 'Remains emotionally neutral.', 'Is angry.', 'Provides no opinion.'],
+        a: 'B',
+        r: 'Skeptical = doubtful, unwilling to accept at face value. Doubt is not anger (that is "hostile") and not neutrality (that is "neutral"); it is active disbelief or caution.' },
+      { q: 'A city offers a "subsidy" to solar adopters. This most nearly means the city:',
+        o: ['Bans solar panels.', 'Pays money to support solar adoption.', 'Makes solar panels illegal.', 'Raises solar taxes.', 'Imports all its energy.'],
+        a: 'B',
+        r: 'A subsidy is government money granted to support an activity — here, paying part of solar costs. The punishing/banning options are antonyms of "support."' }
+    ]),
+    check: [
+      { q: '"Compelling" most nearly means:', o: ['Convincing', 'Confusing', 'Comic', 'Long', 'Sudden'], a: 0 },
+      { q: '"Concise" means:', o: ['Padded', 'Brief and exact', 'Repetitive', 'Complex', 'Vague'], a: 1 },
+      { q: '"Skeptical" author is:', o: ['Fully convinced', 'Doubtful', 'Angry', 'Neutral', 'Bored'], a: 1 },
+      { q: 'An assumption is:', o: ['The evidence', 'An unstated necessary idea', 'The conclusion', 'A quote', 'The title'], a: 1 },
+      { q: 'A "subsidy" is:', o: ['A tax increase', 'Government money in support', 'An import ban', 'A fine', 'A loan default'], a: 1 }
+    ]
+  })
+  ];
+
   const sections = [
+    {
+      key: 'foundations',
+      name: 'Foundations',
+      short: 'Foundations',
+      icon: '🌱',
+      blurb: 'Start here: rebuild core math and English skills from zero before attempting GMAT material.',
+      topics: foundationTopics
+    },
     {
       key: 'quant',
       name: 'Quantitative Reasoning',
@@ -2363,10 +3050,14 @@ const curriculum = (function () {
     }
   ];
 
-  const allTopics = quantTopics.concat(verbalTopics, diTopics);
+  const allTopics = foundationTopics.concat(quantTopics, verbalTopics, diTopics);
 
   /* Map each topic to the practice questions that share its tag */
   const topicIdByQuestionTopic = {
+    // foundations
+    'found-ops': 'fops', 'found-frac': 'ffrac', 'found-alg': 'falg',
+    'found-gram1': 'fgram', 'found-gram2': 'fgram', 'found-gram3': 'fgram',
+    'found-read': 'rc', 'found-vocab': 'fvocab',
     // quant
     'quant-pct': 'arithmetic', 'quant-ratios': 'arithmetic',
     'quant-fracdec': 'arithmetic', 'quant-numprops': 'numbers',
