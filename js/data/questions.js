@@ -97,7 +97,7 @@ const questionBank = (function () {
       text: "If 3x + 7 = 2x + 13, what is the value of x?",
       options: ["2","4","5","6","10"],
       correct: 3,
-      explanation: "3x + 7 = 2x + 13 → x = 6.",
+      explanation: "Subtract 2x from both sides: x + 7 = 13, so x = 6. Checking, 3(6) + 7 = 25 and 2(6) + 13 = 25. Answer D.",
       timeEstimate: 45,
       hint: "This is a linear-equation problem. Gather all the x terms on one side and the constant terms on the other by adding or subtracting the same amount on both sides, then divide to isolate x.",
     },
@@ -105,7 +105,7 @@ const questionBank = (function () {
       text: "If 2x + 3y = 14 and 3x + 2y = 16, what is the value of x + y?",
       options: ["4","5","6","7","8"],
       correct: 2,
-      explanation: "Adding the two equations gives 5x + 5y = 30, so x + y = 6.",
+      explanation: "Add the two equations: (2x + 3y) + (3x + 2y) = 14 + 16 → 5x + 5y = 30. Divide both sides by 5: x + y = 6. Answer C.",
       timeEstimate: 75,
       hint: "This is a two-variable linear-system problem. Set up the two-equation system before touching the answer choices. Notice that adding the two equations together gives you a multiple of (x + y), so you can find x + y directly without solving for x and y separately.",
     },
@@ -145,7 +145,7 @@ const questionBank = (function () {
       text: "For the function f(x) = x² − 3x + 2, what is the value of f(5)?",
       options: ["7","12","15","22","26"],
       correct: 1,
-      explanation: "f(5) = 25 − 15 + 2 = 12.",
+      explanation: "Substitute x = 5 into f(x) = x² − 3x + 2: f(5) = 5² − 3(5) + 2 = 25 − 15 + 2 = 12. Answer B.",
       timeEstimate: 45,
       hint: "This is a function-evaluation problem. Replace every x in the function rule with the number 5, then simplify using the order of operations.",
     },
@@ -161,7 +161,7 @@ const questionBank = (function () {
       text: "(2⁵ × 2⁻³) / 2² = ?",
       options: ["2⁰","2¹","2²","2³","2⁶"],
       correct: 0,
-      explanation: "2⁵ × 2⁻³ = 2². Then 2² / 2² = 2⁰ = 1.",
+      explanation: "When multiplying powers with the same base, add the exponents: 2⁵ × 2⁻³ = 2⁽⁵⁻³⁾ = 2². When dividing, subtract: 2² ÷ 2² = 2⁰ = 1. Answer A.",
       timeEstimate: 45,
       hint: "This is an exponent-laws problem. Use the rule that dividing powers with the same base means subtracting exponents, and multiplying means adding them, then simplify to a single power of 2.",
     },
@@ -209,7 +209,7 @@ const questionBank = (function () {
       text: "A trader buys goods for $80 and sells them for $100. What is the profit expressed as a percentage of the cost?",
       options: ["20%","25%","30%","40%","80%"],
       correct: 1,
-      explanation: "Profit = 100 − 80 = 20. As a percent of cost: 20/80 = 25%.",
+      explanation: "Profit = 100 − 80 = 20. Profit as a percent of cost = 20/80 = 0.25 = 25%. Answer B.",
       timeEstimate: 45,
       hint: "This is a profit-percentage problem. Profit percent is the profit divided by the cost, times 100. Compute the profit first, then compare it to the original cost of $80.",
     },
@@ -273,7 +273,7 @@ const questionBank = (function () {
       text: "What is the least common multiple (LCM) of 12 and 18?",
       options: ["24","36","54","72","108"],
       correct: 1,
-      explanation: "12 = 2² × 3, 18 = 2 × 3². LCM = 2² × 3² = 36.",
+      explanation: "Prime factorize: 12 = 2² × 3 and 18 = 2 × 3². The LCM takes the highest power of each prime: 2² × 3² = 4 × 9 = 36. Answer B.",
       timeEstimate: 45,
       hint: "This is a least-common-multiple problem. The LCM is the smallest positive integer that is a multiple of both 12 and 18. Factor each into primes, then take the highest power of each prime that appears.",
     },
@@ -329,7 +329,7 @@ const questionBank = (function () {
       text: "What is the greatest common divisor (GCD) of 84 and 126?",
       options: ["12","14","21","28","42"],
       correct: 4,
-      explanation: "84 = 2² × 3 × 7; 126 = 2 × 3² × 7. GCD = 2 × 3 × 7 = 42.",
+      explanation: "Prime factorize: 84 = 2² × 3 × 7 and 126 = 2 × 3² × 7. The GCD takes the common primes at the lowest power: 2 × 3 × 7 = 42. Answer E.",
       timeEstimate: 60,
       hint: "This is a greatest-common-divisor problem. The GCD is the largest number that divides both 84 and 126 exactly. Factor each into primes and take the lowest power of each shared prime factor.",
     },
@@ -361,7 +361,7 @@ const questionBank = (function () {
       text: "A bag contains 3 red marbles, 5 blue marbles, and 2 green marbles. If one marble is drawn at random, what is the probability that it is blue?",
       options: ["1/10","1/5","1/2","3/10","2/5"],
       correct: 2,
-      explanation: "Total marbles = 10. Blue = 5. Probability = 5/10 = 1/2.",
+      explanation: "Total marbles = 3 + 5 + 2 = 10. Blue marbles = 5, so P(blue) = 5/10 = 1/2. Answer C.",
       timeEstimate: 45,
       hint: "This is a basic-probability problem. Probability equals the number of favorable outcomes divided by the total number of outcomes. Count the blue marbles and divide by the total marbles.",
     },
@@ -409,7 +409,7 @@ const questionBank = (function () {
       text: "A box contains 4 red and 6 blue balls. Two balls are drawn without replacement. What is the probability that both are red?",
       options: ["2/15","4/25","6/25","2/5","4/15"],
       correct: 0,
-      explanation: "P(red then red) = (4/10) × (3/9) = 12/90 = 2/15.",
+      explanation: "First draw: 4 red balls out of 10. Second draw without replacement: 3 red out of the remaining 9. P = (4/10) × (3/9) = 12/90 = 2/15. Answer A.",
       timeEstimate: 90,
       hint: "This is a without-replacement probability problem. Find the chance the first draw is red, then multiply by the chance the second draw is red given that the first red is already gone, since the total and the red count both drop by one.",
     },
@@ -839,7 +839,7 @@ const questionBank = (function () {
       text: "Round 3,257 to the nearest hundred.",
       options: ["3,200","3,250","3,300","3,400","3,000"],
       correct: 2,
-      explanation: "Look at the tens digit of 3,257, which is 5. Since it is 5 or greater, round the hundreds digit up: 3,200 → 3,300. Answer C.",
+      explanation: "Look at the tens digit of 3,257, which is 5. Since it is 5 or greater, round the hundreds digit up: 3,257 → 3,300. Answer C.",
       timeEstimate: 30,
       hint: "To round to the nearest hundred, check the tens digit. If it is 5 or more, round up; if it is 4 or less, round down.",
     },
@@ -2159,7 +2159,7 @@ const questionBank = (function () {
     },
     { id: "d_tp_02", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "medium",
       text: "TWO-PART: A train travels 300 miles at a constant speed. If it had traveled 10 mph faster, the trip would have taken 1 hour less. Select the actual speed (mph) and the actual travel time (hours).\nAnswer pair: (speed, hours)",
-      options: ["Speed 40, time 7.5","Speed 50, time 6","Speed 50, time 7.5","Speed 60, time 5","Speed 60, time 6"],
+      options: ["Speed 40, time 7.5","Speed 50, time 6","Speed 60, time 5","Speed 70, time 4.5","Speed 80, time 4"],
       correct: 1,
       explanation: "Let the actual speed be s (mph) and the actual time t (hours), so s·t = 300. Traveling 10 mph faster saves 1 hour: (s + 10)(t − 1) = 300. Expanding and using s·t = 300 gives −s + 10t − 10 = 0, so s = 10t − 10. Substituting into s·t = 300: (10t − 10)t = 300 → t² − t − 30 = 0 → t = 6 (discarding the negative root). Then s = 50. Speed 50 mph, time 6 hours. Answer B.",
       timeEstimate: 120,
@@ -2335,7 +2335,7 @@ const questionBank = (function () {
     },
     { id: "d_tp_04", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "hard",
       text: "TWO-PART: A fruit basket contains apples and oranges. There are 16 apples and 8 oranges. After 4 apples are removed, what is the new percentage of the remaining fruit that is apples?\nAnswer pair: (fraction of apples as a percent, number of oranges)",
-      options: ["66⅔%, 8 oranges","75%, 8 oranges","60%, 8 oranges","72%, 8 oranges","50%, 8 oranges"],
+      options: ["66⅔%, 6 oranges","75%, 7 oranges","60%, 8 oranges","72%, 9 oranges","50%, 10 oranges"],
       correct: 2,
       explanation: "After removing 4 apples, apples = 12 and oranges = 8, so total remaining = 20. Apples as a percent = 12/20 = 60%, with oranges unchanged at 8.",
       timeEstimate: 120,
@@ -2385,7 +2385,7 @@ const questionBank = (function () {
       text: "TABLE: Employee productivity by department (output per hour):\nDepartment A: 12 | Department B: 9 | Department C: 15 | Department D: 8 | Department E: 11\n\nThe productivity of the most productive department exceeds that of the least productive department by what percent of the least productive department's value?",
       options: ["40%","60%","75%","87.5%","125%"],
       correct: 3,
-      explanation: "Most = C (15), least = D (8). Excess = 7. 7/8 = 87.5%.",
+      explanation: "The most productive department (C) produces 15 units per hour and the least productive (D) produces 8. The excess is 15 − 8 = 7, which as a percent of the least productive's output is 7/8 = 87.5%. Answer D.",
       timeEstimate: 120,
       hint: "Identify the largest and the smallest values in the column, then find the difference and express it as a percent of the smallest value.",
     },
@@ -2425,7 +2425,7 @@ const questionBank = (function () {
       text: "GRAPHICS: A pie chart of a $2,400 monthly budget:\nHousing 40% | Food 25% | Transport 15% | Savings 12% | Other 8%\n\nHow much is budgeted for Transport?",
       options: ["$288","$300","$360","$384","$600"],
       correct: 2,
-      explanation: "15% of $2,400 = $360.",
+      explanation: "Transport is 15% of the $2,400 budget: 0.15 × 2,400 = $360. Answer C.",
       timeEstimate: 60,
       hint: "Take the total budget and multiply it by the Transport percent written as a decimal to find the dollar amount set aside for transport.",
     },
@@ -2791,7 +2791,7 @@ const questionBank = (function () {
     },
     { id: "d_tp_10", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "hard",
       text: "TWO-PART: Of 200 employees, 60% work in Operations and the rest in Sales. If 5 more salespeople are hired and no one leaves, select the new number of Operations employees and the new total number of employees.\nAnswer pair: (operations, total)",
-      options: ["Ops 120, Total 205","Ops 125, Total 205","Ops 120, Total 210","Ops 121, Total 205","Ops 120, Total 200"],
+      options: ["Ops 120, Total 205","Ops 125, Total 200","Ops 130, Total 210","Ops 115, Total 195","Ops 124, Total 215"],
       correct: 0,
       explanation: "Initially, 60% of 200 = 120 work in Operations. Hiring 5 salespeople does not change the Operations count (still 120) but raises the total to 205. Answer A.",
       timeEstimate: 120,
@@ -2799,7 +2799,7 @@ const questionBank = (function () {
     },
     { id: "d_tp_11", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "medium",
       text: "TWO-PART: A car drives 180 miles at a constant speed and the trip takes 3 hours. If the car's speed were increased by 15 mph and the distance stayed the same, select the new speed and the new travel time.\nAnswer pair: (new speed, new time)",
-      options: ["Speed 75, time 2.4","Speed 75, time 3","Speed 90, time 2","Speed 60, time 3","Speed 80, time 2.25"],
+      options: ["Speed 75, time 2.4","Speed 70, time 3","Speed 80, time 2","Speed 65, time 2.5","Speed 85, time 2.75"],
       correct: 0,
       explanation: "The original speed is 180/3 = 60 mph. Increasing by 15 mph gives 75 mph. The new time is 180/75 = 2.4 hours. Answer A.",
       timeEstimate: 120,
@@ -2807,15 +2807,15 @@ const questionBank = (function () {
     },
     { id: "d_tp_12", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "hard",
       text: "TWO-PART: A factory's fixed daily costs are $2,000 and each widget costs $5 to make. Widgets sell for $9 each. If the factory produces and sells just enough widgets to break even (total cost equals total revenue), select the number of widgets and the profit at that point.\nAnswer pair: (widgets, profit)",
-      options: ["500 widgets, profit $0","400 widgets, profit $0","500 widgets, profit $2,000","250 widgets, profit $0","500 widgets, profit $1,000"],
-      correct: 0,
-      explanation: "Total cost = 2000 + 5n and total revenue = 9n, where n is the number of widgets. At break-even, 9n = 2000 + 5n → 4n = 2000 → n = 500. Profit at break-even is by definition $0. Answer A.",
+      options: ["300 widgets, profit $2,000","400 widgets, profit $1,000","500 widgets, profit $0","600 widgets, profit $500","700 widgets, profit $1,500"],
+      correct: 2,
+      explanation: "Total cost = 2000 + 5n and total revenue = 9n, where n is the number of widgets. At break-even, 9n = 2000 + 5n → 4n = 2000 → n = 500. Profit at break-even is by definition $0. Answer C.",
       timeEstimate: 120,
-      hint: "Set the total cost equal to the total revenue and solve for the number of widgets. At that break-even point the profit is exactly the amount that makes the equation balance.",
+      hint: "Set the total cost equal to the total revenue and solve for the number of widgets. At that break-even point the profit is exactly the amount that makes the equation balance. Select that pair of answers.",
     },
     { id: "d_tp_13", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "hard",
       text: "TWO-PART: Product Alpha sells for $50 and costs $20. Product Beta sells for $60 and costs $30. Select Alpha's profit margin and Beta's profit margin, where profit margin = profit ÷ selling price.\nAnswer pair: (Alpha margin, Beta margin)",
-      options: ["Alpha 60%, Beta 50%","Alpha 50%, Beta 60%","Alpha 60%, Beta 40%","Alpha 40%, Beta 60%","Alpha 50%, Beta 50%"],
+      options: ["Alpha 60%, Beta 50%","Alpha 50%, Beta 60%","Alpha 40%, Beta 40%","Alpha 55%, Beta 55%","Alpha 45%, Beta 45%"],
       correct: 0,
       explanation: "Alpha's profit is 50 − 20 = 30, so its margin is 30/50 = 60%. Beta's profit is 60 − 30 = 30, so its margin is 30/60 = 50%. Answer A.",
       timeEstimate: 120,
@@ -2823,7 +2823,7 @@ const questionBank = (function () {
     },
     { id: "d_tp_14", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "hard",
       text: "TWO-PART: The table below lists a product's price and quantity sold in two regions:\nRegion A: price $10, quantity 40\nRegion B: price $12, quantity 30\n\nSelect the total revenue and the average selling price per unit (total revenue ÷ total units).\nAnswer pair: (total revenue, average price)",
-      options: ["$760, $10.86","$760, $11.00","$700, $10.00","$760, $11.50","$400, $10.00"],
+      options: ["$760, $10.86","$700, $11.00","$820, $10.00","$740, $11.50","$860, $12.00"],
       correct: 0,
       explanation: "Region A revenue = 10 × 40 = $400; Region B revenue = 12 × 30 = $360; total revenue = $760. Total units = 70, so the average price = 760/70 ≈ $10.86. Answer A.",
       timeEstimate: 120,
@@ -2858,7 +2858,7 @@ const questionBank = (function () {
         left: { prompt: "Total distance traveled (meters) while passing the platform", options: ["120","180","200","300","360"], correct: 2 },
         right: { prompt: "Train speed (meters per second)", options: ["10","15","20","25","30"], correct: 2 }
       },
-      explanation: "To fully clear the platform the train must travel its own length plus the platform length: 180 + 120 = 300 m. Speed = 300/12 = 25 m/s. So Column 1 = 300 and Column 2 = 25 — note this is the pair at index 3, which is why A–E letters do not apply here.",
+      explanation: "To fully clear the platform the train must travel its own length plus the platform length: 180 + 120 = 300 m. Speed = 300/12 = 25 m/s. So Column 1 = 300 and Column 2 = 25 (both are the entry in the third row of the answer grid).",
       timeEstimate: 150,
       hint: "The distance to be covered includes both the train's own length and the platform's length. Divide that total distance by the given 12 seconds to get the speed.",
     },
@@ -3019,7 +3019,7 @@ const questionBank = (function () {
       },
       options: ["Traffic fell in the month after the campaign launched","Traffic grew by roughly 50% between February and May","The largest single-month increase occurred in June","Traffic in June was less than in April","From March to June traffic grew by exactly 25%"],
       correct: 1,
-      explanation: "February = 22, May = 34. Growth = (34 − 22)/22 = 12/22 ≈ 54.5%, roughly 50% → E. Actually statement B says 'roughly 50%' → true. June (33) rose from 29 in April — so C is false (June increase was −1); D is false (33 > 29); the largest increase was April (+6) or May (+5), not June so C is false; A is false (Apr 29 → May 34 rose). B is the supported statement.",
+      explanation: "Values (thousands): Jan 20, Feb 22, Mar 23, Apr 29, May 34, Jun 33. From February to May, growth = (34 − 22)/22 = 12/22 ≈ 54.5%, which is roughly 50%, so B is supported. The month after the campaign launched (May) rose from 29 to 34, so A is false. The largest single-month increase was March→April (+6), not June, so C is false. June (33) is more than April (29), so D is false. From March to June, growth = (33 − 23)/23 ≈ 43%, not exactly 25%, so E is false. Answer B.",
       timeEstimate: 150,
       hint: "Compute percent change from a February baseline to May, and verify the direction of every month-to-month step before picking the supported claim.",
     },
@@ -3030,10 +3030,35 @@ const questionBank = (function () {
      Two-Part Analysis widgets. Correctness is preserved exactly: each
      answer option stored a (column1, column2) pair, and the same pair
      index selects the same values in the two column pickers. */
+  /* Split a "label value, label value" pair at the first comma that is NOT
+     between two digits, so thousands separators inside numbers (e.g. "$2,000")
+     do not split the pair apart. */
+  function splitPair(pair) {
+    for (var i = 0; i < pair.length; i++) {
+      if (pair.charAt(i) === ',') {
+        var prev = i ? pair.charAt(i - 1) : '';
+        var next = i + 1 < pair.length ? pair.charAt(i + 1) : '';
+        if (!/\d/.test(prev) || !/\d/.test(next)) {
+          return [pair.slice(0, i), pair.slice(i + 1)];
+        }
+      }
+    }
+    return null;
+  }
+
+  /* Extract the numeric value from a segment like "Fiction 45", "$10.86",
+     "0.5% profit", "Non-fiction 12" or "X=100". The digit-bearing token is
+     used so labelled values like "Non-fiction 3" yield "3", not "-fiction 3". */
   function columnValueFromSegment(seg) {
+    seg = seg.trim();
     var i = seg.indexOf('=');
-    if (i >= 0) return seg.slice(i + 1).trim();
-    return seg.replace(/^[^0-9.\-]+/, '').trim();
+    if (i >= 0) seg = seg.slice(i + 1).trim();
+    var tokens = seg.split(/\s+/);
+    var pick = tokens[tokens.length - 1];
+    for (var t = 0; t < tokens.length; t++) {
+      if (/\d/.test(tokens[t])) { pick = tokens[t]; break; }
+    }
+    return pick.replace(/^[^0-9.\-]+/, '').trim();
   }
   dataInsights.forEach(function (q) {
     /* Normalize Table Analysis: keep the correct map inside q.table.correct
@@ -3047,8 +3072,8 @@ const questionBank = (function () {
       if (m && q.options && q.options.length) {
         var leftOpts = [], rightOpts = [], okPairs = true;
         q.options.forEach(function (pair) {
-          var parts = pair.split(',').map(function (s) { return s.trim(); });
-          if (parts.length !== 2) { okPairs = false; return; }
+          var parts = splitPair(pair);
+          if (!parts || parts.length !== 2) { okPairs = false; return; }
           leftOpts.push(columnValueFromSegment(parts[0]));
           rightOpts.push(columnValueFromSegment(parts[1]));
         });
