@@ -1269,6 +1269,28 @@ a.lesson-nav-card:hover { border-color: var(--color-secondary); box-shadow: var(
 }
 .road-step.next .road-num { background: var(--color-secondary); color: #fff; border-color: var(--color-secondary); }
 .road-name { font-weight: 600; }
+.road-arrow { align-self: center; color: var(--color-muted); font-size: 1rem; padding: 0 .1rem; }
+.road-step.road-lv-foundation { border-left: 3px solid rgba(46, 125, 50, .55); }
+.road-step.road-lv-beginner { border-left: 3px solid rgba(46, 125, 50, .9); }
+.road-step.road-lv-intermediate { border-left: 3px solid var(--color-accent); }
+.road-step.road-lv-advanced { border-left: 3px solid var(--color-danger); }
+
+.stage-chip {
+  display: inline-flex; align-items: center; gap: .3rem; padding: .25rem .55rem; border-radius: 999px;
+  font-size: .75rem; font-weight: 600; border: 1px solid var(--color-border); background: var(--color-card); color: var(--color-text);
+}
+.stage-chip-foundation { border-color: rgba(46, 125, 50, .4); }
+.stage-chip-beginner { border-color: rgba(46, 125, 50, .7); }
+.stage-chip-intermediate { border-color: rgba(255, 111, 0, .45); }
+.stage-chip-advanced { border-color: rgba(198, 40, 40, .45); }
+
+.topic-card.topic-level-foundation { border-left: 3px solid rgba(46, 125, 50, .35); }
+.topic-card.topic-level-beginner { border-left: 3px solid rgba(46, 125, 50, .65); }
+.topic-card.topic-level-intermediate { border-left: 3px solid var(--color-accent); }
+.topic-card.topic-level-advanced { border-left: 3px solid var(--color-danger); }
+.topic-card.topic-locked { opacity: .78; }
+.topic-card.topic-locked:hover { opacity: 1; }
+.topic-card .topic-meta { font-size: .78rem; color: var(--color-muted); margin-top: .2rem; text-transform: capitalize; }
 
 /* v1.5.0 simulator: on-screen calculator + post-exam review */
 .sim-calc-wrap { border: 1px solid var(--color-border); border-radius: 10px; padding: 1rem; background: var(--color-bg); }

@@ -170,6 +170,23 @@ function renderDashboard(el) {
       </div>
     </section>
 
+    <section class="card" style="margin-bottom:1rem;border-left:4px solid var(--color-danger)">
+      <div class="row row-wrap" style="align-items:center;gap:.5rem 1rem">
+        <div>
+          <div class="card-title">🔴 Expert Endgame</div>
+          <p class="text-muted" style="margin:0">Clear each section's chapters (pass the Hard tests) to unlock its Expert capstone — a mixed-format strategy cap. The capstones join everything you relearned.</p>
+        </div>
+        <div class="row" style="gap:.5rem;flex-wrap:wrap;margin-left:auto">
+          ${curriculum.sections.filter(s => s.topics.some(t => t.level === 'advanced')).map(s => {
+            const adv = s.topics.filter(t => t.level === 'advanced');
+            const unlocked = adv.filter(t => expertTopicUnlocked(t.id)).length;
+            const mastered = adv.filter(t => learningStatus(t.id).status === 'mastered').length;
+            return `<a class="btn btn-sm ${mastered === adv.length ? 'btn-outline' : 'btn-ghost'} stage-chip stage-chip-advanced" href="#/learn" title="${esc(s.name)}">${s.icon} ${s.short}: ${mastered}/${adv.length} capstone${adv.length > 1 ? 's' : ''} ${mastered === adv.length ? '✅' : unlocked === adv.length ? '🔓' : '🔒'}</a>`;
+          }).join('')}
+        </div>
+      </div>
+    </section>
+
     <section class="grid grid-2">
       <div class="card">
         <div class="card-header"><h2 class="card-title">💪 Top Strengths</h2></div>

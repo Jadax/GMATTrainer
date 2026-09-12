@@ -1207,6 +1207,82 @@ const curriculum = (function () {
       { q: 'DS: What is x − y?\n(1) x + y = 10\n(2) x − y = 4', o: ['A', 'B', 'C', 'D', 'E'], a: 1 },
       { q: 'DS: How many cars are in the lot?\n(1) There are 40 sedans.\n(2) Sedans are 50% of the cars.', o: ['A', 'B', 'C', 'D', 'E'], a: 2 }
     ]
+  }),
+
+  topic('quant-expert', 'Quantitative Reasoning: Expert Traps, Timing & Mixed-Topic Strategy', 'quant', 'advanced', {
+    overview: [
+      'The GMAT Focus Quantitative Reasoning section is 21 Problem Solving questions in 45 minutes with no calculator — just over two minutes per item. At the expert tier the section stops being about whether you know a concept and becomes a recognition game: which of the five skill banks is this stem really testing, and which distractor was engineered from the mistake you are about to make.',
+      'The five skill banks in this course are arithmetic (percents, ratios, fractions, decimals), algebra (equations, inequalities, exponents, functions), number properties (primes, divisibility, odds and evens, integer constraints), word problems (rates, work, mixtures, interest, profit), and statistics (mean, median, range, standard deviation, probability). Naming the bank in the first ten seconds decides your toolkit.',
+      'Hard quantitative items are engineered around signature mistakes: a wrong base in a percent comparison, a sign error in an algebraic move, a discarded integer constraint, a missed compounding step, or a reversed ratio. Expert solving internalizes the distractor logic — when you reach an answer you can name the misstep that produced each wrong option, which is what converts a HARD item into a MEDIUM one.',
+      'Integer constraints are the highest-yield expert lever. Counts of people, tickets, and objects force positive integers, so a stem such as "x is a positive integer with x² < 30" gives a short enumerable list. The expert habit is to write down what the stem forces before opening the math.',
+      'The weighted-average lever resolves a large family of hard items: the blend of two concentrations or two averages must sit between the inputs and shift toward the heavier weight exactly in proportion to the weights. Questions that resist a two-equation setup usually collapse with the lever.',
+      'Pacing math: the section average is about 2:10 per question, but the expert spends roughly ninety seconds on easy and medium items to bank time for the three or four genuinely hard ones. A ninety-second guess on a stuck item is a better trade than four thirty-second overruns — overruns are how 600-level timers happen at 700-level targets.',
+      'The estimation governor decides your arithmetic: when answer choices are spaced far apart, round deliberately and compute once; when they are close, exact work wins. Recognizing which game you are in, at the first glance at the options, saves more time than any shortcut technique.',
+      'Every earlier chapter taught the formulas and traps; the capstone bundles them: mixed-topic timing sets, distractor forensics, and the twenty-second verification habit (substitute the root back, run the reverse percent multiplier, scale a ratio to its total). Test-day insight: read the answer choices before the stem when you can — scale and units arrive before the numbers, and they tell you whether to compute or to estimate.'
+    ],
+    formulas: [
+      { term: 'PS pace', def: '45 minutes ÷ 21 questions ≈ 2:10 each; budget ~12:30 per block of 6 and bank time for the hard tail' },
+      { term: 'Weighted-average lever', def: 'the blend lies between the two inputs and sits closer to the larger quantity; blend = (ax + by)/(a + b), where a and b are the quantities' },
+      { term: 'Overlapping sets', def: 'total = group A + group B − both + neither; anything counted in both must be subtracted once' },
+      { term: 'Percent base discipline', def: 'name the base before computing: percent change = (new − old)/old, and "greater than" means the change divided by the ORIGINAL value' },
+      { term: 'Integer-constraint test', def: 'counts of objects force positive integers; enumerate what the stem allows and test instead of solving blindly' },
+      { term: 'Divisibility battery', def: '2: last digit even; 3: digit sum ÷ 3; 4: last two digits ÷ 4; 5: ends 0 or 5; 6: even and ÷ 3; 8: last three digits ÷ 8; 9: digit sum ÷ 9; 11: alternating-sum rule' },
+      { term: 'Prime-factor sufficiency', def: 'divisibility by 12 requires 2² and 3 in the prime factorization; answer divisibility questions through prime factors, not long division' },
+      { term: 'Exponent in equals exponent in', def: 'same base ⇒ equate exponents; different bases ⇒ factor into a common base before comparing' },
+      { term: 'Speed-change shortcut', def: 'new time = distance ÷ new speed; faster travel saves time only over the same distance' },
+      { term: 'Work equivalence', def: 'rates add in jobs per hour: 1/t₁ + 1/t₂ = 1/t_overall' },
+      { term: 'Mixture lever', def: 'blend concentration = (a·x + b·y)/(a + b); the blend is closer to the concentration of the larger quantity' },
+      { term: 'SD direction', def: 'standard deviation changes only when values move relative to the mean; adding the same constant to every value leaves SD unchanged' }
+    ],
+    strategies: [
+      'Name the skill bank in your head within ten seconds; the wrong toolkit is the silent killer.',
+      'Read the answer choices before the stem when possible: scale, units, and spacing tell you estimate-versus-exact.',
+      'Solve for the answer AND for the biggest distractor; naming the built-in misstep dismantles the item.',
+      'When the stem implies whole objects, enumerate the integer candidates before touching algebra.',
+      'Verify algebra by substitution and percents by the reverse multiplier; a twenty-second check avoids a five-minute redo.',
+      'On weighted averages and mixtures, move the lever instead of grinding a two-equation system.',
+      'On far-apart answer choices, round to one significant figure and compute once.',
+      'On work problems, set the unit job to 1 and solve for per-hour rates.',
+      'Bank time: spend about ninety seconds on easy and medium items and hold the reserve for the hard tail.',
+      'After ninety seconds with no path, guess from the constraints (drop options that violate integer or parity limits) and move on.',
+      'Scale a ratio to its total membership before judging a quantity claim.',
+      'Keep a mental running clock per block of about six questions (12–13 minutes).'
+    ],
+    traps: [
+      'Wrong base: answering a percent-greater question with the NEW value as the denominator.',
+      'Sign error: moving a term across an equals sign without flipping it; always substitute back.',
+      'Solved-the-wrong-variable: computing n when the stem asks for 2n, or x when it asks for x + y.',
+      'Discarded constraint: fractional counts from a stem that implies people, tickets, or objects.',
+      'Adding percents that must multiply when a change compounds.',
+      'Reversed ratio: writing "x is to y" and then reading the result as y to x.',
+      'Dividing by an expression that could be zero (x, x−1, x²−1) without checking the stem.',
+      'Exponent base confusion: treating 2³ × 3² as additive instead of factoring to a common base.',
+      'SD confusion: treating a uniform shift as a change in spread — every value +k leaves SD unchanged.',
+      'Rounding too early when the answer choices are close together.',
+      'Misplacing the modifier: applying "20% of the remainder" as "20% of the total."',
+      'Missing the mirror distractor: the option that equals your most natural misstep is the signature trap.'
+    ],
+    examples: examplesFor([
+      { q: 'A chemist mixes 3 liters of a 10% salt solution with 7 liters of a 30% salt solution. What percent of the mixture is salt?',
+        o: ['16%', '20%', '24%', '28%', '33%'],
+        a: 'C',
+        r: 'Salt = 0.10 × 3 + 0.30 × 7 = 0.3 + 2.1 = 2.4 liters out of 10 total → 24%. The lever confirms it: the 7 L of 30% pulls the blend toward 30%, and 24% is closer to 30% than to 10% — the D option (28%) flips the weights.' },
+      { q: 'x is a positive integer such that 12 < x < 20 and x is divisible by 3. How many possible values of x are there?',
+        o: ['1', '2', '3', '4', '5'],
+        a: 'B',
+        r: 'The integers 13 through 19 divisible by 3 are 15 and 18 — exactly two. Enumerating the small integer window is faster and safer than algebra. A (one) forgets 18; C counts by crossing 20.' },
+      { q: 'If 2^x = 64 and 3^y = 81, what is the value of x − y?',
+        o: ['−2', '0', '2', '4', '6'],
+        a: 'C',
+        r: '64 = 2^6 so x = 6; 81 = 3^4 so y = 4; x − y = 2. Matching bases to familiar powers tests the exponent-in-equals-exponent skill; the −2 option is the arithmetic-reversal trap.' }
+    ]),
+    check: [
+      { q: 'On the GMAT Focus, the Quantitative Reasoning section allows a calculator:', o: ['on every question', 'on data-sufficiency items only', 'never', 'only on word problems', 'on half the section'], a: 2 },
+      { q: 'A stem says "x is a positive integer and x² < 30." The number of possible values of x is:', o: ['2', '3', '4', '5', '6'], a: 4 },
+      { q: 'A 10% solution is blended with a 30% solution in equal amounts. The blend is closest to:', o: ['10%', '30%', '20%', '40%', '15%'], a: 2 },
+      { q: 'Adding the same constant to every value in a data set:', o: ['raises the standard deviation', 'lowers the standard deviation', 'leaves the standard deviation unchanged', 'doubles the standard deviation', 'halves the standard deviation'], a: 2 },
+      { q: 'The best twenty-second verification for a solved linear equation is:', o: ['memorizing the steps', 'substituting the solution back into the original equation', 'redrawing the diagram', 'guessing a new value', 'consulting the answer key'], a: 1 }
+    ]
   })
 ];
 
@@ -1818,6 +1894,158 @@ const curriculum = (function () {
       { q: 'Ninety percent of golf-club members favor a tax, so the author concludes the whole public favors it. The flaw is:', o: ['generalizing from an unrepresentative sample', 'reversing cause and effect', 'posing a false either-or', 'relying on a vague authority', 'attacking the author'], a: 0 },
       { q: 'Rather than naming the logical error, a weak flaw answer tends to:', o: ['be unusually precise', 'restate the conclusion or merely echo the topic', 'supply new evidence', 'define the terms', 'shorten the argument'], a: 1 }
     ]
+  }),
+
+  topic('verbal-cr-advanced', 'Critical Reasoning: Complex Negation, Method & Precision Evaluation', 'verbal', 'advanced', {
+    overview: [
+      'At the expert tier, Critical Reasoning stops testing whether you can spot an assumption and starts testing whether you can negate compound and conditional ones, describe the exact move an argument makes, and hold an evaluate question to the standard of "decides one way or the other." Roughly a quarter of Focus Verbal questions are CR, and the hard third of those is where expert scorers separate themselves.',
+      'The negation technique is the backbone. To confirm an assumption, negate your candidate as precisely as written: an assumption such as "A leads to B and B leads to C" negates to "A does NOT lead to B, OR B does NOT lead to C." A loose negation — negating the topic instead of the claim — confirms the wrong answer.',
+      'A conditional assumption has its own negation: the negation of "if P then Q" is "P and NOT Q." The original assumption catches the test-taker who negates to "NOT P" and wrongly keeps the answer.',
+      'Method-of-reasoning questions describe how the argument proceeds: concession followed by rebuttal, analogy, ruling-out alternatives, extrapolation from a sample, or flagging a limitation. The correct answer says what the argument DID, at matching strength and scope — never what it only implies.',
+      'Evaluate-the-argument questions require a question that flips the conclusion when answered yes versus no. A candidate that leaves the conclusion unmoved either way is not an evaluator, no matter how relevant it sounds.',
+      'Expert reading is precision reading: quantify and qualify the claim. More dollars is not a higher rate; more cases is not a higher percentage; "some evidence suggests" does not license a "proves" answer.',
+      'Sample-to-population logic decides a large share of hard items: a study of one group cannot justify a claim about another unless the stem supplies the bridge. The missing bridge is commonly the correct assumption, weakener, or flaw.',
+      'Test-day: restate the author\'s actual conclusion word-for-word before reading the options. CR misses at the expert level are almost never knowledge failures — they are mismatches between the conclusion the author drew and the conclusion the test-taker answered.'
+    ],
+    formulas: [
+      { term: 'Negation test', def: 'negate the exact claim; if the negation would destroy the conclusion, the claim is a required assumption' },
+      { term: 'Compound negation', def: 'NOT (A and B) = NOT A OR NOT B; a single broken link suffices to collapse the assumption' },
+      { term: 'Conditional negation', def: 'negate "if P then Q" as "P and NOT Q" — P still holds, Q merely fails to follow' },
+      { term: 'Method verbs', def: 'concede then counter, cite an analogy, rule out an alternative, extrapolate from a sample, flag a limitation, trace a trend' },
+      { term: 'Evaluate test', def: 'the correct question flips the conclusion when answered yes versus no; anything else is filler' },
+      { term: 'Strength ladder', def: 'some < many < most < all; suggests < indicates < demonstrates < proves — answers must match the claim\'s strength' },
+      { term: 'Quantity vs rate', def: 'a higher dollar amount is not a higher percent; a higher case count is not a higher rate per population' },
+      { term: 'Sample-population rule', def: 'a study of group A supports only claims about group A unless the stem supplies the link' },
+      { term: 'Causal-direction flag', def: 'X precedes Y does not mean X caused Y; watch options that reverse the arrow' },
+      { term: 'Two-step assumption', def: 'when a conclusion joins two separate premises, the assumption is the missing bridge between them' },
+      { term: 'Anecdote vs pattern', def: 'a single example supports "suggests" at most; a representative pattern licenses a stronger claim' },
+      { term: 'Cite vs endorse', def: 'quoting an expert is not agreeing with the expert; the author may cite then reject' }
+    ],
+    strategies: [
+      'State the conclusion verbatim before reading options on every CR question.',
+      'Write the dependency: "the author needs ___ to be true" before hunting assumptions.',
+      'Negate your candidate exactly as worded; test that the negation kills the conclusion.',
+      'Break AND-assumptions into parts and negate each part; one broken link is enough.',
+      'On method questions, summarize the passage\'s moves in verbs before touching the choices.',
+      'Reject method answers that claim the argument did what it only implied.',
+      'On evaluate questions, apply the yes/no squeeze to every surviving candidate.',
+      'Normalize counts to rates before comparing groups of different sizes.',
+      'Flag sample-to-population jumps; the missing bridge is the item\'s payload.',
+      'Reject answers that restate the conclusion instead of supporting or appraising the reasoning.',
+      'Prefer the smaller, more precise claim when two options survive.',
+      'Keep a sixty-second rhythm: stem → paraphrase → hunt → move.'
+    ],
+    traps: [
+      'Negating the general topic instead of the exact claim (loose negation).',
+      'Negating "if P then Q" to "NOT P" instead of "P and NOT Q."',
+      'Conflating quantity with rate: more dollars treated as a higher percent.',
+      'Reversing causation inside a describe-the-argument answer.',
+      'Equating "author cites an expert" with "author endorses the expert."',
+      'Keeping an evaluate candidate that cannot change the outcome.',
+      'Answering a method question with content instead of moves.',
+      'Calling one example a "representative pattern."',
+      'Extrapolating a study to a population the stem never links.',
+      'Missing the bridge claim between two separate premises.',
+      'Choosing a broadly true but unhelpful option; the GMAT wants the specific job done.',
+      'Ignoring strength words: "may," "likely," and "most" are load-bearing.'
+    ],
+    examples: examplesFor([
+      { q: 'All engineers enrolled in the training program passed the licensure exam, and every graduate of the program is an engineer. The dean concludes that all graduates passed the licensure exam.\n\nWhich of the following must be true for the conclusion to hold?',
+        o: ['Every graduate of the program is an engineer enrolled in the program.', 'Every engineer in the program is a graduate of the program.', 'All graduates of the program passed the exam.', 'The exam is the only way to earn an engineering credential.', 'Some engineers in the program are not graduates.'],
+        a: 'A',
+        r: 'The premises chain only to engineers enrolled in the program (enrolled → passed). Graduates are engineers, but not stated to be enrolled, so the dean needs the bridge "every graduate is an engineer enrolled in the program." Option B is the converse and does not complete the chain; C restates the conclusion.' },
+      { q: 'Critics charge that the tax breaks failed because districts did not prosper as predicted. But the prediction assumed a matching interest-rate environment that never arrived; where rates behaved as assumed, districts did attract investment.\n\nThe argument proceeds by:',
+        o: ['citing an expert who endorses the critics', 'conceding the outcome but showing the prediction was conditional on an absent condition', 'denying that the tax breaks were ever enacted', 'appealing to the popularity of the policy', 'tracing the historical origin of the policy'],
+        a: 'B',
+        r: 'The author grants the districts did not prosper (concedes the outcome) and then rebuts the critics by showing the prediction carried an unstated condition (the rate environment) that failed. Option A inverts the relation; C, D, and E describe content the passage never deploys.' },
+      { q: 'A clinic treated 200 patients with a new therapy and 200 with a standard therapy. In the treated group 80 recovered; in the standard group 60 recovered. The clinic concludes the new therapy is more effective.\n\nWhich of the following, if true, most seriously calls the conclusion into question?',
+        o: ['The two groups had very different average ages.', 'The new therapy costs more than the standard therapy.', 'Recovery was defined identically for both groups.', 'Patients were assigned to groups at random.', 'The clinic has treated thousands of patients with the standard therapy over the years.'],
+        a: 'A',
+        r: 'If the treated group was much younger, age — not the therapy — could explain the recovery gap. Options C and D strengthen the conclusion; B and E are irrelevant to effectiveness.' }
+    ]),
+    check: [
+      { q: 'The negation of "If the firm invests, it will expand" is:', o: ['The firm will not invest.', 'The firm invests and does NOT expand.', 'The firm neither invests nor expands.', 'The firm expands without investing.', 'The firm will always expand.'], a: 1 },
+      { q: 'On evaluate-the-argument questions, a correct answer must:', o: ['be strictly true in the real world', 'quote a comparable study', 'flip the conclusion when answered yes versus no', 'support the author\'s bias', 'add arithmetic'], a: 2 },
+      { q: 'A study of college students is used to justify a claim about all voters. The missing element is:', o: ['a control group', 'a longer preamble', 'a bridge linking the sample to the population', 'an expert witness', 'a diagram'], a: 2 },
+      { q: '"More dollars were spent" is different from "the rate rose" because:', o: ['both are about money', 'quantities and rates can move in opposite directions', 'rates exceed quantities on the GMAT', 'dollars cannot be compared', 'percentages are always higher'], a: 1 },
+      { q: 'A thorough method-of-reasoning answer describes:', o: ['the topic the argument discusses', 'the number of words in the passage', 'the moves the argument makes', 'the author\'s personal experience', 'the passage\'s length'], a: 2 }
+    ]
+  }),
+
+  topic('verbal-rc-advanced', 'Reading Comprehension: Comparative Passages & Inference Under Pressure', 'verbal', 'advanced', {
+    overview: [
+      'Expert Reading Comprehension splits into two disciplines: passages that are structurally demanding, and a clock that is unforgiving. GMAT Focus Verbal packs Critical Reasoning and RC into 45 minutes; expert scorers read a 220–320-word passage in about ninety seconds, map its paragraphs, and spend about ninety seconds per question after that.',
+      'Comparative passages — two short passages or two viewpoints inside one — are the signature of the hard tier. The first move is relationship mapping: do the authors agree on the claim but differ on evidence, disagree on the claim itself, or address complementary aspects? Nearly every question then applies one author\'s logic to the other\'s material.',
+      'Hard inference is rarely single-sentence. It is a two-step deduction: take a condition stated in one paragraph and an instance stated in another, and derive what must follow. The negation test verifies; the two-step construction produces the candidate.',
+      'The expert reading method is the ninety-second map: the first paragraph names the author\'s claim and method; middle paragraphs deliver counterpoint, evidence, refinement, or application; the final paragraph resolves the argument or gestures at an open question. Answer from the map; re-enter the text only to confirm an anchoring sentence.',
+      'Expert precision extends the detail discipline: an answer must survive every clause. At hard difficulty the wrong answers are engineered to pass on the first clause and collapse on the second — a span, a population, or a magnitude quietly widened.',
+      'Pacing is strategy, not luck: after about ninety seconds without a firm answer, flag, guess, and move. A single stuck RC item costs more than the points of two easy ones it steals time from.',
+      'Harder structure questions ask not just what a sentence does but why the author ordered the passage as it is: why the twist is postponed, why the concession arrives late, why the evidence is sequenced as it is.',
+      'Test-day insight: the passage is a machine for one main idea, and every example, concession, and hedge is a moving part. The expert reads parts as functions — which is why the map beats memorization under time pressure.'
+    ],
+    formulas: [
+      { term: 'Passage map', def: 'para 1: claim + method; middle: counterpoint / evidence / refinement; final: resolution or open question' },
+      { term: 'Comparative map', def: 'classify authors as same-claim-different-evidence, different-claim, or complementary-focus before reading the questions' },
+      { term: 'Two-step inference', def: 'combine a stated condition with a stated instance to derive what must follow' },
+      { term: 'Negation test', def: 'negate the candidate; if the negation can coexist with the text, the candidate is not forced' },
+      { term: '90-second read', def: 'map the passage in about ninety seconds, answer from the map, and re-enter text only for anchors' },
+      { term: 'Clock cap', def: 'abandon after about 90–120 seconds on a question; guess and flag rather than fight' },
+      { term: 'Clause-survival test', def: 'every clause of the answer must match the text; one invented clause invalidates the option' },
+      { term: 'Structural-why test', def: 'ask why the author placed X here — ordering itself is evidence of intent' },
+      { term: 'Signal map', def: 'however = pivot, granted = concession, notably = emphasis, in fact = correction, by contrast = opposition' },
+      { term: 'Hedge-to-claim rule', def: 'answer strength must mirror passage strength; never outrun the hedge' },
+      { term: 'Scope filter', def: 'a claim about X in setting Y cannot license a claim about Z or a different setting' },
+      { term: 'Author function', def: 'adjudicating, tracing, correcting, or cautiously endorsing — the function predicts tone and main idea' }
+    ],
+    strategies: [
+      'Build the paragraph map in about ninety seconds; never answer from raw memory of a single sentence.',
+      'On comparative passages, name both positions before opening the questions.',
+      'Pre-phrase every inference: "this must mean ___", then verify against the anchors.',
+      'Run the negation test when two candidates survive.',
+      'Set a silent countdown: at ninety seconds with no firm answer, guess and flag.',
+      'Read the final paragraph\'s first and last sentences for the resolution or open question.',
+      'Answer "why is X here" with a function verb, not the content of X.',
+      'Match strength: allow "may," "some," and "likely" only where the passage hedges.',
+      'Kill any option whose second clause invents a figure, population, or cause.',
+      'Use the map to pre-answer organization questions before reading the choices.',
+      'Budget about four minutes per passage plus its questions.',
+      'Skip dense sentences unless a question anchors them; the map is the priority.'
+    ],
+    traps: [
+      'Answering from the first clause when the second clause overreaches.',
+      'Supplying world knowledge the text never provides.',
+      'Outrunning scope: a claim about one country or era extended elsewhere.',
+      'Reversing the map: assigning one author the other\'s mechanism.',
+      'Reading "an example" as "a pattern" without textual support.',
+      'Confusing the concession with the thesis.',
+      'Overreading the hedge: "appears to" is not "demonstrates."',
+      'Missing the two-step: borrowing a fact from outside the paragraph.',
+      'Timing failure: a four-minute war on one question.',
+      'Choosing paraphrases of the topic over forced conclusions.',
+      'Structure options that describe what a paragraph says, not what it does.',
+      'Preferring the most detailed option over the logically correct one.'
+    ],
+    examples: examplesFor([
+      { q: 'Author A argues that rising housing costs stem from restrictive zoning; Author B argues they stem from population growth. Both agree that housing supply matters.\n\nWhich of the following, if true, best supports B over A?',
+        o: ['Cities with unchanged zoning but rapid population growth showed the steepest price rises.', 'Cities with relaxed zoning but static populations showed steep price rises.', 'Rents rose most in cities that enacted new zoning restrictions.', 'Developer costs rose with materials prices everywhere.', 'Housing supply grew fastest in the fastest-growing cities.'],
+        a: 'A',
+        r: 'B\'s position is population → prices. An outcome where population grew while zoning was unchanged, yet prices still rose, isolates population growth as the driver and weakens A\'s zoning-specific claim. Option C weakly supports A; D introduces a third factor; E is ambiguous.' },
+      { q: 'All wildfires require fuel, and grasslands provide fuel only during the dry season. Fires occur only when an ignition source meets fuel. Last Wednesday a wildfire burned in the region.\n\nWhich of the following MUST be true?',
+        o: ['Last Wednesday fell inside the dry season.', 'The fire was started deliberately.', 'No rain fell on Tuesday.', 'The region has no fire-suppression crews.', 'All wildfires are started by lightning.'],
+        a: 'A',
+        r: 'Fire → fuel was present → grassland fuel existed → the dry season was active. This two-step inference is forced by the text. Options B, C, D, and E import facts the passage never states — the classic over-reach at hard difficulty.' },
+      { q: 'The author first presents the standard model of neutral pricing, then lists three market failures it cannot explain, then notes the model survives because it is convenient rather than because it fits the data, and closes by sketching a behavioral alternative.\n\nThe primary purpose of the passage is to:',
+        o: ['endorse the standard model without reservation', 'replace the standard model with permanent laws', 'contrast observed failures with the model\'s convenient survival and sketch a behavioral alternative', 'prove that prices are random', 'recount the history of pricing theory'],
+        a: 'C',
+        r: 'The arc is: standard model → observed failures → survival-by-convenience → behavioral sketch. Option C captures the contrast and the alternative. A inverts the thrust; B overstates ("permanent laws"); D caricatures the content; E ignores the critical structure.' }
+    ]),
+    check: [
+      { q: 'On comparative passages, the first step before reading the questions is:', o: ['memorizing both texts verbatim', 'counting the words', 'mapping the relationship between the two authors\' claims', 'listing every transition', 'identifying hidden purposes'], a: 2 },
+      { q: 'The negation test checks whether a candidate inference is:', o: ['pleasant sounding', 'forced by the passage', 'longer than the paragraph', 'a well-known fact', 'endorsed by experts'], a: 1 },
+      { q: 'After ninety seconds with no firm answer on an RC question, the expert move is to:', o: ['re-read the whole passage', 'skip the passage entirely', 'guess, flag, and move on', 'wait for the timer', 'call the question invalid'], a: 2 },
+      { q: 'A wrong RC answer can pass on its first clause and fail on its second because:', o: ['the first clause always matches the text', 'the second clause may widen the scope or invent detail', 'passages are always ambiguous', 'answers are longer than questions', 'clauses are graded separately'], a: 1 },
+      { q: '"Granted, the sample is small — but the trend is consistent" is best read as:', o: ['a full retreat from the argument', 'a concession preceding the main push', 'an admission of defeat', 'a change of topic', 'a contradiction in the options'], a: 1 }
+    ]
   })
 ];
 
@@ -2329,6 +2557,82 @@ const curriculum = (function () {
       { q: 'Swapping the two selected answers between columns is:', o: ['harmless', 'a classic trap', 'optional', 'only wrong in verbal items', 'allowed if the totals match'], a: 1 },
       { q: 'If ticket count is 4 times sponsorship count, then 100 tickets implies sponsorships of:', o: ['20', '25', '30', '40', '50'], a: 1 },
       { q: 'Given x + y = 240 and x - y = 40, the efficient formula for x is:', o: ['x = (240 + 40)/2', 'x = 40/2', 'x + y is enough', 'infinite solutions', 'x = (240 - 40)/2'], a: 0 }
+    ]
+  }),
+
+  topic('di-expert', 'Data Insights: Mixed-Format Strategy & Test-Day Pacing', 'dataInsights', 'advanced', {
+    overview: [
+      'Data Insights is 20 questions in 45 minutes across weighted Data Sufficiency, graphics interpretation, two-part analysis, MSR, and table analysis. What makes DI advanced is not the difficulty of any single item — it is the switching: five formats fighting for one brain, each with a different tool.',
+      'The 45-minute clock with a calculator and a mixed-format slate makes the section fundamentally a triage exam. The expert decides in the first ten seconds which of three lanes an item belongs in: pure DS logic (statement sufficiency), estimation-plus-navigation (table, graphics), or rule-matching (MSR, table analysis). Choosing the lane sets the pace and the toolkit.',
+      'Data Sufficiency questions are never about truth, only about the uniqueness of the answer. The expert disciplines every yes/no and value stem with the same reflex: re-pose the question as a yes or a value, test each statement alone, then test them together — and name the would-be answer before peeking at the choices.',
+      'The weighted format is the corner of DI that punishes good students: two side-by-side tracks with ~55% of your attention on the harder one. The expert reads both headers, answers the track whose logic is shorter first, and returns to the other with the remaining time. Leaving one track strategically blank is a valid tactic on a weighted question.',
+      'Graphics interpretation is reading with the eyes and the hands: axis units (thousands, millions, percents) are the entire skill. A chart labeled in $ thousands hides a factor of a thousand behind every graceful line. The expert names the axis unit before reading a single point.',
+      'Table analysis and MSR are rule-matching disciplines: the prompt states criteria, the table or tabs store the data, and every answer choice is a test of one rule against one row or a synthesis across tabs. Cross-tab answers — judgments that blend two sources into a claim neither source makes — are the format\'s signature trap.',
+      'Pacing targets: DS items run about 1:30–2:30 (longer than the section average), graphics and tables 1:30–2:00, and MSR up to 2:30 for a cluster of three questions tied to one tab set. The expert carries a mental ledger: after the first stretch of the section, the next ten-second decision is always "skip, guess, or proceed on this one."',
+      'Test-day arc: the section front-loads the weighted items; the expert starts with the more-laden track, stays on pace through the pure DS stretch, and treats the final third — ta tables, short graphics, quick MSR — as the scoring zone where seconds turn into points.'
+    ],
+    formulas: [
+      { term: 'DS verdict map', def: 'A: (1) alone; B: (2) alone; C: both; D: either alone; E: neither' },
+      { term: 'Uniqueness test', def: 'DS never asks if a statement is true — it asks whether the answer is determined' },
+      { term: 'Yes/no discipline', def: 're-pose a yes/no stem as the exact yes or no to test; a statement yields one result to be sufficient' },
+      { term: 'Weighted-track split', def: 'spend ~55% of the time on the harder track; the other track alone can draw too long' },
+      { term: 'Axis-unit rule', def: 'name the chart\'s unit (thousands, millions, percent) before reading a single point; unit errors beat math errors in value' },
+      { term: 'MSR authority', def: 'each tab governs a specific domain; blending tabs invents authority no source possesses' },
+      { term: 'Table rule test', def: 'mentally run each rule across the row before touching the options; three criteria is the common recipe' },
+      { term: 'IR pace ledger', def: 'DS 1:30–2:30; graphics and tables 1:30–2:00; MSR up to 2:30 per cluster' },
+      { term: 'Eliminate-then-solve', def: 'in graphics and tables, rate and unit constraints eliminate options before calculation' },
+      { term: 'Cluster strategy', def: 'treat an MSR tab set as one investment: read tabs once, answer three questions off the same map' },
+      { term: 'Calculator as a tool', def: 'use the on-screen calculator for long division, percents, and table sums — never for reading the problem' },
+      { term: 'Cross-tab rule', def: 'a claim that needs facts from two tabs is unsupported unless one tab explicitly licenses it' }
+    ],
+    strategies: [
+      'Sort each item into a lane in the first ten seconds: DS logic, estimation-plus-navigation, or rule-matching.',
+      'On weighted formats, read both tracks, answer the shorter logic first, then return to the harder one.',
+      'Re-pose every DS stem as the exact yes or no, or the exact value, before testing statements.',
+      'Read the axis unit and the legend before any data point in graphics interpretation.',
+      'Name the verdict map reflexively: A, B, C, D, E — then prove it, then look.',
+      'On MSR, invest once in the tabs, then answer the clustered questions from the same map.',
+      'On table analysis, run the criteria in row order and reject on the first violation.',
+      'Move on if a pure DS stem has eaten 2:30 — guess with constraints and bank the seconds.',
+      'Use the calculator for computing, not strategizing; strategy lives in the stimulus.',
+      'Treat the final third of the section as the scoring zone and keep pace rewards there.',
+      'Prefer estimation to exact arithmetic when the choices are far apart.',
+      'Track your time in blocks of five questions instead of counting single questions.'
+    ],
+    traps: [
+      'Answering DS as if the statements needed to be true.',
+      'Testing the statements in the wrong order: read each alone before combining.',
+      'Reversing the verdict map (C/D confusion when both statements work alone).',
+      'Ignoring axis units: treating a $ thousands chart as dollars.',
+      'Cross-tab judgments that blend two sources into a claim neither makes.',
+      'Over-investing in the first table before checking the criteria.',
+      'Watching the clock per question instead of per block.',
+      'Leaving a weighted track completely unread while grinding the other.',
+      'Forgetting that a faster method on a long DS stem is usually available.',
+      'Rounding away the answer when the choices sit close together.',
+      'Answering "does X succeed" during DS instead of "is the answer unique."',
+      'Re-reading tab sets after every question when one structured read suffices.'
+    ],
+    examples: examplesFor([
+      { q: 'If x is a positive integer and x < 7, what is the value of x?\n(1) x is odd.\n(2) x > 3.',
+        o: ['A', 'B', 'C', 'D', 'E'],
+        a: 'C',
+        r: 'x ∈ {1, 2, 3, 4, 5, 6}. (1) odd → {1, 3, 5}, not unique. (2) x > 3 → {4, 5, 6}, not unique. Together: odd AND > 3 → 5, unique. The verdict is C. Alone either statement leaves multiple candidates; only the intersection yields the value.' },
+      { q: 'The line graph shows quarterly revenue in $ thousands: Q1 40, Q2 48, Q3 44, Q4 60. Between which two consecutive quarters was the percent increase the greatest?',
+        o: ['Q1–Q2', 'Q2–Q3', 'Q3–Q4', 'No quarters show an increase', 'Not determinable from the graph'],
+        a: 'C',
+        r: 'Q1→Q2: (48−40)/40 = 20%. Q2→Q3 declines. Q3→Q4: (60−44)/44 ≈ 36.4%. The Q3–Q4 jump is the largest increase. The skills at work: read the axis unit ($ thousands), compute percents rather than absolute gaps, and treat the declining stretch as a non-candidate.' },
+      { q: 'MEMO: "Engineering requires a signed approval for any repair over $500."\nFINANCE: "Any expense over $1,000 must be approved by the controller."\nREPAIR LOG: "A $700 repair was completed."\n\nWhich of the following is most strongly supported?',
+        o: ['The repair violated the memo.', 'The repair violated the finance policy.', 'The repair required a signed approval.', 'The controller audited the repair.', 'The repair was approved by the memo\'s author.'],
+        a: 'C',
+        r: 'The memo governs repairs over $500, and $700 exceeds that threshold, so a signed approval was required — option C is supported. A is backwards (requiring approval is not violating the memo); B misapplies finance, whose $1,000 threshold $700 never crosses; D and E invent approvals no tab records.' }
+    ]),
+    check: [
+      { q: 'Data Sufficiency questions are fundamentally about:', o: ['whether a statement is true', 'whether a statement yields a unique answer', 'how the numbers look', 'which statement is longer', 'calculator output'], a: 1 },
+      { q: 'On MSR, cross-tab answers are nearly always wrong because:', o: ['tabs are long', 'each source governs a specific domain and blending sources invents authority', 'the calculator cannot read tabs', 'colors differ between tabs', 'tabs are optional'], a: 1 },
+      { q: 'The GMAT Focus Data Insights section provides:', o: ['a paper and pencil only', 'a full scientific calculator on every question', 'calculators only on data-sufficiency items', 'a stopwatch instead of tools', 'no tools at all'], a: 1 },
+      { q: 'A yes/no DS question is answered definitively when the statements yield:', o: ['a specific number in each statement', 'two different answers', 'a definitive yes or no', 'the same numeric value twice', 'a percentage only'], a: 2 },
+      { q: 'The most important pacing move in DI after ninety seconds on a stuck item is:', o: ['open the calculator', 're-read every tab', 'guess from constraints, flag, and move on', 'restart at question one', 'expand every row'], a: 2 }
     ]
   })
 ];
@@ -3067,14 +3371,25 @@ const curriculum = (function () {
     'quant-dstonly': 'ds',
     // verbal
     'verbal-rc-main': 'rc', 'verbal-rc-detail': 'rc',
-    'verbal-rc-structure': 'rc', 'verbal-cr-basics': 'cr',
-    'verbal-cr-strengthen': 'cr', 'verbal-cr-other': 'cr',
+    'verbal-rc-structure': 'rc', 'verbal-rc-advanced': 'rc',
+    'verbal-cr-basics': 'cr', 'verbal-cr-strengthen': 'cr',
+    'verbal-cr-other': 'cr', 'verbal-cr-advanced': 'cr',
     // data insights
     'di-ds': 'ds', 'di-msr': 'ms', 'di-table': 'ta',
     'di-graphics': 'gi', 'di-twopart': 'tp'
   };
 
   function questionsForTopic(topicId) {
+    if (topicId === 'quant-expert') {
+      return questionBank.quant.filter(function (q) {
+        return q.difficulty === 'medium' || q.difficulty === 'hard';
+      });
+    }
+    if (topicId === 'di-expert') {
+      return questionBank.dataInsights.filter(function (q) {
+        return q.difficulty === 'medium' || q.difficulty === 'hard';
+      });
+    }
     var qTopic = topicIdByQuestionTopic[topicId];
     var pool = questionBank.all.filter(function (q) {
       return q.topic === qTopic;

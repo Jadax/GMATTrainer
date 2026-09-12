@@ -6,6 +6,22 @@
 
 'use strict';
 
+const STAGE_OF = {
+  foundation: { icon: '🌱', label: 'Rebuild' },
+  beginner: { icon: '🟢', label: 'Core' },
+  intermediate: { icon: '🟡', label: 'Advanced' },
+  advanced: { icon: '🔴', label: 'Expert' }
+};
+
+/* An Expert (advanced) capstone unlocks once every other topic in its section is mastered. */
+function expertTopicUnlocked(topicId) {
+  const t = curriculum.topics.find(x => x.id === topicId);
+  if (!t || t.level !== 'advanced') return true;
+  const sec = curriculum.sections.find(s => s.topics.some(x => x.id === topicId));
+  if (!sec) return true;
+  return sec.topics.every(x => x.level === 'advanced' || learningStatus(x.id).status === 'mastered');
+}
+
 /* ---------------------------------------------------------------------
    Learn landing: section tabs + topic cards with progress
    --------------------------------------------------------------------- */
@@ -52,9 +68,12 @@ function renderLearnHome(el) {
       <div class="row" style="align-items:center;gap:.5rem;flex-wrap:wrap">
         <div>
           <h3 style="margin:0">🗺️ Suggested Course Path</h3>
-          <p class="text-muted" style="margin:.25rem 0 0">Work each chapter's lesson, then climb its chapter tests (Easy → Medium → Hard).</p>
+          <p class="text-muted" style="margin:.25rem 0 0">Four stages per section. Work each topic's lesson, then climb its chapter tests (Easy → Medium → Hard), then the Expert capstone.</p>
         </div>
         ${startId ? `<a class="btn btn-sm btn-outline" style="margin-left:auto" href="#/learn/${startId}">${diagStart ? 'Your recommended start: ' : 'Continue: '}${esc((allTopics.find(t => t.id === startId) || {}).name || '')} →</a>` : ''}
+      </div>
+      <div class="row" style="gap:.4rem;flex-wrap:wrap;margin-top:.6rem">
+        ${Object.keys(STAGE_OF).map(k => `<span class="stage-chip stage-chip-${k}" title="${STAGE_OF[k].label} stage">${STAGE_OF[k].icon} ${STAGE_OF[k].label}</span>`).join('')}
       </div>
       <div class="course-road" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem;align-items:stretch">
         ${order.map((id, i) => {
@@ -62,14 +81,19 @@ function renderLearnHome(el) {
           const st_ = learningStatus(id);
           const done = st_.status === 'mastered' ? 'done' : st_.status === 'in-progress' ? 'doing' : '';
           const isNext = startId === id;
-          return `<a class="road-step ${done} ${isNext ? 'next' : ''}" href="#/learn/${id}" title="${esc((t || {}).name || '')}">
+          const lv = (t && t.level) || 'foundation';
+          const prevId = order[i - 1];
+          const prevT = prevId ? allTopics.find(x => x.id === prevId) : null;
+          const divider = prevT && prevT.level !== lv
+            ? `<span class="road-arrow" title="Next stage: ${STAGE_OF[lv] ? STAGE_OF[lv].label : ''}">→</span>` : '';
+          return `${divider}<a class="road-step ${done} ${isNext ? 'next' : ''} road-lv-${lv}" href="#/learn/${id}" title="${esc((t || {}).name || '')}">
             <span class="road-num">${i + 1}</span>
             <span class="road-name">${esc((t || {}).name || '')}</span>
             <span class="road-icon">${done === 'done' ? '✅' : isNext ? '▶️' : done === 'doing' ? '◐' : '○'}</span>
           </a>`;
         }).join('')}
       </div>
-      <div class="text-muted fs-small" style="margin-top:.5rem">Tip: a chapter is fully cleared once you pass its <b>Hard</b> chapter test — that is your TTP-style mastery checkpoint.</div>
+      <div class="text-muted fs-small" style="margin-top:.5rem">Tip: a chapter is fully cleared once you pass its <b>Hard</b> chapter test — then the section's <b>Expert</b> capstone unlocks.</div>
     </section>
 
     <section class="card">
@@ -122,18 +146,19 @@ function learnTopicCard(t) {
   const stateIcon = { 'not-started': '○', 'in-progress': '◐', 'mastered': '●' }[ls.status] || '○';
   const stateLabel = { 'not-started': 'Not started', 'in-progress': 'In progress', 'mastered': 'Mastered' }[ls.status] || ls.status;
   const skillMap = { foundation: 'Foundations', beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
+  const locked = t.level === 'advanced' && !expertTopicUnlocked(t.id);
   // Mastery-decay marker: how many of this topic's questions are due for spaced review.
   const dueIds = new Set(questionDueIds());
   const dueCount = curriculum.questionsForTopic(t.id).filter(q => dueIds.has(q.id)).length;
   return `
-    <a class="card card-hover topic-card ${dueCount ? 'topic-due' : ''}" href="#/learn/${t.id}" style="text-decoration:none">
+    <a class="card card-hover topic-card ${dueCount ? 'topic-due' : ''} topic-level-${t.level} ${locked ? 'topic-locked' : ''}" href="#/learn/${t.id}" style="text-decoration:none">
       <div class="row" style="align-items:center">
-        <span class="feed-icon">${stateIcon === '●' ? '✅' : stateIcon === '◐' ? '🔄' : '📘'}</span>
+        <span class="feed-icon">${locked ? '🔒' : stateIcon === '●' ? '✅' : stateIcon === '◐' ? '🔄' : '📘'}</span>
         <div class="topic-name">${esc(t.name)}</div>
       </div>
-      <div class="topic-meta">${skillMap[t.level] || t.level}</div>
+      <div class="topic-meta">${(STAGE_OF[t.level] || {}).icon || ''} ${skillMap[t.level] || t.level}</div>
       <div class="topic-state">
-        <span class="badge ${ls.status === 'mastered' ? 'badge-success' : ls.status === 'in-progress' ? 'badge-accent' : ''}">${stateLabel}</span>
+        <span class="badge ${ls.status === 'mastered' ? 'badge-success' : ls.status === 'in-progress' ? 'badge-accent' : locked ? 'badge-ghost' : ''}">${locked ? '🔒 Expert tier — clear this section\'s core first' : stateLabel}</span>
         ${dueCount ? `<span class="badge badge-primary" title="Questions due for spaced review">⏰ ${dueCount} due</span>` : ''}
         <span class="text-muted">${curriculum.questionsForTopic(t.id).length} practice Qs</span>
       </div>
@@ -180,12 +205,17 @@ function renderTopicLesson(el, args) {
       <div class="lesson-header">
         <h1>${esc(topic.name)}</h1>
         <div class="lesson-meta">
-          <span class="badge ${diffClass[topic.level]}">${levelLabel}</span>
+          <span class="badge ${diffClass[topic.level]}">${(STAGE_OF[topic.level] || {}).icon || ''} ${levelLabel}</span>
           ${secName ? `<span class="text-muted">${esc(secName)}</span>` : ''}
           <span class="text-muted">·</span>
           <span class="text-muted">${qCount} practice questions available</span>
         </div>
       </div>
+
+      ${topic.level === 'advanced' && !expertTopicUnlocked(topic.id) ? `
+      <div class="card" style="margin:1rem 0;border-left:4px solid var(--color-primary);background:linear-gradient(135deg,rgba(98,0,234,.08),rgba(255,193,7,.06))">
+        <b>🔒 Expert tier — locked for now.</b> Finish this section's Core and Advanced chapters first (pass their Hard chapter tests) and this capstone will unlock. You can read it anytime; practice here draws from the section's intermediate and hard pool.
+      </div>` : ''}
 
       <nav class="lesson-toc" aria-label="Lesson outline">
         <div class="lesson-toc-title">In this lesson</div>
@@ -294,7 +324,7 @@ function chapterTestsBlock(topic, ctp) {
         } else {
           status = attempts ? '<span class="badge badge-accent">Best ' + slot.best + '/' + CHAPTER_TEST_LEN + '</span>' : '<span class="badge badge-ghost">Not attempted</span>';
           btn = '<button class="btn btn-sm btn-primary" type="button" onclick="startChapterTest(\'' + topic.id + '\',\'' + c.d + '\')">Start ' + c.label + ' test →</button>';
-          note = qAvail >= 4 ? qAvail + ' ' + c.label.toLowerCase() + ' questions in the bank' : 'Chapter bank calibrated for this level';
+          note = topic.level === 'advanced' ? pool.length + ' intermediate + hard questions in the bank' : (qAvail >= 4 ? qAvail + ' ' + c.label.toLowerCase() + ' questions in the bank' : 'Chapter bank calibrated for this level');
         }
         return '<div class="card ct-card">' +
           '<div class="row" style="align-items:center;gap:.5rem">' +

@@ -14,9 +14,9 @@ let diag = null;   // active run { questions[], index, correct }
 let diagSeq = 0;   // increments so a fresh run ignores a stale render
 let diagEl = null; // the app shell element (set once per renderer call)
 
-function stratify(pool) {
-  // 2 easy / 3 medium / 3 hard, shuffled within each band, then interleaved
-  const bands = [{ d: 'easy', n: 2 }, { d: 'medium', n: 3 }, { d: 'hard', n: 3 }];
+function stratify(pool, bands) {
+  // default: 2 easy / 3 medium / 3 hard, shuffled within each band, then interleaved
+  if (!bands) bands = [{ d: 'easy', n: 2 }, { d: 'medium', n: 3 }, { d: 'hard', n: 3 }];
   let out = [];
   bands.forEach(function (b) {
     const band = shuffle(pool.filter(q => q.difficulty === b.d));
@@ -59,6 +59,9 @@ function recommendFor(strand, level) {
     if (level === 'developing') return 'found-frac';
     return 'quant-pct';
   }
+  if (strand === 'di') {
+    return 'di-ds';
+  }
   if (level === 'foundations') return 'found-gram1';
   if (level === 'developing') return 'found-read';
   return 'verbal-rc-main';
@@ -78,7 +81,7 @@ function renderDiagnosticIntro(el) {
   el.innerHTML = `
     <div class="page-header">
       <h1>🧭 Placement Diagnostic</h1>
-      <p class="text-muted">A 16-question check (8 Quant + 8 Verbal) that tells you exactly where to start in the Learn roadmap.</p>
+      <p class="text-muted">A 22-question check (8 Quant + 8 Verbal + 6 Data Insights) that tells you exactly where to start in the Learn roadmap.</p>
     </div>
 
     <section class="card">
@@ -99,13 +102,14 @@ function renderDiagnosticIntro(el) {
           <p class="text-muted fs-small">8 questions · reading comprehension and critical reasoning</p>
         </div>
         <div class="card">
-          <div class="topic-name">🎯 Outcome</div>
-          <p class="text-muted fs-small">Each strand is scored Foundations / Developing / Strong, and you get one recommended starting topic.</p>
+          <div class="topic-name">📊 Data Insights strand</div>
+          <p class="text-muted fs-small">6 questions · data sufficiency, graphics, tables, MSR, two-part</p>
         </div>
       </div>
+      <p class="text-muted fs-small" style="margin:.75rem 0 0">Each strand is scored 🌱 Foundations / 🛠️ Developing / 🚀 Strong, and you get one recommended starting topic — usually the weakest strand.</p>
       <div class="row" style="gap:1rem;align-items:center;margin-top:1.25rem;flex-wrap:wrap">
         <button class="btn btn-primary" id="diagStart">Start the diagnostic →</button>
-        ${prev ? `<span class="text-muted fs-small">Last taken ${new Date(prev.ts).toLocaleDateString()} — Quant ${prev.quant.correct}/${prev.quant.total} · Verbal ${prev.verbal.correct}/${prev.verbal.total}</span>` : ''}
+        ${prev ? `<span class="text-muted fs-small">Last taken ${new Date(prev.ts).toLocaleDateString()} — Quant ${prev.quant.correct}/${prev.quant.total} · Verbal ${prev.verbal.correct}/${prev.verbal.total} ${prev.di ? '· DI ' + prev.di.correct + '/' + prev.di.total : ''}</span>` : ''}
       </div>
     </section>
 
@@ -129,11 +133,13 @@ function startDiagnostic(el) {
   diagSeq++;
   const quantQ = stratify(questionBank.quant);
   const verbalQ = stratify(questionBank.verbal);
+  const diQ = stratify(questionBank.dataInsights, [{ d: 'easy', n: 2 }, { d: 'medium', n: 2 }, { d: 'hard', n: 2 }]);
   diag = {
     questions: quantQ.map(function (q) { return { strand: 'quant', q: q }; })
-      .concat(verbalQ.map(function (q) { return { strand: 'verbal', q: q }; })),
+      .concat(verbalQ.map(function (q) { return { strand: 'verbal', q: q }; }))
+      .concat(diQ.map(function (q) { return { strand: 'di', q: q }; })),
     index: 0,
-    correct: { quant: 0, verbal: 0 }
+    correct: { quant: 0, verbal: 0, di: 0 }
   };
   renderDiagnosticQuestion(el);
 }
@@ -163,7 +169,7 @@ function renderDiagnosticQuestion(el) {
     </div>
 
     <div class="row row-wrap" style="align-items:center;gap:.5rem;margin-bottom:.75rem">
-      <span class="badge ${item.strand === 'quant' ? 'badge-accent' : 'badge-secondary'}">${item.strand === 'quant' ? '🔢 Quant' : '📖 Verbal'}</span>
+      <span class="badge ${item.strand === 'quant' ? 'badge-accent' : item.strand === 'di' ? 'badge-primary' : 'badge-secondary'}">${item.strand === 'quant' ? '🔢 Quant' : item.strand === 'di' ? '📊 Data Insights' : '📖 Verbal'}</span>
       <span class="badge ${q.difficulty === 'easy' ? 'badge-easy' : q.difficulty === 'medium' ? 'badge-medium' : 'badge-hard'}">${q.difficulty}</span>
       <span class="text-muted fs-small" style="margin-left:auto">${esc(q.subtopic)}</span>
     </div>
@@ -227,35 +233,38 @@ function finishDiagnostic(el) {
   if (!run) return;
   const quant = { correct: run.correct.quant, total: 8, level: levelFor(run.correct.quant, 8) };
   const verbal = { correct: run.correct.verbal, total: 8, level: levelFor(run.correct.verbal, 8) };
+  const di = { correct: run.correct.di, total: 6, level: levelFor(run.correct.di, 6) };
 
   const rank = { foundations: 0, developing: 1, strong: 2 };
-  let started;
-  if (rank[quant.level] <= rank[verbal.level]) {
-    started = recommendFor('quant', quant.level);
-  } else {
-    started = recommendFor('verbal', verbal.level);
-  }
+  const strands = [
+    { key: 'quant', level: quant.level },
+    { key: 'verbal', level: verbal.level },
+    { key: 'di', level: di.level }
+  ];
+  strands.sort(function (a, b) { return rank[a.level] - rank[b.level] || (a.key === 'quant' ? -1 : 1); });
+  const weakest = strands[0];
+  let started = recommendFor(weakest.key, weakest.level);
   if (!started) started = 'quant-pct';
 
   updateState(function (s) {
-    s.diagnostic = { ts: Date.now(), quant: quant, verbal: verbal, started: started };
+    s.diagnostic = { ts: Date.now(), quant: quant, verbal: verbal, di: di, started: started };
   });
 
-  renderDiagnosticResult(el, quant, verbal, started);
+  renderDiagnosticResult(el, quant, verbal, di, started);
   // prevent a stale in-progress run from re-rendering on revisit
   diag = null;
   diagSeq = 0;
 }
 
-function renderDiagnosticResult(el, quant, verbal, started) {
+function renderDiagnosticResult(el, quant, verbal, di, started) {
   const st = loadState();
   const topic = topicById(started);
-  const strongest = quant.level === 'strong' && verbal.level === 'strong';
+  const strongest = quant.level === 'strong' && verbal.level === 'strong' && di.level === 'strong';
   const summary = strongest
-    ? 'Both strands look strong — head straight into the standard curriculum.'
-    : (quant.level === 'developing' || quant.level === 'foundations') && (verbal.level === 'developing' || verbal.level === 'foundations')
-      ? 'Your result points to a Foundations-first path. Build both strands from the bottom up, starting with the recommended topic below.'
-      : 'Start with the weaker strand below, then move on to standard GMAT topics.';
+    ? 'All three strands look strong — head straight into the standard curriculum and the Expert capstones.'
+    : (quant.level === 'foundations' || verbal.level === 'foundations' || di.level === 'foundations')
+      ? 'At least one strand points to Foundations. Build from the bottom up starting with the weakest strand below, so the advanced material can actually land.'
+      : 'Your result suggests brushing up the weaker strand first, then moving on to standard GMAT topics and the Expert capstones.';
 
   function strandCard(label, icon, s, rec) {
     const badgeCls = s.level === 'foundations' ? 'badge-ghost' : s.level === 'developing' ? 'badge-accent' : 'badge-success';
@@ -282,9 +291,10 @@ function renderDiagnosticResult(el, quant, verbal, started) {
       <p class="text-muted">${esc(summary)}</p>
     </div>
 
-    <div class="grid grid-2" style="margin-bottom:1rem">
+    <div class="grid grid-3" style="margin-bottom:1rem">
       ${strandCard('Quant', '🔢', quant, recommendFor('quant', quant.level))}
       ${strandCard('Verbal', '📖', verbal, recommendFor('verbal', verbal.level))}
+      ${strandCard('Data Insights', '📊', di, recommendFor('di', di.level))}
     </div>
 
     <section class="card" style="border-left:4px solid var(--color-secondary)">
