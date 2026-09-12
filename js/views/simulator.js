@@ -183,6 +183,8 @@ function buildSimSection(key) {
   chosen = chosen.slice(0, meta.count);
   return {
     key: key,
+    icon: meta.icon,
+    name: meta.name,
     questions: chosen.map(function (q) {
       if (q.passageId && !q.passage) {
         const p = questionBank.rcPassages.find(function (r) { return r.id === q.passageId; });
@@ -359,14 +361,17 @@ function renderQuestion(el) {
       </div>
 
       ${passageHtml}
+      ${q.format === 'msr' || q.format === 'graphics' ? diScaffold(q) : ''}
       <div class="question-text">${esc(q.text)}</div>
 
       <div id="simOptions">
-        ${q.options.map((o, i) => `
-          <button class="option ${sec.answers[sim.qIdx] === i ? 'selected' : ''}" data-o="${i}" type="button">
-            <span class="option-letter">${String.fromCharCode(65 + i)}</span>
-            <span>${esc(o)}</span>
-          </button>`).join('')}
+        ${q.format === 'twopart' || q.format === 'table'
+          ? diAnswerAreaHtml(q)
+          : q.options.map((o, i) => `
+            <button class="option ${sec.answers[sim.qIdx] === i ? 'selected' : ''}" data-o="${i}" type="button">
+              <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+              <span>${esc(o)}</span>
+            </button>`).join('')}
       </div>
 
       ${calcHtml}
@@ -378,6 +383,26 @@ function renderQuestion(el) {
     </div>`;
 
   // Options
+  if (q.format === 'twopart' || q.format === 'table') {
+    diBindAnswerArea(el.querySelector('#simOptions'), q, function (v) {
+      if (sec.submitted) return;
+      const prev = sec.answers[sim.qIdx];
+      const changed = prev !== null;
+      if (changed) {
+        sec.changesLeft -= 1;
+        if (sec.changesLeft < 0) {
+          sec.changesLeft = 0;
+          toast('No answer changes left for this section.', 'error');
+          return;
+        }
+      }
+      sec.answers[sim.qIdx] = v;
+      const cb = el.querySelector('#changesBadge');
+      if (cb) cb.textContent = 'Changes left: ' + sec.changesLeft;
+      playSound('type');
+      simSave();
+    });
+  } else {
   el.querySelectorAll('#simOptions .option').forEach(btn => {
     btn.addEventListener('click', function () {
       if (sec.submitted) return;
@@ -399,6 +424,9 @@ function renderQuestion(el) {
       simSave();
     });
   });
+  }
+  // MSR tab panes live above the options box — bind them on the section root
+  if (q.format === 'msr') diBindMsr(el, q);
   // Mark
   el.querySelector('#simMarkBtn').addEventListener('click', function () {
     sec.marked[sim.qIdx] = !sec.marked[sim.qIdx];
@@ -533,7 +561,7 @@ function renderReview(el) {
           const status = sec.answers[i] === null ? '<span class="badge badge-error">Unanswered</span>'
             : sec.marked[i] ? '<span class="badge badge-accent">Marked</span>'
             : '<span class="badge badge-success">Answered</span>';
-          const ans = sec.answers[i] === null ? '—' : String.fromCharCode(65 + sec.answers[i]);
+          const ans = sec.answers[i] === null ? '—' : (diIsStructured(q) ? '✦' : String.fromCharCode(65 + sec.answers[i]));
           return `
           <div class="feed-item" style="cursor:pointer" onclick="simJumpToQuestion(${i})">
             <span class="feed-icon">Q${i + 1}</span>
@@ -622,16 +650,16 @@ function simSubmitSection() {
   sec.elapsed = secElapsedNow(sim.sectionIdx);
   Timer.stop();
 
-  // record answers
+  // record answers — with real per-question time and full SRS scheduling
   let answeredCount = 0;
   sec.questions.forEach((q, i) => {
     const chosen = sec.answers[i];
     if (chosen === null) return; // skipped questions don't count as attempts
     answeredCount += 1;
-    const correct = chosen === q.correct;
+    const correct = isDiCorrect(q, chosen);
     const k = sectionForQuest(q);
-    recordAnswer(q, correct, 40, k);
-    if (!correct) addErrorLog(q.id, chosen, k);
+    const secs = Math.max(1, (sec.qTime && sec.qTime[i]) || 30);
+    recordAnswerScheduled(q, correct, secs, k, chosen);
   });
   if (answeredCount > 0) addStudySession(answeredCount, sec.elapsed, sec.key);
   sec.submitted = true;
@@ -670,13 +698,13 @@ function simFinish() {
       const answered = chosen !== null;
       if (answered) {
         att += 1;
-        if (chosen === q.correct) cor += 1;
+        if (isDiCorrect(q, chosen)) cor += 1;
       }
       reviewRows.push({
         section: sec.key,
         question: q,
         chosen: chosen,
-        correct: answered ? chosen === q.correct : false,
+        correct: answered ? isDiCorrect(q, chosen) : false,
         unanswered: !answered,
         diff: q.difficulty,
         secs: (sec.qTime && sec.qTime[i]) || 0
@@ -759,7 +787,7 @@ function renderSimDone(el) {
         <div class="sim-review-grid" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem">
           ${rows.map((row, i) => `
             <button class="sim-review-chip ${row.unanswered ? 'chip-un' : row.correct ? 'chip-ok' : 'chip-bad'}" data-sec="${key}" data-i="${i}" type="button" title="${esc(row.question.text.slice(0, 90))}">
-              ${row.unanswered ? '—' : String.fromCharCode(65 + row.chosen)}
+${row.unanswered ? '—' : (diIsStructured(row.question) ? '✦' : String.fromCharCode(65 + row.chosen))}
             </button>`).join('')}
         </div>
         <div class="text-muted fs-small" style="margin-top:.5rem">Chips show your answer letter · green = correct, red = wrong, grey = unanswered. Click one to review it.</div>
@@ -834,17 +862,17 @@ function renderSimReviewDetail(el, row) {
         <span class="badge ${q.difficulty === 'hard' ? 'badge-hard' : q.difficulty === 'medium' ? 'badge-medium' : 'badge-easy'}">${difficultyLabel(q.difficulty)}</span>
         <span class="badge badge-ghost">${topicTagName(q.topic)}</span>
         <span class="badge badge-ghost">⏱ ${fmtShort(row.secs || 0)}</span>
-        <span class="text-muted fs-small" style="margin-left:auto">You answered: ${row.unanswered ? '—' : String.fromCharCode(65 + row.chosen)} · Correct: ${String.fromCharCode(65 + q.correct)}</span>
+        <span class="text-muted fs-small" style="margin-left:auto">You answered: ${row.unanswered ? '—' : diAnswerDisplay(row.question, row.chosen)} · Correct: ${diCorrectDisplay(q)}</span>
       </div>
       ${q.passage ? `<div class="clue-box" style="margin:1rem 0"><div style="font-weight:700;margin-bottom:.5rem">📄 ${esc(q.passageTitle || 'Passage')}</div><div style="white-space:pre-line">${esc(q.passage)}</div></div>` : ''}
       <div class="example-question">${esc(q.text)}</div>
-      <div>
+      ${q.options ? `<div>
         ${q.options.map((o, oi) => `
           <div class="option ${oi === q.correct ? 'correct' : ''} ${row.chosen === oi && oi !== q.correct ? 'incorrect' : ''} disabled">
             <span class="option-letter">${String.fromCharCode(65 + oi)}</span>
             <span>${esc(o)} ${oi === q.correct ? '<span class="badge badge-success">Correct answer</span>' : row.chosen === oi ? '<span class="badge badge-error">Your answer</span>' : ''}</span>
           </div>`).join('')}
-      </div>
+      </div>` : ''}
       <div class="example-reason" style="margin-top:.5rem">${esc(q.explanation || '')}</div>
       <button class="btn btn-sm btn-ghost" type="button" onclick="document.getElementById('simReviewDetail').innerHTML=''">✕ Close review</button>
     </div>`;

@@ -2829,7 +2829,240 @@ const questionBank = (function () {
       timeEstimate: 120,
       hint: "Add up the revenue from both regions for the total, then divide that total by the combined number of units for the average price, and match the two results to the answer columns.",
     },
+
+    /* ---- True Focus-format items (two-part, table, MSR, graphics) ---- */
+
+    { id: "d_tp_15", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "medium", format: "twopart",
+      text: "TWO-PART: A clothing store sells shirts at $24 and ties at $12. On Tuesday, the store sold 60 items and collected $1,080.\nSelect one entry in each column. The two columns are independent.",
+      twopart: {
+        left: { prompt: "Number of shirts sold", options: ["10","20","30","40","50"], correct: 2 },
+        right: { prompt: "Number of ties sold", options: ["50","40","30","20","10"], correct: 2 }
+      },
+      explanation: "Let s = shirts, t = ties. s + t = 60 and 24s + 12t = 1080. Divide the money equation by 12: 2s + t = 90. Subtract the item equation: (2s + t) − (s + t) = 90 − 60, so s = 30. Then t = 30. Shirts 30, ties 30.",
+      timeEstimate: 120,
+      hint: "Set up one equation for the total item count and one for the total money received, then solve. Two equations with two unknowns pin both counts down.",
+    },
+    { id: "d_tp_16", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "medium", format: "twopart",
+      text: "TWO-PART: A company has 240 employees. 55% work full-time and the rest part-time. The company hires 20 more part-time employees and no one leaves.\nSelect one entry in each column. The two columns are independent.",
+      twopart: {
+        left: { prompt: "New number of part-time employees", options: ["108","124","128","132","148"], correct: 2 },
+        right: { prompt: "New total number of employees", options: ["240","250","260","270","280"], correct: 2 }
+      },
+      explanation: "Part-time originally = 45% of 240 = 108. After hiring 20, part-time = 128. Total = 240 + 20 = 260.",
+      timeEstimate: 120,
+      hint: "First find the original part-time count (45% of 240), then add the 20 new hires to both the part-time figure and the overall employee total.",
+    },
+    { id: "d_tp_17", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "hard", format: "twopart",
+      text: "TWO-PART: A train is 180 meters long and a platform is 120 meters long. The train completely passes the platform (from the moment its front touches the platform until its back clears it) in 12 seconds.\nSelect one entry in each column. The two columns are independent.",
+      twopart: {
+        left: { prompt: "Total distance traveled (meters) while passing the platform", options: ["120","180","200","300","360"], correct: 2 },
+        right: { prompt: "Train speed (meters per second)", options: ["10","15","20","25","30"], correct: 2 }
+      },
+      explanation: "To fully clear the platform the train must travel its own length plus the platform length: 180 + 120 = 300 m. Speed = 300/12 = 25 m/s. So Column 1 = 300 and Column 2 = 25 — note this is the pair at index 3, which is why A–E letters do not apply here.",
+      timeEstimate: 150,
+      hint: "The distance to be covered includes both the train's own length and the platform's length. Divide that total distance by the given 12 seconds to get the speed.",
+    },
+    { id: "d_tp_18", topic: "tp", subtopic: "Two-Part Analysis", difficulty: "hard", format: "twopart",
+      text: "TWO-PART: A merchant buys 200 kg of a commodity at $8 per kg. She sells 40% of it at a 25% profit and the rest at a 10% loss.\nSelect one entry in each column. The two columns are independent.",
+      twopart: {
+        left: { prompt: "Net profit or loss (dollars) on the whole lot", options: ["$0","$16","$32","$64","$96"], correct: 3 },
+        right: { prompt: "Net result as a percent of the total cost", options: ["0.5% profit","1% profit","2% profit","4% profit","5% profit"], correct: 3 }
+      },
+      explanation: "Total cost = 200 × 8 = $1,600. She sells 80 kg (40%) at a 25% profit: that share costs 80 × 8 = $640, and a 25% profit on it is $160. She sells 120 kg at a 10% loss: that share costs 120 × 8 = $960, and a 10% loss on it is $96. Net profit = 160 − 96 = $64. As a percent of cost: 64/1600 = 4%. Columns: Column 1 = $64 and Column 2 = 4%.",
+      timeEstimate: 180,
+      hint: "Handle the two shares separately: profit on the 40% share and loss on the 60% share, then net them and convert to a percent of the $1,600 total cost.",
+    },
+    { id: "d_ta_yn01", topic: "ta", subtopic: "Table Analysis", difficulty: "medium", format: "table",
+      text: "TABLE: The table shows last quarter's sales (in $ thousands) for four stores of a retail chain.\nFor each store, select Yes if that store's sales exceeded $120,000, otherwise No.",
+      table: {
+        headers: ["Store", "Region", "Sales ($k)"],
+        rows: [["Store A", "North", "135"], ["Store B", "South", "118"], ["Store C", "West", "142"], ["Store D", "East", "109"], ["Store E", "Central", "120"]],
+        statement: "Sales exceeded $120,000?"
+      },
+      correct: { 0: true, 1: false, 2: true, 3: false, 4: false },
+      explanation: "Store A = 135k and Store C = 142k both exceed 120k → Yes. Store B = 118k, Store D = 109k, and Store E = 120k do not exceed 120k (E equals it, not more) → No.",
+      timeEstimate: 120,
+      hint: "Compare each store's figure against the $120,000 threshold. Equal to 120 does not count as exceeding it.",
+    },
+    { id: "d_ta_yn02", topic: "ta", subtopic: "Table Analysis", difficulty: "medium", format: "table",
+      text: "TABLE: The table lists five products with unit price and units sold.\nFor each product, select Yes if that product's total revenue exceeded $10,000, otherwise No.",
+      table: {
+        headers: ["Product", "Unit price ($)", "Units sold"],
+        rows: [["Alpha", "25", "420"], ["Beta", "18", "560"], ["Gamma", "30", "330"], ["Delta", "22", "450"], ["Epsilon", "15", "680"]],
+        statement: "Total revenue exceeded $10,000?"
+      },
+      correct: { 0: true, 1: true, 2: false, 3: false, 4: true },
+      explanation: "Revenue = price × units: Alpha 25×420 = 10,500 → Yes. Beta 18×560 = 10,080 → Yes. Gamma 30×330 = 9,900 → No. Delta 22×450 = 9,900 → No. Epsilon 15×680 = 10,200 → Yes.",
+      timeEstimate: 150,
+      hint: "Multiply each product's price by its units to get revenue, then compare each to $10,000. Watch products that end just above or below the cutoff.",
+    },
+    { id: "d_ta_yn03", topic: "ta", subtopic: "Table Analysis", difficulty: "hard", format: "table",
+      text: "TABLE: The table shows monthly attendance (in thousands) for five museums.\nFor each museum, select Yes if its attendance in July was more than double its attendance in January, otherwise No.",
+      table: {
+        headers: ["Museum", "January", "July"],
+        rows: [["Museum 1", "8", "17"], ["Museum 2", "10", "19"], ["Museum 3", "6", "11"], ["Museum 4", "12", "25"], ["Museum 5", "9", "18"]],
+        statement: "July attendance more than double January's?"
+      },
+      correct: { 0: true, 1: false, 2: false, 3: true, 4: false },
+      explanation: "Double each January figure and compare with July. Museum 1: 17 > 16 → Yes. Museum 2: 19 < 20 → No. Museum 3: 11 < 12 → No. Museum 4: 25 > 24 → Yes. Museum 5: 18 equals exactly double of 9, which is not more than double → No.",
+      timeEstimate: 150,
+      hint: "Double each January figure and compare to July. Strictly 'more than double' means July must exceed twice January; equality does not qualify.",
+    },
+    { id: "d_ta_yn04", topic: "ta", subtopic: "Table Analysis", difficulty: "medium", format: "table",
+      text: "TABLE: The table shows four suppliers and the percentage of their shipments that arrived on time.\nFor each supplier, select Yes if at least 90% of their shipments arrived on time, otherwise No.",
+      table: {
+        headers: ["Supplier", "Shipments", "On-time %"],
+        rows: [["Supplier A", "220", "92"], ["Supplier B", "180", "88"], ["Supplier C", "150", "94"], ["Supplier D", "240", "90"]],
+        statement: "At least 90% on time?"
+      },
+      correct: { 0: true, 1: false, 2: true, 3: true },
+      explanation: "Supplier A 92% → Yes. Supplier B 88% → No. Supplier C 94% → Yes. Supplier D 90% → qualifies (at least 90) → Yes.",
+      timeEstimate: 120,
+      hint: "Read each supplier's on-time percentage and compare to the 90% threshold. 'At least 90%' includes exactly 90%.",
+    },
+    { id: "d_ms_17", topic: "ms", subtopic: "Multi-Source Reasoning", difficulty: "medium", format: "msr",
+      text: "MSR: Read the three tabbed sources, then answer the question below.",
+      msr: { tabs: [
+        { title: "Email (Manager)", text: "Effective immediately, any purchase over $2,000 requires a purchase order signed by a manager before the purchase is made." },
+        { title: "Email (Finance)", text: "Reimbursement is processed only for purchases supported by an original receipt. Approved purchase orders do not replace receipts." },
+        { title: "Invoice", text: "A projector was purchased for $2,350 with a properly signed purchase order and a valid original receipt." }
+      ] },
+      options: ["Reimbursed — a signed purchase order covers the payment","Reimbursed — the receipt supports the claim and the purchase order was approved","Rejected — the purchase exceeded $2,000","Rejected — purchases over $2,000 are not reimbursable","Uncertain — the emails conflict"],
+      correct: 1,
+      explanation: "The projector cost $2,350 (> $2,000) so the signed purchase order requirement applied and was met. Finance requires the original receipt, which was also provided. Both conditions are satisfied, so the claim is reimbursed.",
+      timeEstimate: 150,
+      hint: "Check every requirement in turn: the dollar threshold, the signed purchase order, and the receipt. Then see whether all three conditions are satisfied.",
+    },
+    { id: "d_ms_18", topic: "ms", subtopic: "Multi-Source Reasoning", difficulty: "hard", format: "msr",
+      text: "MSR: Read the three tabbed sources, then answer the question below.",
+      msr: { tabs: [
+        { title: "Memo (Room 1)", text: "Room 1 is available every weekday from 9 a.m. to 3 p.m., except Wednesdays when it is used for maintenance from 1 p.m. to 3 p.m." },
+        { title: "Memo (Room 2)", text: "Room 2 is available all day every weekday." },
+        { title: "Calendar", text: "The product team booked Room 1 for Tuesday 1–3 p.m. and Room 2 for Wednesday 2–4 p.m." }
+      ] },
+      options: ["Both bookings violate the room availability rules","Only the Wednesday booking violates its room's rules","Only the Tuesday booking violates its room's rules","Neither booking violates the room availability rules","Cannot be determined from the sources"],
+      correct: 3,
+      explanation: "Tuesday 1–3 p.m.: Room 1 is available weekdays 9–3 (the Wednesday maintenance blackout does not apply). Wednesday 2–4 p.m.: Room 2 is available all day every weekday. Neither booking conflicts with its room's rules.",
+      timeEstimate: 150,
+      hint: "Verify each booking against that specific room's availability — the Wednesday restriction applies only to Room 1, and Room 2 has no restriction at all.",
+    },
+    { id: "d_ms_19", topic: "ms", subtopic: "Multi-Source Reasoning", difficulty: "hard", format: "msr",
+      text: "MSR: Read the three tabbed sources, then answer the question below.",
+      msr: { tabs: [
+        { title: "Report A", text: "City X reported 120 traffic accidents in June this year, 30 fewer than in May." },
+        { title: "Report B", text: "The city launched a public-safety campaign in April this year encouraging slower driving." },
+        { title: "Survey", text: "A survey conducted in July found that 62% of drivers in City X said they now drive more slowly than they did a year ago." }
+      ] },
+      options: ["The campaign caused the May-to-June decline in accidents","The decline must continue in future months","The survey supports that driving in City X is now slower, but it does not prove the campaign caused the accident decline","The accident decline proves the survey respondents were truthful","Accidents and driving speed are unrelated"],
+      correct: 2,
+      explanation: "The three sources together show a decline in accidents and a campaign and a self-reported behavior change, but none of the sources establishes causation. Correlation and chronology are not proof of cause, so the only defensible claim is that the survey indicates slower driving without proving the campaign caused the decline.",
+      timeEstimate: 150,
+      hint: "The classic trap here is treating correlation as causation. The documents give a sequence of events and a trend, but no controlled evidence that the campaign is what changed behavior.",
+    },
+    { id: "d_ms_20", topic: "ms", subtopic: "Multi-Source Reasoning", difficulty: "medium", format: "msr",
+      text: "MSR: Read the three tabbed sources, then answer the question below.",
+      msr: { tabs: [
+        { title: "Policy", text: "The gym waives its monthly membership fee for members who attend at least 10 sessions in a month." },
+        { title: "Attendance", text: "Robin attended 12 sessions in March and 8 sessions in April." },
+        { title: "Notice", text: "The fee-waiver policy took effect on the first day of March." }
+      ] },
+      options: ["Robin's March fee is waived; her April fee is not","Robin's April fee is waived; her March fee is not","Both the March and April fees are waived","Neither the March nor the April fee is waived","Cannot be determined from the sources"],
+      correct: 0,
+      explanation: "The policy applied from March 1. Robin attended 12 sessions in March (≥ 10) so the March fee is waived; she attended only 8 in April (< 10) so the April fee is not. Answer A.",
+      timeEstimate: 120,
+      hint: "Check each month separately against the 10-session threshold, and confirm the policy was already in effect for the earlier of the two months.",
+    },
+    { id: "d_gi_21", topic: "gi", subtopic: "Graphics Interpretation", difficulty: "medium", format: "graphics",
+      text: "GRAPHICS: The bar chart shows the number of books borrowed from a library by day, Monday through Friday.\n",
+      graphics: {
+        type: "bar", title: "Books borrowed by day", unit: "books", categories: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        series: [{ name: "Borrowed", values: [150, 120, 90, 110, 140] }]
+      },
+      options: ["Friday's count was 20 more than Tuesday's","Monday and Friday combined exceeded the total of the other three days","Wednesday was the second-highest day","No day reached 150 books","The total for the week was 600 books"],
+      correct: 0,
+      explanation: "Values: Mon 150, Tue 120, Wed 90, Thu 110, Fri 140. Friday (140) is 20 more than Tuesday (120), so A is supported. Monday + Friday = 290, while Tue + Wed + Thu = 320, so B is false (290 < 320). Wednesday (90) is the lowest day, not the second-highest, so C is false. Monday reached exactly 150, so D is false. The weekly total is 610, so E is false.",
+      timeEstimate: 120,
+      hint: "Add and compare the daily totals carefully, and test each statement against the exact numbers in the chart.",
+    },
+    { id: "d_gi_22", topic: "gi", subtopic: "Graphics Interpretation", difficulty: "medium", format: "graphics",
+      text: "GRAPHICS: The line graph shows sales (in $ thousands) of two products across four quarters.\n",
+      graphics: {
+        type: "line", title: "Quarterly sales by product ($k)", unit: "$k",
+        categories: ["Q1", "Q2", "Q3", "Q4"],
+        series: [{ name: "Product A", values: [40, 55, 60, 75] }, { name: "Product B", values: [60, 50, 45, 40] }]
+      },
+      options: ["Product A outsold Product B in Q1","Product A's growth from Q1 to Q4 was larger in absolute terms than Product B's decline","Product B's sales never reached $60k","Total sales rose every quarter","Product B outsold Product A in every quarter"],
+      correct: 1,
+      explanation: "A went from 40 to 75 (up 35k); B went from 60 to 40 (down 20k). A's absolute growth of 35 exceeds B's decline of 20, so B is supported. A did not outsell B in Q1 (40 < 60), so A is false. B reached exactly $60k in Q1, so C is false. Totals: 100, 105, 105, 115 — flat from Q2 to Q3, so D is false. A leads from Q2, so E is false.",
+      timeEstimate: 150,
+      hint: "Read each product's rise or fall between Q1 and Q4, compute the absolute changes, and test each option against the numbers.",
+    },
+    { id: "d_gi_23", topic: "gi", subtopic: "Graphics Interpretation", difficulty: "easy", format: "graphics",
+      text: "GRAPHICS: The chart shows the market share of three companies in 2024.\n",
+      graphics: {
+        type: "bar", title: "Market share by company (2024)", unit: "%",
+        categories: ["Company X", "Company Y", "Company Z"],
+        series: [{ name: "Share %", values: [38, 27, 35] }]
+      },
+      options: ["Company X had the smallest share","Company Y had more than twice Company Z's share","Company Z had the second-largest share with more than a third of the market","Company X and Company Y together had exactly 75% of the market","Company Z's share was less than a third of the market"],
+      correct: 2,
+      explanation: "Shares: X 38%, Y 27%, Z 35%. Company Z (35%) is the second-largest and exceeds one third (33⅓%). X + Y = 65%, not 75%. Y (27%) is less than twice Z — the claim about twice would need 70%. X is largest. So C is the supported statement.",
+      timeEstimate: 90,
+      hint: "Rank the three percentages and check each statement's arithmetic. 'More than a third' beats 33⅓%, and 35% does beat it.",
+    },
+    { id: "d_gi_24", topic: "gi", subtopic: "Graphics Interpretation", difficulty: "hard", format: "graphics",
+      text: "GRAPHICS: The line graph tracks website traffic (in thousands of visits) over six months along with a marketing campaign that launched in April.\n",
+      graphics: {
+        type: "line", title: "Monthly website visits (thousands)", unit: "visits (k)",
+        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        series: [{ name: "Visits", values: [20, 22, 23, 29, 34, 33] }]
+      },
+      options: ["Traffic fell in the month after the campaign launched","Traffic grew by roughly 50% between February and May","The largest single-month increase occurred in June","Traffic in June was less than in April","From March to June traffic grew by exactly 25%"],
+      correct: 1,
+      explanation: "February = 22, May = 34. Growth = (34 − 22)/22 = 12/22 ≈ 54.5%, roughly 50% → E. Actually statement B says 'roughly 50%' → true. June (33) rose from 29 in April — so C is false (June increase was −1); D is false (33 > 29); the largest increase was April (+6) or May (+5), not June so C is false; A is false (Apr 29 → May 34 rose). B is the supported statement.",
+      timeEstimate: 150,
+      hint: "Compute percent change from a February baseline to May, and verify the direction of every month-to-month step before picking the supported claim.",
+    },
   ];
+
+  /* ---------- Data Insights format enrichment ----------
+     Convert legacy "pair-in-one-option" Two-Part questions into real
+     Two-Part Analysis widgets. Correctness is preserved exactly: each
+     answer option stored a (column1, column2) pair, and the same pair
+     index selects the same values in the two column pickers. */
+  function columnValueFromSegment(seg) {
+    var i = seg.indexOf('=');
+    if (i >= 0) return seg.slice(i + 1).trim();
+    return seg.replace(/^[^0-9.\-]+/, '').trim();
+  }
+  dataInsights.forEach(function (q) {
+    /* Normalize Table Analysis: keep the correct map inside q.table.correct
+       so isDiCorrect / diCorrectDisplay read one consistent shape. */
+    if (q.format === 'table' && q.correct && !q.table.correct) {
+      q.table.correct = q.correct;
+      delete q.correct;
+    }
+    if (q.topic === 'tp' && !q.format && q.text.indexOf('Answer pair:') !== -1) {
+      var m = q.text.match(/Answer pair:\s*\(([^,]+),\s*([^)]+)\)/);
+      if (m && q.options && q.options.length) {
+        var leftOpts = [], rightOpts = [], okPairs = true;
+        q.options.forEach(function (pair) {
+          var parts = pair.split(',').map(function (s) { return s.trim(); });
+          if (parts.length !== 2) { okPairs = false; return; }
+          leftOpts.push(columnValueFromSegment(parts[0]));
+          rightOpts.push(columnValueFromSegment(parts[1]));
+        });
+        if (okPairs) {
+          q.format = 'twopart';
+          q.twopart = {
+            left: { prompt: m[1].trim(), options: leftOpts, correct: q.correct },
+            right: { prompt: m[2].trim(), options: rightOpts, correct: q.correct }
+          };
+          q.text = q.text.replace(/\nAnswer pair:[^\n]*/, '') + "\nSelect one entry in each column. The two columns are independent.";
+        }
+      }
+    }
+  });
 
   /* ---------- Final assembly ---------- */
   const verbal = rcQuestions.concat(crQuestions);

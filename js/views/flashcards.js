@@ -43,6 +43,7 @@ function topicTagName(t) {
 function renderFlashcards(el) {
   const st = loadState();
   let deck = st.flashcards.length ? st.flashcards : buildDefaultDeck();
+  const dueCount = flashcardDueCount();
 
   if (!deck.length) {
     el.innerHTML = `<div class="page-header"><h1>🃏 Flashcards</h1></div>
@@ -54,10 +55,10 @@ function renderFlashcards(el) {
   el.innerHTML = `
     <div class="page-header">
       <h1>🃏 Flashcards <span class="badge badge-secondary">${deck.length}</span></h1>
-      <p class="text-muted">Tap / click a card to flip it. Review sessions feed your spaced-repetition schedule.</p>
+      <p class="text-muted">Spaced-repetition cards on an SM-2 schedule — rate each card Again / Good / Easy and the app spaces your reviews for long-term recall.</p>
     </div>
     <div class="row" style="gap:.75rem;margin-bottom:1rem">
-      <button class="btn btn-primary" onclick="startFlashSession()">Start review session</button>
+      <button class="btn btn-primary" onclick="startFlashSession()">Start review session ${dueCount ? `<span class="badge badge-primary">${dueCount} due</span>` : ''}</button>
       <button class="btn btn-outline" onclick="showCardAdder()">Add a card</button>
       <button class="btn btn-ghost" onclick="resetFlashcards()">Recreate from errors</button>
     </div>
@@ -79,13 +80,34 @@ function flashPreview(c, i) {
 /* ---------------------------------------------------------------------
    Review session (flip-card interface)
    --------------------------------------------------------------------- */
-let flashState = null; // {deckIndex: []}
+let flashState = null; // {order: [], idx, correct, total, deck}
+
+/** Session order: due cards first (by due date), then never-reviewed new cards, then the rest. */
+function sessionCardOrder(deck) {
+  const now = Date.now();
+  const isDue = c => (c.due === undefined || c.due === 0 || c.due === null) ? true : c.due <= now;
+  const score = c => isDue(c) ? 0 : 1;
+  return shuffleIdx(deck.length)
+    .sort((a, b) => {
+      const s = score(deck[a]) - score(deck[b]);
+      if (s !== 0) return s;
+      const da = (deck[a].due || 0);
+      const db = (deck[b].due || 0);
+      return da - db;
+    });
+}
 
 function startFlashSession() {
   const st = loadState();
   let deck = st.flashcards.length ? st.flashcards : buildDefaultDeck();
   if (!deck.length) { toast('No flashcards to review.', 'error'); return; }
-  flashState = { order: shuffleIdx(deck.length), idx: 0, correct: 0, total: deck.length, deck: deck };
+  // Persist the working deck so SM-2 scheduling sticks even on first use.
+  if (!st.flashcards.length) {
+    updateState(s => { s.flashcards = deck; });
+  } else {
+    deck = loadState().flashcards;
+  }
+  flashState = { order: sessionCardOrder(deck), idx: 0, correct: 0, total: Math.min(deck.length, 30), deck: deck };
   flashcardView();
 }
 
@@ -129,8 +151,9 @@ function flashcardView() {
         <div class="text-muted fs-small mt-2" style="margin-top:1rem" id="flashHint">Tap to flip</div>
       </div>
       <div id="flashActions" class="row" style="justify-content:center;margin-top:1rem;display:none">
-        <button class="btn btn-outline" onclick="flashScore(false)">Still learning</button>
-        <button class="btn btn-primary" onclick="flashScore(true)">Got it ✓</button>
+        <button class="btn btn-outline" onclick="flashGrade(0)">🔄 Again</button>
+        <button class="btn btn-primary" onclick="flashGrade(1)">✓ Good</button>
+        <button class="btn btn-ghost" onclick="flashGrade(2)">⏩ Easy</button>
       </div>
     </div>`;
 }
@@ -150,18 +173,26 @@ function flipFlash() {
   el.querySelector('#flashActions').style.display = 'flex';
 }
 
-function flashScore(knewIt) {
+/** grade: 0 = again, 1 = good, 2 = easy (SM-2). Persists the schedule to state. */
+function flashGrade(grade) {
   const el = document.getElementById('app');
-  if (knewIt) flashState.correct += 1;
+  if (!flashState) return;
+  const card = flashState.deck[flashState.order[flashState.idx]];
+  const xp = flashcardSchedule(card, grade); // mutates card, returns xp value
+  if (xp > 0) flashState.correct += 1;
+  const cardSnapshot = JSON.parse(JSON.stringify(card));
   updateState(st => {
     st.stats.cardsReviewed += 1;
+    if (!st.flashcards.length) st.flashcards = flashState.deck;
+    const target = st.flashcards.find(c => c && c.front === cardSnapshot.front && c.back === cardSnapshot.back);
+    if (target) {
+      ['ef', 'reps', 'streak', 'lapses', 'interval', 'reviews', 'due'].forEach(k => { if (cardSnapshot[k] !== undefined) target[k] = cardSnapshot[k]; });
+    }
     st._flashInRun = (st._flashInRun || 0) + 1;
   });
   flashState.idx += 1;
   if (flashState.idx >= flashState.total) {
-    updateState(st => {
-      st.xp += flashState.correct * gamification.xpRules.flashcardReview;
-    });
+    updateState(st => { st.xp += flashState.correct * gamification.xpRules.flashcardReview; });
     checkBadges();
   }
   flashcardView();
@@ -219,6 +250,6 @@ function resetFlashcards() {
 window.renderFlashcards = renderFlashcards;
 window.startFlashSession = startFlashSession;
 window.flipFlash = flipFlash;
-window.flashScore = flashScore;
+window.flashGrade = flashGrade;
 window.showCardAdder = showCardAdder;
 window.resetFlashcards = resetFlashcards;

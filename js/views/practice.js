@@ -59,9 +59,16 @@ function clearSession() {
 function composeQuestions(config) {
   let pool = [];
   const qb = questionBank;
+  // Real-exam format questions only (Focus: Quant PS + Verbal RC/CR + DI).
+  // Foundations content stays in the Learn track and per-topic drills.
+  const TEST_POOL = qb.quant.concat(qb.verbal, qb.dataInsights);
 
   if (config.mode === 'practice') {
-    pool = qb.all.slice();
+    pool = TEST_POOL.slice();
+  } else if (config.mode === 'adaptive') {
+    pool = composeAdaptiveSession(config);
+  } else if (config.mode === 'review') {
+    pool = composeCumulativeReview(config);
   } else if (config.mode === 'topic') {
     pool = curriculum.questionsForTopic(config.topic);
   } else if (config.mode === 'ct') {
@@ -80,16 +87,16 @@ function composeQuestions(config) {
     }
     pool = pool.slice(0, want);
   } else if (config.mode === 'section') {
-    pool = qb[config.section] || qb.all;
+    pool = qb[config.section] || TEST_POOL;
   } else if (config.mode === 'error') {
     const ids = new Set(loadState().practice.errorLog.map(e => e.questionId));
-    pool = qb.all.filter(q => ids.has(q.id));
+    pool = TEST_POOL.filter(q => ids.has(q.id));
   } else if (config.mode === 'flagged') {
     const ids = new Set(loadState().practice.flagged);
-    pool = qb.all.filter(q => ids.has(q.id));
+    pool = TEST_POOL.filter(q => ids.has(q.id));
   } else if (config.mode === 'due') {
     const dueIds = new Set(questionDueIds());
-    pool = qb.all.filter(q => dueIds.has(q.id));
+    pool = TEST_POOL.filter(q => dueIds.has(q.id));
   } else if (config.mode === 'weak') {
     // two lowest-accuracy topics that you have actually attempted
     const st = loadState();
@@ -101,13 +108,13 @@ function composeQuestions(config) {
     });
     const ranked = Object.keys(acc).sort((a, b) => acc[a] - acc[b]);
     const weakest = ranked.slice(0, 2);
-    pool = weakest.length ? qb.all.filter(q => weakest.indexOf(q.topic) >= 0).slice(0, 12) : qb.all.slice();
+    pool = weakest.length ? TEST_POOL.filter(q => weakest.indexOf(q.topic) >= 0).slice(0, 12) : TEST_POOL.slice();
   } else if (config.mode === 'diagnostic') {
     // 1 quant + 1 verbal + 1 DI worth of a quick baseline: 9 questions
     pool = sample(qb.quant, 3).concat(sample(qb.verbal, 3), sample(qb.dataInsights, 3));
   }
 
-  if (config.difficulty && config.difficulty !== 'any' && config.mode !== 'ct') {
+  if (config.difficulty && config.difficulty !== 'any' && config.mode !== 'ct' && config.mode !== 'adaptive') {
     pool = pool.filter(q => q.difficulty === config.difficulty);
   }
   // dedupe
@@ -124,6 +131,58 @@ function composeQuestions(config) {
     return q;
   });
   return pool;
+}
+
+/* TTP-style adaptive session: rotates across Quant / Verbal / DI and picks
+   each strand's difficulty from your recent accuracy. Ramps session-to-session
+   as you improve (adaptiveDifficultyFor / updateAdaptiveFromAnswer). */
+function composeAdaptiveSession(config) {
+  const qb = questionBank;
+  // Honor an explicit section filter (custom form) — else interleave all three.
+  const explicit = config.section && ['quant', 'verbal', 'dataInsights'].indexOf(config.section) >= 0;
+  const strands = explicit ? [config.section] : ['quant', 'verbal', 'dataInsights'];
+  const perStrand = Math.max(1, Math.min(8, Math.ceil((config.count || 12) / strands.length)));
+  const out = [];
+  strands.forEach(section => {
+    const secPool = qb[section] || [];
+    const topics = {};
+    secPool.forEach(q => { if (!topics[q.topic]) topics[q.topic] = []; topics[q.topic].push(q); });
+    const topicKeys = Object.keys(topics);
+    // favour weaker topics within the strand
+    const st = loadState();
+    topicKeys.sort((a, b) => {
+      const da = st.stats.byTopic[a], db = st.stats.byTopic[b];
+      const accA = da && da.attempts >= 3 ? da.correct / da.attempts : 0.5;
+      const accB = db && db.attempts >= 3 ? db.correct / db.attempts : 0.5;
+      return accA - accB;
+    });
+    for (let i = 0; i < perStrand; i++) {
+      const tag = topicKeys[i % topicKeys.length];
+      const wantDiff = adaptiveDifficultyFor(tag);
+      let candidates = topics[tag].filter(q => q.difficulty === wantDiff);
+      if (!candidates.length) candidates = topics[tag].slice();
+      if (!candidates.length) continue;
+      out.push(candidates[Math.floor(Math.random() * candidates.length)]);
+    }
+  });
+  return out;
+}
+
+/** Cumulative review (weekly sweep): previously-seen questions across all sections,
+    prioritizing anything that is due today for spaced review. */
+function composeCumulativeReview(config) {
+  const qb = questionBank;
+  const TEST_POOL = qb.quant.concat(qb.verbal, qb.dataInsights);
+  const seen = new Set(everSeenQuestionIds());
+  const pool = TEST_POOL.filter(q => seen.has(q.id));
+  if (!pool.length) return TEST_POOL.length ? sample(TEST_POOL, config.count || 10) : [];
+  const due = new Set(questionDueIds());
+  pool.sort((a, b) => {
+    const da = due.has(a.id) ? 0 : (a.difficulty === 'hard' ? 1 : 2);
+    const db = due.has(b.id) ? 0 : (b.difficulty === 'hard' ? 1 : 2);
+    return da - db;
+  });
+  return pool.slice(0, config.count || 10);
 }
 
 function shuffle(arr) {
@@ -177,7 +236,12 @@ function renderPracticeHub(el) {
       <button class="mode-card" onclick="startQuick()">
         <span class="mode-icon">🔀</span>
         <span class="mode-title">Mixed Practice</span>
-        <span class="mode-desc">10 random questions across all sections. Great for daily volume.</span>
+        <span class="mode-desc">10 random questions, Focus format only (Quant PS · Verbal RC/CR · DI). Great for daily volume.</span>
+      </button>
+      <button class="mode-card" onclick="startAdaptive()">
+        <span class="mode-icon">⚡</span>
+        <span class="mode-title">Adaptive Session</span>
+        <span class="mode-desc">Rotates Quant / Verbal / DI and ramps difficulty to your accuracy, TTP-style.</span>
       </button>
       <button class="mode-card" onclick="startDiagnostic()">
         <span class="mode-icon">🩺</span>
@@ -187,12 +251,17 @@ function renderPracticeHub(el) {
       <button class="mode-card" onclick="startDue()">
         <span class="mode-icon">🔁</span>
         <span class="mode-title">Spaced Review ${dueCount ? `<span class="badge badge-primary">${dueCount}</span>` : ''}</span>
-        <span class="mode-desc">Questions due today from your spaced-repetition schedule. 1→3→7→14→30 day intervals.</span>
+        <span class="mode-desc">Questions due today from your SM-2 spaced-repetition schedule — retrieval practice is the highest-yield habit.</span>
       </button>
       <button class="mode-card" onclick="startWeak()">
         <span class="mode-icon">🎯</span>
         <span class="mode-title">Weak Areas</span>
         <span class="mode-desc">Your two lowest-accuracy topics. Drilling these moves your score fastest.</span>
+      </button>
+      <button class="mode-card" onclick="startReview()">
+        <span class="mode-icon">🗓️</span>
+        <span class="mode-title">Cumulative Review</span>
+        <span class="mode-desc">Weekly sweep of everything you've practiced, prioritized by what's due. Interleaved across all sections.</span>
       </button>
       <button class="mode-card" onclick="location.hash='#/practice/error'">
         <span class="mode-icon">🔍</span>
@@ -228,6 +297,7 @@ function renderPracticeHub(el) {
         <div class="field">
           <label>Difficulty</label>
           <select id="cfDiff">
+            <option value="adaptive">Adaptive (ramps to you)</option>
             <option value="any">Any difficulty</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
@@ -341,7 +411,18 @@ function startCustom() {
   if (fmt === 'quant' || fmt === 'verbal' || fmt === 'dataInsights') {
     section = fmt; mode = 'section';
   }
+  if (diff === 'adaptive') {
+    mode = 'adaptive';
+    beginSession({ mode: mode, section: (fmt === 'quant' || fmt === 'verbal' || fmt === 'dataInsights') ? fmt : null, difficulty: 'adaptive', count: count, perQSeconds: time });
+    return;
+  }
   beginSession({ mode: mode, section: section, difficulty: diff, count: count, perQSeconds: time });
+}
+function startAdaptive() {
+  beginSession({ mode: 'adaptive', difficulty: 'adaptive', count: 12, perQSeconds: 0 });
+}
+function startReview() {
+  beginSession({ mode: 'review', difficulty: 'any', count: 10, perQSeconds: 0 });
 }
 
 /* ---------------------------------------------------------------------
@@ -396,14 +477,19 @@ function renderPracticeSession(el) {
 
       ${passageHtml}
 
+      ${current.format === 'msr' ? diScaffold(current) : ''}
+      ${current.format === 'graphics' ? diScaffold(current) : ''}
+
       <div class="question-text">${esc(current.text)}</div>
 
       <div id="options">
-        ${current.options.map((o, i) => `
-          <button class="option" data-o="${i}" type="button">
-            <span class="option-letter">${String.fromCharCode(65 + i)}</span>
-            <span>${esc(o)}</span>
-          </button>`).join('')}
+        ${current.format === 'twopart' || current.format === 'table'
+          ? diAnswerAreaHtml(current)
+          : current.options.map((o, i) => `
+            <button class="option" data-o="${i}" type="button">
+              <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+              <span>${esc(o)}</span>
+            </button>`).join('')}
       </div>
 
       <div class="practice-actions-row">
@@ -458,13 +544,24 @@ function renderPracticeSession(el) {
 
   // Answer selection (single selection - click to commit)
   const optionsBox = el.querySelector('#options');
-  optionsBox.querySelectorAll('.option').forEach(btn => {
-    btn.addEventListener('click', function () {
+  if (current.format === 'twopart' || current.format === 'table') {
+    diBindAnswerArea(optionsBox, current, function (v) {
       if (ps.answers && ps.answers[ps.idx]) return;
-      const oi = +this.getAttribute('data-o');
-      submitAnswer(oi, false);
+      ps._diAnswer = v;
+      submitAnswer(v, false);
     });
-  });
+  } else {
+    optionsBox.querySelectorAll('.option').forEach(btn => {
+      btn.addEventListener('click', function () {
+        if (ps.answers && ps.answers[ps.idx]) return;
+        const oi = +this.getAttribute('data-o');
+        submitAnswer(oi, false);
+      });
+    });
+  }
+
+  // MSR tab panes live above the options box — bind them on the session root
+  if (current.format === 'msr') diBindMsr(el, current);
 
   // Hint reveal (graded — never spoils the answer letter)
   const hintBtn = el.querySelector('#hintBtn');
@@ -502,6 +599,8 @@ function renderPracticeSession(el) {
       return;
     }
     if (!qAnswered && /^[1-5a-e]$/.test(k)) {
+      const cur = ps.questions[ps.idx];
+      if (cur.format === 'twopart' || cur.format === 'table') return;
       const idx = /^[a-e]$/.test(k) ? k.charCodeAt(0) - 97 : +k - 1;
       const t = el.querySelector('#options .option[data-o="' + idx + '"]');
       if (t) { playSound('type'); t.classList.add('selected'); t.click(); }
@@ -523,7 +622,7 @@ function submitAnswer(chosen, timedOut) {
   if (!ps) return;
   const q = ps.questions[ps.idx];
   const secs = Math.round((Date.now() - ps.thinkStart) / 1000);
-  const correct = !timedOut && chosen === q.correct;
+  const correct = !timedOut && isDiCorrect(q, chosen);
   const hintUsed = !!(ps._hintUsed || false);
   ps._hintUsed = false;
 
@@ -536,6 +635,9 @@ function submitAnswer(chosen, timedOut) {
     selected: chosen, timedOut: timedOut, secs: secs, hintUsed: hintUsed,
     felt: null, errorTag: null, confidence: null
   });
+  if (ps.config && ps.config.mode === 'adaptive') {
+    updateState(st => updateAdaptiveFromAnswer(st, q, correct));
+  }
 
   ps.answers.push({ chosen: chosen, correct: correct, secs: secs, ts: Date.now(), hintUsed: hintUsed });
   ps.thinkStart = Date.now();
@@ -564,7 +666,10 @@ function submitAnswer(chosen, timedOut) {
     : pc === 'pace-slow' ? 'Over the ~target. Before answering, name the approach: which concept, which formula.'
     : 'Right pace for this question.';
   const topicKey = curriculum.topicKeyForQTopic(q.topic);
-  const correctLetter = String.fromCharCode(65 + q.correct);
+  const correctLetter = diIsStructured(q) ? diCorrectDisplay(q) : String.fromCharCode(65 + q.correct);
+  if (q.format === 'twopart' || q.format === 'table' || q.format === 'graphics' || q.format === 'msr') {
+    optionsBox.querySelectorAll('.option').forEach(btn => btn.classList.add('disabled'));
+  }
 
   fb.innerHTML = `
     <div class="clue-box ${correct ? 'lesson-box-success' : 'lesson-box-danger'}" style="margin:1rem 0">
@@ -875,10 +980,14 @@ function reviewQuestion(idx) {
     <div class="example-block">
       <span onclick="render()" style="cursor:pointer;color:var(--color-secondary)">← Back to summary</span>
       <div class="example-question mt-1">${esc(q.text)}</div>
-      ${q.options.map((o, i) => `
+      ${q.options ? q.options.map((o, i) => `
         <div class="option ${i === q.correct ? 'correct' : ''} ${a && a.chosen === i && i !== q.correct ? 'incorrect' : ''} disabled">
           <span class="option-letter">${String.fromCharCode(65 + i)}</span><span>${esc(o)}</span>
-        </div>`).join('')}
+        </div>`).join('') : `
+        <div class="clue-box" style="margin:.75rem 0">
+          <b>Your answer:</b> ${(a && a.chosen !== undefined && a.chosen !== null) ? diAnswerDisplay(q, a.chosen) : '—'}
+          &nbsp;·&nbsp; <b>Correct:</b> ${diCorrectDisplay(q)}
+        </div>`}
       <div class="example-reason">${esc(q.explanation || '')}</div>
     </div>`;
 }
@@ -927,7 +1036,7 @@ function renderErrorReview(el) {
         return `<div class="card">
           <div class="feed-item"><span class="badge badge-secondary">${topicTagName(q.topic)}</span><span class="feed-time">${new Date(e.ts).toLocaleDateString()}</span></div>
           <div class="example-question mt-1">${esc(q.text.slice(0, 140))}${q.text.length > 140 ? '…' : ''}</div>
-          <div class="text-muted fs-small">You chose ${e.youChose >= 0 ? String.fromCharCode(65 + e.youChose) : '—'} · Correct: ${String.fromCharCode(65 + q.correct)}</div>
+          <div class="text-muted fs-small">You chose ${e.youChose === null || e.youChose === undefined ? '—' : diIsStructured(q) ? diAnswerDisplay(q, e.youChose) : String.fromCharCode(65 + e.youChose)} · Correct: ${diIsStructured(q) ? diCorrectDisplay(q) : String.fromCharCode(65 + q.correct)}</div>
           <button class="btn btn-sm btn-outline mt-1" onclick="location.hash='#/practice/topic/${curriculum.topicKeyForQTopic(q.topic)}'">Practice this topic</button>
         </div>`;
       }).join('')}
@@ -991,6 +1100,8 @@ function unflagQuestion(id) {
 window.startQuick = startQuick;
 window.startDiagnostic = startDiagnostic;
 window.startCustom = startCustom;
+window.startAdaptive = startAdaptive;
+window.startReview = startReview;
 window.beginSession = beginSession;
 window.startChapterTest = startChapterTest;
 window.nextQuestion = nextQuestion;

@@ -198,7 +198,7 @@ function renderDashboard(el) {
           <h2 class="card-title">🔁 Spaced Review Due</h2>
           <span class="badge badge-primary">${dueCount}</span>
         </div>
-        ${dueCount ? `<p class="text-muted">Questions from your 1→3→7→14→30 schedule coming due. Reviewing on time is what makes recall stick.</p>
+        ${dueCount ? `<p class="text-muted">Questions from your SM-2 spaced-repetition schedule coming due — intervals grow with each recall. Reviewing on time is what makes recall stick.</p>
           <button class="btn btn-sm btn-primary mt-2" onclick="startDue()">Review ${dueCount} due →</button>`
         : '<p class="text-muted">Nothing due right now. Keep answering questions and your spaced-review queue builds itself.</p>'}
       </div>

@@ -371,6 +371,7 @@ button { font-family: var(--font-body); cursor: pointer; }
 .topic-meta { font-size: 0.82rem; color: var(--color-muted); }
 .topic-progress { margin-top: auto; }
 .topic-state { display: flex; gap: 0.35rem; align-items: center; font-size: 0.8rem; }
+.topic-card.topic-due { border-left: 3px solid var(--color-primary); }
 
 .lesson-container { max-width: 780px; margin: 0 auto; }
 .lesson-section { margin-bottom: 1.75rem; }
@@ -830,6 +831,38 @@ button { font-family: var(--font-body); cursor: pointer; }
 .badge-secondary { background: rgba(13, 71, 161, 0.12); color: var(--color-secondary); }
 .badge-ghost { background: var(--color-border); color: var(--color-text); }
 .progress-bar.success { background: var(--color-success); }
+
+/* ---------- Data Insights format widgets ---------- */
+.di-graphics svg { display: block; margin: 0 auto; }
+.di-graphics svg text { font-family: inherit; }
+.di-msr-tabs { margin-bottom: .25rem; }
+.di-answer .di-col-label { font-weight: 700; margin-bottom: .3rem; font-size: .92rem; }
+.di-select {
+  width: 100%;
+  max-width: 360px;
+  padding: .5rem .6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-card);
+  color: var(--color-text);
+  font: inherit;
+}
+.di-table-wrap { border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-card); }
+table.di-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .92rem;
+}
+.di-table th, .di-table td {
+  border-bottom: 1px solid var(--color-border);
+  padding: .45rem .6rem;
+  text-align: left;
+  white-space: nowrap;
+}
+.di-table th { font-weight: 700; background: var(--color-bg); }
+.di-table tbody tr:last-child td { border-bottom: none; }
+.di-yesno { display: inline-flex; align-items: center; gap: .25rem; margin-right: .8rem; font-size: .9rem; cursor: pointer; }
+.di-yesno input { accent-color: var(--color-primary); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {

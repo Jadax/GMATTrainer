@@ -122,8 +122,11 @@ function learnTopicCard(t) {
   const stateIcon = { 'not-started': '○', 'in-progress': '◐', 'mastered': '●' }[ls.status] || '○';
   const stateLabel = { 'not-started': 'Not started', 'in-progress': 'In progress', 'mastered': 'Mastered' }[ls.status] || ls.status;
   const skillMap = { foundation: 'Foundations', beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
+  // Mastery-decay marker: how many of this topic's questions are due for spaced review.
+  const dueIds = new Set(questionDueIds());
+  const dueCount = curriculum.questionsForTopic(t.id).filter(q => dueIds.has(q.id)).length;
   return `
-    <a class="card card-hover topic-card" href="#/learn/${t.id}" style="text-decoration:none">
+    <a class="card card-hover topic-card ${dueCount ? 'topic-due' : ''}" href="#/learn/${t.id}" style="text-decoration:none">
       <div class="row" style="align-items:center">
         <span class="feed-icon">${stateIcon === '●' ? '✅' : stateIcon === '◐' ? '🔄' : '📘'}</span>
         <div class="topic-name">${esc(t.name)}</div>
@@ -131,6 +134,7 @@ function learnTopicCard(t) {
       <div class="topic-meta">${skillMap[t.level] || t.level}</div>
       <div class="topic-state">
         <span class="badge ${ls.status === 'mastered' ? 'badge-success' : ls.status === 'in-progress' ? 'badge-accent' : ''}">${stateLabel}</span>
+        ${dueCount ? `<span class="badge badge-primary" title="Questions due for spaced review">⏰ ${dueCount} due</span>` : ''}
         <span class="text-muted">${curriculum.questionsForTopic(t.id).length} practice Qs</span>
       </div>
       <div class="progress topic-progress" style="height:6px"><div class="progress-bar ${ls.status === 'mastered' ? 'success' : ''}" style="width:${ls.status === 'mastered' ? 100 : ls.status === 'in-progress' ? 50 : 0}%"></div></div>

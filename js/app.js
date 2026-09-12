@@ -51,9 +51,10 @@
     openModal(`
       <h3 style="margin:0 0 .75rem">Quick Help</h3>
       <ul style="margin:0;padding-left:1.2rem;line-height:1.7">
-        <li><strong>Learn</strong> — 22 topics across Quant / Verbal / Data Insights.</li>
-        <li><strong>Practice</strong> — 150+ questions with error log + flagging.</li>
-        <li><strong>Simulator</strong> — timed full exam (2h15m) or single sections.</li>
+        <li><strong>Diagnostic</strong> — a 16-question placement test that pins your recommended starting point.</li>
+        <li><strong>Learn</strong> — ${(window.curriculum && curriculum.sections.reduce ? curriculum.sections.reduce((n, s) => n + s.topics.length, 0) : 22)} topics, zero→mastery, with TTP-style chapter tests (Easy → Medium → Hard).</li>
+        <li><strong>Practice</strong> — ${(window.questionBank && questionBank.all ? questionBank.all.length : '300+')} questions in real GMAT Focus format, with spaced review (SM-2), adaptive sessions, error log + flagging.</li>
+        <li><strong>Simulator</strong> — timed full exam (2h15m) or single sections, Focus Edition blueprint.</li>
         <li><strong>Analytics</strong> — projected score, section & topic accuracy.</li>
         <li><strong>Progress</strong> — XP, levels, badges, heatmap, backups.</li>
         <li>Your data lives in this browser (localStorage). Export backups from Progress.</li>

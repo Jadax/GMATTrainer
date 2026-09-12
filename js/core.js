@@ -95,7 +95,7 @@ function loadState() {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && parsed.version === 1) {
-        __state = deepMerge(buildDefaultState(), parsed);
+        __state = migrateState(deepMerge(buildDefaultState(), parsed));
         return __state;
       }
     }
@@ -255,31 +255,39 @@ function _aggregateAnswer(st, question, correct, secs, sectionKey) {
   recalcStreak(st);
 }
 
-const SR_STEPS = [1, 3, 7, 14, 30]; // growing review intervals (days)
+const SR_STEPS = [1, 3, 7, 14, 30]; // legacy growing review intervals (days) — kept for display/migration
+const SR_EF_MIN = 1.3;
+const SR_EF_MAX = 2.5;
 
-/** Spaced-repetition scheduling for a single question. */
+/** Spaced-repetition scheduling for a single question (SM-2-style ease factor).
+ *  First success in 1 day, second in 6, then interval × ease. Failures reset
+ *  the streak and shrink the ease factor so the item returns sooner.
+ */
 function _scheduleQuestion(st, qid, correct) {
   if (!st.settings || st.settings.spacedRepetition === false) return;
   if (!st.practice.review[qid]) {
     st.practice.review[qid] = {
       intervalDays: 0, stepsIndex: 0, reps: 0, streak: 0, wrongCount: 0,
-      lastCorrect: null, due: Date.now(), attempts: []
+      ef: SR_EF_MAX, lastCorrect: null, due: Date.now(), attempts: []
     };
   }
   const rec = st.practice.review[qid];
+  rec.ef = Math.min(SR_EF_MAX, Math.max(SR_EF_MIN, rec.ef === undefined ? SR_EF_MAX : rec.ef));
   if (correct) {
-    rec.stepsIndex = Math.min((rec.stepsIndex || 0) + 1, SR_STEPS.length - 1);
-    rec.intervalDays = SR_STEPS[rec.stepsIndex];
-    rec.reps += 1;
-    rec.streak += 1;
+    rec.reps = (rec.reps || 0) + 1;
+    rec.streak = (rec.streak || 0) + 1;
     rec.lastCorrect = true;
+    if (rec.reps === 1) rec.intervalDays = 1;
+    else if (rec.reps === 2) rec.intervalDays = 6;
+    else rec.intervalDays = Math.max(2, Math.round((rec.intervalDays || 6) * rec.ef));
+    rec.ef = Math.min(SR_EF_MAX, rec.ef + 0.1);
   } else {
-    rec.stepsIndex = 0;
-    rec.intervalDays = 1; // relearn next day
-    rec.reps += 1;
+    rec.ef = Math.max(SR_EF_MIN, rec.ef - 0.2);
+    rec.reps = 0;
     rec.streak = 0;
-    rec.wrongCount += 1;
+    rec.wrongCount = (rec.wrongCount || 0) + 1;
     rec.lastCorrect = false;
+    rec.intervalDays = 1; // relearn next day
   }
   rec.due = Date.now() + rec.intervalDays * 86400000;
 }
@@ -292,11 +300,200 @@ function recordAnswer(question, correct, secs, sectionKey) {
 }
 
 /**
+ * Simulator-grade recording: stats + spaced-repetition + deduped error log.
+ * Mirrors saveAnswerDetailed without the rich post-answer meta tagging.
+ */
+function recordAnswerScheduled(question, correct, secs, sectionKey, selected) {
+  updateState(st => {
+    _aggregateAnswer(st, question, correct, secs, sectionKey);
+    _scheduleQuestion(st, question.id, correct);
+    if (!correct) {
+      st.practice.errorLog = st.practice.errorLog.filter(e => e.questionId !== question.id);
+      st.practice.errorLog.push({
+        questionId: question.id,
+        youChose: selected,
+        ts: Date.now(),
+        section: sectionKey,
+        correct: false,
+        secs: secs
+      });
+      st.stats.errorLogCount = st.practice.errorLog.length;
+    }
+    const rec = st.practice.review[question.id] || (st.practice.review[question.id] = {
+      intervalDays: 0, stepsIndex: 0, reps: 0, streak: 0, wrongCount: 0,
+      ef: SR_EF_MAX, lastCorrect: null, due: Date.now(), attempts: []
+    });
+    rec.attempts.push({ ts: Date.now(), correct: correct, secs: secs, hintUsed: false });
+  });
+  checkBadges();
+  App.emit('state', loadState());
+}
+
+/* ---------------------------------------------------------------------
+   Data-Insights structured answers (Focus formats)
+   q.format: 'mc' (default), 'numeric', 'twopart', 'table', 'graphics', 'msr'
+   isDiCorrect(q, chosen) decides correctness for any format.
+   --------------------------------------------------------------------- */
+function isDiCorrect(q, chosen) {
+  if (chosen === null || chosen === undefined) return false;
+  if (q.format === 'numeric') {
+    return String(chosen).trim().toUpperCase() === String(q.answer).trim().toUpperCase();
+  }
+  if (q.format === 'twopart') {
+    return !!chosen && chosen.left !== undefined && chosen.right !== undefined &&
+      chosen.left === q.twopart.left.correct && chosen.right === q.twopart.right.correct;
+  }
+  if (q.format === 'table') {
+    if (!chosen || !q.table || !q.table.correct) return false;
+    return Object.keys(q.table.correct).every(idx =>
+      (chosen[idx] === undefined ? false : chosen[idx]) === q.table.correct[idx]);
+  }
+  // mc / graphics / msr: single index
+  return chosen === q.correct;
+}
+
+/** Human-friendly display of a stored structured answer (for review screens). */
+function diAnswerDisplay(q, chosen) {
+  if (chosen === null || chosen === undefined) return '—';
+  if (q.format === 'numeric') return String(chosen);
+  if (q.format === 'twopart') {
+    const lt = q.twopart.left.options[chosen.left];
+    const rt = q.twopart.right.options[chosen.right];
+    return 'C1: ' + (lt !== undefined ? lt : '?') + ' · C2: ' + (rt !== undefined ? rt : '?');
+  }
+  if (q.format === 'table') {
+    return 'Yes/No selections set';
+  }
+  return String.fromCharCode(65 + chosen);
+}
+
+/** Display of the correct answer for any format (review screens). */
+function diCorrectDisplay(q) {
+  if (q.format === 'numeric') return String(q.answer);
+  if (q.format === 'twopart') {
+    return 'C1: ' + q.twopart.left.options[q.twopart.left.correct] + ' · C2: ' + q.twopart.right.options[q.twopart.right.correct];
+  }
+  if (q.format === 'table') return 'per-row Yes/No selections';
+  return String.fromCharCode(65 + q.correct);
+}
+
+/** True for non-multiple-choice Focus DI formats. */
+function diIsStructured(q) {
+  return !!q.format && q.format !== 'mc';
+}
+
+/* ---------------------------------------------------------------------
+   Flashcard SM-2 scheduling (cards: {front, back, ..., ef, reps, streak,
+   lapses, interval, reviews, due})
+   --------------------------------------------------------------------- */
+const FC_EF_MIN = 1.3;
+const FC_EF_MAX = 2.5;
+
+function flashcardSchedule(card, grade) {
+  // grade: 0 = again, 1 = good, 2 = easy
+  if (grade === 0) {
+    card.lapses = (card.lapses || 0) + 1;
+    card.reps = 0;
+    card.streak = 0;
+    card.interval = 1;
+    card.ef = Math.max(FC_EF_MIN, (card.ef === undefined ? 2.5 : card.ef) - 0.2);
+  } else if (grade === 1) {
+    card.reps = (card.reps || 0) + 1;
+    card.ef = Math.min(FC_EF_MAX, (card.ef === undefined ? 2.5 : card.ef) + 0.03);
+    if (card.reps === 1) card.interval = 1;
+    else if (card.reps === 2) card.interval = 6;
+    else card.interval = Math.max(2, Math.round((card.interval || 1) * card.ef));
+    card.streak = (card.streak || 0) + 1;
+  } else {
+    card.reps = (card.reps || 0) + 1;
+    card.ef = Math.min(FC_EF_MAX, (card.ef === undefined ? 2.5 : card.ef) + 0.15);
+    if (card.reps === 1) card.interval = 3;
+    else if (card.reps === 2) card.interval = 10;
+    else card.interval = Math.max(3, Math.round(card.interval * card.ef * 1.3));
+    card.streak = (card.streak || 0) + 1;
+  }
+  card.reviews = (card.reviews || 0) + 1;
+  card.due = Date.now() + (card.interval || 1) * 86400000;
+  return grade === 0 ? 0 : (grade === 1 ? 1 : 2);
+}
+
+function flashcardDueCount() {
+  const st = loadState();
+  const now = Date.now();
+  return st.flashcards.filter(c => {
+    if (c.reviews === undefined && c.ef === undefined) return true; // new card
+    return (c.due || 0) <= now;
+  }).length;
+}
+
+/* ---------------------------------------------------------------------
+   Migration pass for state written by older versions
+   --------------------------------------------------------------------- */
+function migrateState(st) {
+  if (st.practice && st.practice.review) {
+    Object.keys(st.practice.review).forEach(id => {
+      const r = st.practice.review[id];
+      if (r && r.ef === undefined) r.ef = SR_EF_MAX;
+    });
+  }
+  if (Array.isArray(st.flashcards)) {
+    st.flashcards.forEach(c => {
+      if (c && c.ef === undefined) { c.ef = FC_EF_MAX; c.reps = 0; c.streak = 0; c.lapses = 0; c.interval = 0; c.reviews = 0; c.due = 0; }
+    });
+  }
+  return st;
+}
+
+/* ---------------------------------------------------------------------
+   Adaptive difficulty (TTP-style ramping)
+   adaptiveDifficultyFor(): easy/medium/hard from recent by-topic accuracy.
+   --------------------------------------------------------------------- */
+const ADAPTIVE_BANDS = [
+  { min: 0.0, idx: 0 },  // low accuracy → easy
+  { min: 0.62, idx: 1 }, // holding → medium
+  { min: 0.82, idx: 2 }  // strong → hard
+];
+
+function adaptiveDifficultyFor(topicTag) {
+  const st = loadState();
+  const d = st.stats.byTopic[topicTag];
+  const stored = st.practice.adaptiveLevel && st.practice.adaptiveLevel[topicTag];
+  if (stored !== undefined) return stored;
+  if (!d || d.attempts < 3) return 'easy';
+  const acc = d.correct / d.attempts;
+  let idx = 0;
+  ADAPTIVE_BANDS.forEach(b => { if (acc >= b.min) idx = b.idx; });
+  return ['easy', 'medium', 'hard'][idx];
+}
+
+/** Update the stored adaptive level after one answer. */
+function updateAdaptiveFromAnswer(st, question, correct) {
+  if (!st.practice.adaptiveLevel) st.practice.adaptiveLevel = {};
+  const cur = st.practice.adaptiveLevel[question.topic];
+  const diffIdx = ['easy', 'medium', 'hard'].indexOf(question.difficulty);
+  let delta = correct ? 1 : -1;
+  if (cur === undefined) {
+    st.practice.adaptiveLevel[question.topic] = Math.max(0, Math.min(2, diffIdx + delta));
+  } else {
+    st.practice.adaptiveLevel[question.topic] = Math.max(0, Math.min(2, cur + delta));
+  }
+}
+
+/** Ids of every question you have ever answered in practice (for cumulative review). */
+function everSeenQuestionIds() {
+  const st = loadState();
+  return Object.keys(st.practice.review || {}).filter(id => {
+    const r = st.practice.review[id] && st.practice.review[id].attempts;
+    return r && r.length > 0;
+  });
+}
+
+/**
  * Full per-answer recording used by practice sessions.
  * meta: { selected, timedOut, secs, hintUsed, felt, errorTag, confidence, note }
  */
 function saveAnswerDetailed(question, sectionKey, meta) {
-  const correct = !meta.timedOut && meta.selected === question.correct;
+  const correct = !meta.timedOut && isDiCorrect(question, meta.selected);
   updateState(st => {
     _aggregateAnswer(st, question, correct, meta.secs, sectionKey);
     _scheduleQuestion(st, question.id, correct);
@@ -322,7 +519,7 @@ function saveAnswerDetailed(question, sectionKey, meta) {
     // append to the review record's attempt history
     const rec = st.practice.review[question.id] || (st.practice.review[question.id] = {
       intervalDays: 0, stepsIndex: 0, reps: 0, streak: 0, wrongCount: 0,
-      lastCorrect: null, due: Date.now(), attempts: []
+      ef: SR_EF_MAX, lastCorrect: null, due: Date.now(), attempts: []
     });
     rec.attempts.push({
       ts: Date.now(), correct: correct, secs: meta.secs,
@@ -784,7 +981,7 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.6.0';
+const APP_VERSION = '1.7.0';
 
 const SECTION_META = {
   quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: '🔢', count: 21, time: 2700 },
