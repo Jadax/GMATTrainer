@@ -56,6 +56,7 @@
         <li><strong>Practice</strong> — ${(window.questionBank && questionBank.all ? questionBank.all.length : '300+')} questions in real GMAT Focus format, with spaced review (SM-2), adaptive sessions, error log + flagging.</li>
         <li><strong>Simulator</strong> — timed full exam (2h15m) or single sections, Focus Edition blueprint.</li>
         <li><strong>Analytics</strong> — projected score, section & topic accuracy.</li>
+        <li><strong>Advisor</strong> — a top-teacher read of your data: score projection, format-by-format gap & pace audit, a priority queue, and weekly cadence advice.</li>
         <li><strong>Progress</strong> — XP, levels, badges, heatmap, backups.</li>
         <li>Your data lives in this browser (localStorage). Export backups from Progress.</li>
         <li><strong>Tip:</strong> answer in real exam timings; always review your error log.</li>

@@ -33,6 +33,13 @@ function topicTagLabel(tag) {
   return map[tag] || tag;
 }
 
+/** Points between the projected total and the user's target (0+). */
+function advisorGapNow(stats) {
+  const proj = gamification.projectedTotalScore(stats || loadState().stats);
+  const target = (loadState().user.targetScore || 705);
+  return Math.max(0, target - proj);
+}
+
 /* ---------------------------------------------------------------------
    Recommended next step based on weakest area
    --------------------------------------------------------------------- */
@@ -183,6 +190,20 @@ function renderDashboard(el) {
             const mastered = adv.filter(t => learningStatus(t.id).status === 'mastered').length;
             return `<a class="btn btn-sm ${mastered === adv.length ? 'btn-outline' : 'btn-ghost'} stage-chip stage-chip-advanced" href="#/learn" title="${esc(s.name)}">${s.icon} ${s.short}: ${mastered}/${adv.length} capstone${adv.length > 1 ? 's' : ''} ${mastered === adv.length ? '✅' : unlocked === adv.length ? '🔓' : '🔒'}</a>`;
           }).join('')}
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-bottom:1rem;border-left:4px solid var(--color-primary)">
+      <div class="row row-wrap" style="align-items:center;gap:.5rem 1rem">
+        <div>
+          <div class="card-title">🧑🏫 Your Advisor</div>
+          <p class="text-muted" style="margin:0">A top-teacher read of your data: projected score, pace audit per format, a priorities queue and weekly cadence — generated fresh every time you open it.</p>
+        </div>
+        <div class="row" style="gap:.5rem;flex-wrap:wrap;margin-left:auto">
+          <span class="badge badge-primary" title="Heuristic estimate">Projected ~${gamification.projectedTotalScore(st.stats)}</span>
+          <span class="badge ${st.stats.totalAnswered === 0 ? 'badge-ghost' : advisorGapNow(st.stats) <= 20 ? 'badge-success' : advisorGapNow(st.stats) <= 60 ? 'badge-accent' : 'badge-ghost'}">${st.stats.totalAnswered === 0 ? 'take diagnostic' : advisorGapNow(st.stats) + ' pts to ' + (st.user.targetScore || 705)}</span>
+          <a class="btn btn-sm btn-primary" href="#/advisor">Open coach's read →</a>
         </div>
       </div>
     </section>
