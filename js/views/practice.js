@@ -112,6 +112,14 @@ function composeQuestions(config) {
   } else if (config.mode === 'diagnostic') {
     // 1 quant + 1 verbal + 1 DI worth of a quick baseline: 9 questions
     pool = sample(qb.quant, 3).concat(sample(qb.verbal, 3), sample(qb.dataInsights, 3));
+  } else if (config.mode === 'bank') {
+    // Question-bank picks (solo drill, a filtered set, or a timed set):
+    // exact ids win; any item is eligible (foundations included).
+    const want = new Set(config.ids || []);
+    pool = questionBank.all.filter(q => want.has(q.id));
+    if (config.includeFoundations === false) {
+      pool = pool.filter(q => qb.foundations.indexOf(q) < 0);
+    }
   }
 
   if (config.difficulty && config.difficulty !== 'any' && config.mode !== 'ct' && config.mode !== 'adaptive') {

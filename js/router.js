@@ -35,10 +35,17 @@ const App = {
    --------------------------------------------------------------------- */
 function parseHash() {
   const h = window.location.hash.replace(/^#\/?/, '');
-  const parts = h.split('/').filter(Boolean);
+  const raw = h.split('/').filter(Boolean);
+  // Allow a '?query' payload on any route (e.g. #/bank?section=quant).
+  // It rides along as a trailing arg so existing positional args are untouched.
+  const route = (raw[0] || 'dashboard').split('?')[0];
+  const args = raw.slice(1);
+  if (raw[0] && raw[0].indexOf('?') >= 0) {
+    args.push(raw[0].slice(raw[0].indexOf('?')));
+  }
   return {
-    route: parts[0] || 'dashboard',
-    args: parts.slice(1)
+    route: route,
+    args: args
   };
 }
 

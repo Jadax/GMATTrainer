@@ -66,6 +66,7 @@ function buildDefaultState() {
       history: [],        // one entry per completed set {ts, mode, section, total, correct, seconds, topic, difficulty}
       errorLog: [],       // [{questionId, ts, youChose, section, correct, secs, felt, errorTag, confidence}]
       flagged: [],        // [questionId] user bookmarks
+      notes: {},          // { qid: string } user study notes per question
       adaptiveLevel: {},  // { topicTag: difficultyIndex }
       review: {}          // per-question spaced-repetition records:
                           //  { qid: { intervalDays, stepsIndex, reps, streak, wrongCount,
@@ -981,7 +982,7 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.10.0';
+const APP_VERSION = '1.11.0';
 
 const SECTION_META = {
   quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: '🔢', count: 21, time: 2700 },

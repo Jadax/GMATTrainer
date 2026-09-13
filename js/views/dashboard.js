@@ -40,6 +40,17 @@ function advisorGapNow(stats) {
   return Math.max(0, target - proj);
 }
 
+/** Questions in the bank with no attempt on record. */
+function bankUnusedCount() {
+  const st = loadState();
+  let n = 0;
+  (window.questionBank ? questionBank.all : []).forEach(q => {
+    const rec = st.practice.review[q.id];
+    if (!rec || !rec.attempts || !rec.attempts.length) n += 1;
+  });
+  return n;
+}
+
 /* ---------------------------------------------------------------------
    Recommended next step based on weakest area
    --------------------------------------------------------------------- */
@@ -204,6 +215,21 @@ function renderDashboard(el) {
           <span class="badge badge-primary" title="Heuristic estimate">Projected ~${gamification.projectedTotalScore(st.stats)}</span>
           <span class="badge ${st.stats.totalAnswered === 0 ? 'badge-ghost' : advisorGapNow(st.stats) <= 20 ? 'badge-success' : advisorGapNow(st.stats) <= 60 ? 'badge-accent' : 'badge-ghost'}">${st.stats.totalAnswered === 0 ? 'take diagnostic' : advisorGapNow(st.stats) + ' pts to ' + (st.user.targetScore || 705)}</span>
           <a class="btn btn-sm btn-primary" href="#/advisor">Open coach's read →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-bottom:1rem;border-left:4px solid var(--color-accent)">
+      <div class="row row-wrap" style="align-items:center;gap:.5rem 1rem">
+        <div>
+          <div class="card-title">🗂️ Question Bank</div>
+          <p class="text-muted" style="margin:0">Every question in the bank against the real Focus blueprint — filter, read full solutions, hand-pick a set and drill straight from the list.</p>
+        </div>
+        <div class="row" style="gap:.5rem;flex-wrap:wrap;margin-left:auto">
+          <span class="badge badge-ghost">${questionBank.all.length} questions</span>
+          <span class="badge ${bankUnusedCount() === 0 ? 'badge-success' : 'badge-accent'}">${bankUnusedCount()} untouched</span>
+          ${st.practice.flagged.length ? `<span class="badge badge-primary">🚩 ${st.practice.flagged.length} flagged</span>` : ''}
+          <a class="btn btn-sm btn-accent" href="#/bank">Open the bank →</a>
         </div>
       </div>
     </section>
