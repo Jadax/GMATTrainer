@@ -51,6 +51,21 @@ function bankUnusedCount() {
   return n;
 }
 
+/** Live / reviewed / healed split for the error-log teaser (self-contained). */
+function errorSummaryNow() {
+  const st = loadState();
+  const out = { total: 0, live: 0, reviewed: 0, healed: 0 };
+  st.practice.errorLog.forEach(e => {
+    const rec = st.practice.review[e.questionId];
+    const healed = !!rec && rec.attempts.length > 0 && rec.attempts[rec.attempts.length - 1].correct;
+    out.total += 1;
+    if (healed) out.healed += 1;
+    else if (e.reviewed) out.reviewed += 1;
+    else out.live += 1;
+  });
+  return out;
+}
+
 /* ---------------------------------------------------------------------
    Recommended next step based on weakest area
    --------------------------------------------------------------------- */
@@ -230,6 +245,23 @@ function renderDashboard(el) {
           <span class="badge ${bankUnusedCount() === 0 ? 'badge-success' : 'badge-accent'}">${bankUnusedCount()} untouched</span>
           ${st.practice.flagged.length ? `<span class="badge badge-primary">🚩 ${st.practice.flagged.length} flagged</span>` : ''}
           <a class="btn btn-sm btn-accent" href="#/bank">Open the bank →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-bottom:1rem;border-left:4px solid var(--color-danger)">
+      <div class="row row-wrap" style="align-items:center;gap:.5rem 1rem">
+        <div>
+          <div class="card-title">🔍 Error Log</div>
+          <p class="text-muted" style="margin:0">Your misses turned into a recovery workflow — spot leak patterns, tag why each one happened, and re-drill until the log heals.</p>
+        </div>
+        <div class="row" style="gap:.5rem;flex-wrap:wrap;margin-left:auto">
+          ${(() => { const es = errorSummaryNow(); let s = '';
+            s += `<span class="badge ${es.live === 0 ? 'badge-success' : 'badge-danger'}">${es.live} live</span>`;
+            if (es.reviewed) s += `<span class="badge badge-accent">${es.reviewed} reviewed</span>`;
+            if (es.healed) s += `<span class="badge badge-success">${es.healed} healed</span>`;
+            return s; })()}
+          <a class="btn btn-sm ${(errorSummaryNow().live > 0 ? 'btn-danger' : 'btn-ghost')}" href="#/errors">Review misses →</a>
         </div>
       </div>
     </section>

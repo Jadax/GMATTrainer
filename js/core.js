@@ -551,6 +551,19 @@ function updateReviewMeta(qid, patch) {
   });
 }
 
+/** Patch error-log meta after the fact. */
+/** Fields: { reviewed, reviewedAt, reason, felt, errorTag, confidence }. */
+function patchErrorEntry(qid, patch) {
+  updateState(st => {
+    const e = st.practice.errorLog.find(x => x.questionId === qid);
+    if (!e) return;
+    Object.keys(patch).forEach(k => {
+      if (patch[k] !== undefined) e[k] = patch[k];
+    });
+  });
+  App.emit('state', loadState());
+}
+
 /** Number of questions currently due for spaced review. */
 function questionDueCount() {
   const st = loadState();
@@ -982,7 +995,7 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.11.0';
+const APP_VERSION = '1.12.0';
 
 const SECTION_META = {
   quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: '🔢', count: 21, time: 2700 },

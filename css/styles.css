@@ -1446,3 +1446,50 @@ a.lesson-nav-card:hover { border-color: var(--color-secondary); box-shadow: var(
   .bank-filters { grid-template-columns: 1fr 1fr; }
   .bank-search { grid-column: span 2; }
 }
+
+/* =====================================================================
+   Error Log Review Hub (#/errors)
+   ===================================================================== */
+.err-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
+.err-stat { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 10px; padding: .75rem .9rem; text-align: center; }
+.err-stat-n { font-size: 1.5rem; font-weight: 800; line-height: 1.1; }
+.err-week-chart { display: flex; align-items: flex-end; gap: .5rem; height: 110px; padding-top: .4rem; }
+.err-week-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: .25rem; }
+.err-week-bar { width: 100%; max-width: 40px; background: var(--color-muted); border-radius: 4px 4px 0 0; position: relative; min-height: 2px; display: flex; align-items: flex-end; justify-content: center; opacity: .55; }
+.err-week-bar.today { background: var(--color-danger); opacity: 1; }
+.err-week-n { font-size: .68rem; color: var(--color-text); position: absolute; top: -1.05rem; }
+.err-week-l { font-size: .66rem; color: var(--color-muted); }
+.err-pattern + .err-pattern { margin-top: .6rem; }
+.err-pattern-head { display: flex; justify-content: space-between; gap: .5rem; font-size: .85rem; margin-bottom: .25rem; }
+.err-pattern-head .text-muted { font-size: .75rem; }
+.err-row, .err-row-head { display: grid; grid-template-columns: 108px 1fr 120px 76px 92px 64px; align-items: center; gap: .75rem; padding: .55rem .8rem; border-bottom: 1px solid var(--color-border); }
+.err-row-head { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--color-muted); background: var(--color-bg); border-radius: 8px 8px 0 0; }
+.err-row { cursor: pointer; }
+.err-row:hover { background: var(--color-bg); }
+.err-row-head > span, .err-col-status, .err-col-format, .err-col-diff, .err-col-when, .err-col-acts { min-width: 0; }
+.err-col-status { white-space: nowrap; }
+.err-col-main { min-width: 0; }
+.err-col-acts { display: flex; gap: .3rem; justify-content: flex-end; }
+.err-snip { color: var(--color-text); font-size: .84rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: .15rem; }
+.err-reason-row { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin-bottom: .5rem; }
+.err-reason-chip { border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 999px; padding: .28rem .65rem; font-size: .78rem; cursor: pointer; }
+.err-reason-chip:hover { border-color: var(--color-secondary); }
+.err-reason-chip.active { background: var(--color-secondary); color: #fff; border-color: var(--color-secondary); }
+.err-groups { display: flex; flex-direction: column; gap: .8rem; }
+.err-group-head { display: flex; align-items: center; gap: .6rem; font-weight: 800; margin-bottom: .5rem; }
+.err-group-row { display: flex; align-items: center; gap: .5rem; padding: .45rem 0; border-bottom: 1px solid var(--color-border); font-size: .85rem; }
+.err-group-acts { display: flex; gap: .3rem; margin-left: auto; }
+.badge-danger { background: var(--color-danger); color: #fff; }
+.progress-bar.danger { background: var(--color-danger); }
+.btn-ghost.danger { color: var(--color-danger); border-color: var(--color-danger); }
+.btn-ghost.danger:hover { background: rgba(198, 40, 40, .1); }
+
+@media (max-width: 900px) {
+  .err-row, .err-row-head { grid-template-columns: 92px 1fr 60px; }
+  .err-col-format, .err-col-diff, .err-col-when, .err-row-head .err-col-format, .err-row-head .err-col-diff, .err-row-head .err-col-when { display: none; }
+  .err-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .err-row, .err-row-head { grid-template-columns: 84px 1fr 56px; padding: .5rem .55rem; gap: .5rem; }
+  .err-col-status .badge { font-size: .66rem; }
+}

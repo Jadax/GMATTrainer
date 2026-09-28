@@ -58,6 +58,7 @@
         <li><strong>Analytics</strong> — projected score, section & topic accuracy.</li>
         <li><strong>Advisor</strong> — a top-teacher read of your data: score projection, format-by-format gap & pace audit, a priority queue, and weekly cadence advice.</li>
         <li><strong>Bank</strong> — browse every one of the ${(window.questionBank && questionBank.all ? questionBank.all.length : '300+')} questions against the real Focus blueprint: filter by section/topic/format/difficulty/status, read full text + explanations, keep per-question notes, and launch a practice set straight from the list.</li>
+        <li><strong>Error Log</strong> — a recovery workflow for every miss: leak patterns by mistake type/topic/format, tag why each one happened, mark reviewed, auto-healed when you answer correctly, and re-drill from the list.</li>
         <li><strong>Progress</strong> — XP, levels, badges, heatmap, backups.</li>
         <li>Your data lives in this browser (localStorage). Export backups from Progress.</li>
         <li><strong>Tip:</strong> answer in real exam timings; always review your error log.</li>
