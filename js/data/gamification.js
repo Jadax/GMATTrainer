@@ -7,12 +7,12 @@ const gamification = (function () {
 
   /* ---------- Level tiers: cumulative XP required to reach each level ---------- */
   const levels = [
-    { name: 'Novice', xp: 0,      icon: 'ðŸŒ±', color: '#78909C' },
-    { name: 'Apprentice', xp: 500, icon: 'ðŸ”§', color: '#0D47A1' },
-    { name: 'Adept', xp: 1500,  icon: 'âš”ï¸', color: '#1A237E' },
-    { name: 'Expert', xp: 3000,  icon: 'ðŸŽ“', color: '#6A1B9A' },
-    { name: 'Master', xp: 6000,  icon: 'ðŸ†', color: '#FF6F00' },
-    { name: '750+ Club', xp: 10000, icon: 'ðŸ’Ž', color: '#C62828' }
+    { name: 'Novice', xp: 0,      icon: '🌱', color: '#78909C' },
+    { name: 'Apprentice', xp: 500, icon: '🔧', color: '#0D47A1' },
+    { name: 'Adept', xp: 1500,  icon: '⚔️', color: '#1A237E' },
+    { name: 'Expert', xp: 3000,  icon: '🎓', color: '#6A1B9A' },
+    { name: 'Master', xp: 6000,  icon: '🏆', color: '#FF6F00' },
+    { name: '750+ Club', xp: 10000, icon: '💎', color: '#C62828' }
   ];
 
   /* ---------- XP economy (single source of truth) ---------- */
@@ -30,53 +30,53 @@ const gamification = (function () {
 
   /* ---------- Badges / achievements ---------- */
   const badges = [
-    { id: 'first_practice', name: 'First Steps', icon: 'ðŸŽ¯', desc: 'Answer your first practice question',
+    { id: 'first_practice', name: 'First Steps', icon: '🎯', desc: 'Answer your first practice question',
       check: function (s) { return s.stats.totalAnswered >= 1; } },
-    { id: 'ten_practice', name: 'Getting Going', icon: 'ðŸƒ', desc: 'Answer 10 practice questions',
+    { id: 'ten_practice', name: 'Getting Going', icon: '🏃', desc: 'Answer 10 practice questions',
       check: function (s) { return s.stats.totalAnswered >= 10; } },
-    { id: 'hundred_practice', name: 'Century Club', icon: 'ðŸ’¯', desc: 'Answer 100 practice questions',
+    { id: 'hundred_practice', name: 'Century Club', icon: '💯', desc: 'Answer 100 practice questions',
       check: function (s) { return s.stats.totalAnswered >= 100; } },
-    { id: 'first_perfect', name: 'Flawless', icon: 'âœ¨', desc: 'Score 100% on a practice set of 5+ questions',
+    { id: 'first_perfect', name: 'Flawless', icon: '✨', desc: 'Score 100% on a practice set of 5+ questions',
       check: function (s) { return s.stats.perfectSets >= 1; } },
-    { id: 'streak_3', name: 'On Fire', icon: 'ðŸ”¥', desc: 'Keep a 3-day study streak',
+    { id: 'streak_3', name: 'On Fire', icon: '🔥', desc: 'Keep a 3-day study streak',
       check: function (s) { return s.stats.bestStreak >= 3; } },
-    { id: 'streak_7', name: 'Unstoppable', icon: 'âš¡', desc: 'Keep a 7-day study streak',
+    { id: 'streak_7', name: 'Unstoppable', icon: '⚡', desc: 'Keep a 7-day study streak',
       check: function (s) { return s.stats.bestStreak >= 7; } },
-    { id: 'lesson_1', name: 'Curious Mind', icon: 'ðŸ“š', desc: 'Complete your first lesson',
+    { id: 'lesson_1', name: 'Curious Mind', icon: '📚', desc: 'Complete your first lesson',
       check: function (s) { return s.stats.lessonsCompleted >= 1; } },
-    { id: 'lesson_10', name: 'Scholar', icon: 'ðŸ›ï¸', desc: 'Complete 10 lessons',
+    { id: 'lesson_10', name: 'Scholar', icon: '🏛️', desc: 'Complete 10 lessons',
       check: function (s) { return s.stats.lessonsCompleted >= 10; } },
-    { id: 'all_lessons', name: 'Course Finisher', icon: 'ðŸŽ‰', desc: 'Complete every lesson in the curriculum',
+    { id: 'all_lessons', name: 'Course Finisher', icon: '🎉', desc: 'Complete every lesson in the curriculum',
       check: function (s) { return s.stats.lessonsCompleted >= curriculum.topics.length; } },
-    { id: 'error_analyst', name: 'Error Analyst', icon: 'ðŸ”', desc: 'Log 10 errors for review',
+    { id: 'error_analyst', name: 'Error Analyst', icon: '🔍', desc: 'Log 10 errors for review',
       check: function (s) { return s.stats.errorLogCount >= 10; } },
-    { id: 'sim_first', name: 'Test Taker', icon: 'â±ï¸', desc: 'Complete a full-length simulator',
+    { id: 'sim_first', name: 'Test Taker', icon: '⏱️', desc: 'Complete a full-length simulator',
       check: function (s) { return s.stats.simsCompleted >= 1; } },
-    { id: 'sim_three', name: 'Exam-Ready', icon: 'ðŸ“', desc: 'Complete 3 full-length simulators',
+    { id: 'sim_three', name: 'Exam-Ready', icon: '📝', desc: 'Complete 3 full-length simulators',
       check: function (s) { return s.stats.simsCompleted >= 3; } },
-    { id: 'hour_1', name: 'Hour Hand', icon: 'ðŸ•', desc: 'Study 1 hour total',
+    { id: 'hour_1', name: 'Hour Hand', icon: '🕐', desc: 'Study 1 hour total',
       check: function (s) { return s.stats.totalSeconds >= 3600; } },
-    { id: 'hour_5', name: 'Time Builder', icon: 'â°', desc: 'Study 5 hours total',
+    { id: 'hour_5', name: 'Time Builder', icon: '⏰', desc: 'Study 5 hours total',
       check: function (s) { return s.stats.totalSeconds >= 18000; } },
-    { id: 'hour_20', name: 'Marathon Mind', icon: 'ðŸ—“ï¸', desc: 'Study 20 hours total',
+    { id: 'hour_20', name: 'Marathon Mind', icon: '🗓️', desc: 'Study 20 hours total',
       check: function (s) { return s.stats.totalSeconds >= 72000; } },
-    { id: 'goal_1', name: 'Goal Keeper', icon: 'ðŸ§­', desc: 'Hit your daily goal once',
+    { id: 'goal_1', name: 'Goal Keeper', icon: '🧭', desc: 'Hit your daily goal once',
       check: function (s) { return s.stats.dailyGoalHits >= 1; } },
-    { id: 'goal_7', name: 'Consistent', icon: 'ðŸ“ˆ', desc: 'Hit your daily goal 7 times',
+    { id: 'goal_7', name: 'Consistent', icon: '📈', desc: 'Hit your daily goal 7 times',
       check: function (s) { return s.stats.dailyGoalHits >= 7; } },
-    { id: 'di_pro', name: 'Data Scientist', icon: 'ðŸ“Š', desc: 'Answer 25 Data Insights questions',
+    { id: 'di_pro', name: 'Data Scientist', icon: '📊', desc: 'Answer 25 Data Insights questions',
       check: function (s) { return s.stats.bySection.dataInsights.attempts >= 25; } },
-    { id: 'verbal_pro', name: 'Wordsmith', icon: 'ðŸ“–', desc: 'Answer 25 Verbal questions',
+    { id: 'verbal_pro', name: 'Wordsmith', icon: '📖', desc: 'Answer 25 Verbal questions',
       check: function (s) { return s.stats.bySection.verbal.attempts >= 25; } },
-    { id: 'quant_pro', name: 'Number Ninja', icon: 'ðŸ”¢', desc: 'Answer 25 Quant questions',
+    { id: 'quant_pro', name: 'Number Ninja', icon: '🔢', desc: 'Answer 25 Quant questions',
       check: function (s) { return s.stats.bySection.quant.attempts >= 25; } },
-    { id: 'hard_10', name: 'Hard Mode', icon: 'ðŸ—¡ï¸', desc: 'Answer 10 Hard questions correctly',
+    { id: 'hard_10', name: 'Hard Mode', icon: '🗡️', desc: 'Answer 10 Hard questions correctly',
       check: function (s) { return s.stats.hardCorrect >= 10; } },
-    { id: 'flashcard_10', name: 'Card Master', icon: 'ðŸƒ', desc: 'Review 10 flashcards',
+    { id: 'flashcard_10', name: 'Card Master', icon: '🃏', desc: 'Review 10 flashcards',
       check: function (s) { return s.stats.cardsReviewed >= 10; } },
-    { id: 'import_data', name: 'Archivist', icon: 'ðŸ—ƒï¸', desc: 'Import a progress backup',
+    { id: 'import_data', name: 'Archivist', icon: '🗃️', desc: 'Import a progress backup',
       check: function (s) { return s.stats.imports >= 1; } },
-    { id: 'night_owl', name: 'Night Owl', icon: 'ðŸ¦‰', desc: 'Answer a question after 10 p.m.',
+    { id: 'night_owl', name: 'Night Owl', icon: '🦉', desc: 'Answer a question after 10 p.m.',
       check: function (s) { return s.stats.nightAnswers >= 1; } }
   ];
 
@@ -96,20 +96,20 @@ const gamification = (function () {
 
   /* ---------- Projected score model (percentile-based heuristic) ---------- */
   /*
-    The GMAT Focus score ranges from 205â€“805. Section scores are 60â€“90 each.
+    The GMAT Focus score ranges from 205–805. Section scores are 60–90 each.
     We project a total from the average section accuracy using a smoothed,
     monotone mapping calibrated to realistic Focus Edition difficulty:
-    section accuracy 25% â†’ 60, 40% â†’ 65, 55% â†’ 70, 70% â†’ 75, 85% â†’ 80, 95% â†’ 85,
+    section accuracy 25% → 60, 40% → 65, 55% → 70, 70% → 75, 85% → 80, 95% → 85,
     then total = sum with a base and a "consistency" readjustment.
   */
   /* Focus Edition section scores are adaptive and computed by GMAC's
      algorithm, so any simulator mapping is a heuristic. We use a simple,
      transparent, monotone band calibration (documented + labeled as an
      estimate in the UI). Key points:
-       0%   â†’ 60    Â·    60% â†’ 72    Â·    85% â†’ 81
-       25%  â†’ 63    Â·    70% â†’ 75    Â·    92% â†’ 84
-       40%  â†’ 66    Â·    78% â†’ 78    Â·    96% â†’ 87
-       50%  â†’ 69    Â·                     100% â†’ 90
+       0%   → 60    ·    60% → 72    ·    85% → 81
+       25%  → 63    ·    70% → 75    ·    92% → 84
+       40%  → 66    ·    78% → 78    ·    96% → 87
+       50%  → 69    ·                     100% → 90
      Linear interpolation between anchor points. */
   var SECTION_SCORE_BANDS = [
     [0.00, 60], [0.25, 63], [0.40, 66], [0.50, 69],

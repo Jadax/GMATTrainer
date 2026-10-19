@@ -205,8 +205,8 @@ function addStudySession(questions, seconds, sectionKey) {
       day.goalHit = true;
       st.stats.dailyGoalHits += 1;
       grantXp(gamification.xpRules.dailyGoalHit);
-      addFeed('ðŸŽ¯', 'Daily goal reached!');
-      toast('Daily goal reached â€” great work!', 'success');
+      addFeed('🎯', 'Daily goal reached!');
+      toast('Daily goal reached — great work!', 'success');
     }
     recalcStreak(st);
   });
@@ -250,7 +250,7 @@ const SR_EF_MIN = 1.3;
 const SR_EF_MAX = 2.5;
 
 /** Spaced-repetition scheduling for a single question (SM-2-style ease factor).
- *  First success in 1 day, second in 6, then interval Ã— ease. Failures reset
+ *  First success in 1 day, second in 6, then interval × ease. Failures reset
  *  the streak and shrink the ease factor so the item returns sooner.
  */
 function _scheduleQuestion(st, qid, correct) {
@@ -337,12 +337,12 @@ function isDiCorrect(q, chosen) {
 
 /** Human-friendly display of a stored structured answer (for review screens). */
 function diAnswerDisplay(q, chosen) {
-  if (chosen === null || chosen === undefined) return 'â€”';
+  if (chosen === null || chosen === undefined) return '—';
   if (q.format === 'numeric') return String(chosen);
   if (q.format === 'twopart') {
     const lt = q.twopart.left.options[chosen.left];
     const rt = q.twopart.right.options[chosen.right];
-    return 'C1: ' + (lt !== undefined ? lt : '?') + ' Â· C2: ' + (rt !== undefined ? rt : '?');
+    return 'C1: ' + (lt !== undefined ? lt : '?') + ' · C2: ' + (rt !== undefined ? rt : '?');
   }
   if (q.format === 'table') {
     return 'Yes/No selections set';
@@ -354,7 +354,7 @@ function diAnswerDisplay(q, chosen) {
 function diCorrectDisplay(q) {
   if (q.format === 'numeric') return String(q.answer);
   if (q.format === 'twopart') {
-    return 'C1: ' + q.twopart.left.options[q.twopart.left.correct] + ' Â· C2: ' + q.twopart.right.options[q.twopart.right.correct];
+    return 'C1: ' + q.twopart.left.options[q.twopart.left.correct] + ' · C2: ' + q.twopart.right.options[q.twopart.right.correct];
   }
   if (q.format === 'table') return 'per-row Yes/No selections';
   return String.fromCharCode(65 + q.correct);
@@ -432,9 +432,9 @@ function migrateState(st) {
    adaptiveDifficultyFor(): easy/medium/hard from recent by-topic accuracy.
    --------------------------------------------------------------------- */
 const ADAPTIVE_BANDS = [
-  { min: 0.0, idx: 0 },  // low accuracy â†’ easy
-  { min: 0.62, idx: 1 }, // holding â†’ medium
-  { min: 0.82, idx: 2 }  // strong â†’ hard
+  { min: 0.0, idx: 0 },  // low accuracy → easy
+  { min: 0.62, idx: 1 }, // holding → medium
+  { min: 0.82, idx: 2 }  // strong → hard
 ];
 
 function adaptiveDifficultyFor(topicTag) {
@@ -575,7 +575,7 @@ function pushPerfectContext(st, correct) {
     if (st._perfectRun >= 5) {
       st.stats.perfectSets += 1;
       grantXp(gamification.xpRules.perfectSet, st);
-      addFeed('âœ¨', 'Perfect set â€” 5+ correct in a row!');
+      addFeed('✨', 'Perfect set — 5+ correct in a row!');
     }
   } else {
     st._perfectRun = 0;
@@ -683,13 +683,13 @@ function markTopicLearned(topicId) {
     t.masteredAt = Date.now();
     st.stats.lessonsCompleted += 1;
     grantXp(gamification.xpRules.lessonCompleted);
-    addFeed('ðŸ“˜', 'Lesson completed: ' + topicName(topicId));
+    addFeed('📘', 'Lesson completed: ' + topicName(topicId));
   });
   // spaced repetition schedule: due in 3, 7, 14 days
   scheduleRepetition(topicId);
 }
 
-/* TTP-style difficulty ladder: Quick Check â†’ Easy â†’ Medium â†’ Hard chapter tests.
+/* TTP-style difficulty ladder: Quick Check → Easy → Medium → Hard chapter tests.
    Pass mark = at least 80% of questions correct. Medium unlocks on Easy pass,
    Hard unlocks on Medium pass, and passing Hard finishes the chapter. */
 const CHAPTER_TEST_LEN = 6;
@@ -734,7 +734,7 @@ function recordChapterTest(topicId, difficulty, correct, total) {
     outcome.best = r.tests[difficulty].best;
     if (passed) {
       grantXp(gamification.xpRules.chapterTestPassed, st);
-      st.stats.history.unshift({ icon: 'ðŸ', text: 'Chapter test passed (' + difficulty + '): ' + topicName(topicId), ts: Date.now() });
+      st.stats.history.unshift({ icon: '🏁', text: 'Chapter test passed (' + difficulty + '): ' + topicName(topicId), ts: Date.now() });
       if (st.stats.history.length > 12) st.stats.history.length = 12;
     }
   });
@@ -746,7 +746,7 @@ function scheduleRepetition(topicId) {
     const t = st.learning[topicId] || (st.learning[topicId] = {});
     const reviews = (t.reviews || 0) + 1;
     t.reviews = reviews;
-    // growing review cycle: 3 â†’ 7 â†’ 14 â†’ 30 days
+    // growing review cycle: 3 → 7 → 14 → 30 days
     const steps = [3, 7, 14, 30];
     const days = steps[Math.min(reviews - 1, steps.length - 1)];
     t.due = Date.now() + days * 86400000;
@@ -754,7 +754,7 @@ function scheduleRepetition(topicId) {
 }
 
 /* ---------------------------------------------------------------------
-   Study phase model (Foundation â†’ Core â†’ Speed)
+   Study phase model (Foundation → Core → Speed)
    Mirrors the phase system used by serious drill trainers.
    --------------------------------------------------------------------- */
 function studyPhase() {
@@ -765,29 +765,29 @@ function studyPhase() {
     return {
       key: 'foundation',
       title: 'Foundation Phase',
-      icon: 'ðŸŒ±',
+      icon: '🌱',
       desc: 'Accuracy first. Learn the concepts before worrying about speed.',
       pct: totalQ < 50 ? Math.round(totalQ / 50 * 100) : Math.round(acc * 100),
-      next: 'Answer 50+ questions at â‰¥50% accuracy to advance.'
+      next: 'Answer 50+ questions at ≥50% accuracy to advance.'
     };
   }
   if (totalQ < 200 || acc < 0.7) {
     return {
       key: 'core',
       title: 'Core Phase',
-      icon: 'ðŸš€',
-      desc: 'Build reliable accuracy across topics. Review every miss â€” that is where gains live.',
+      icon: '🚀',
+      desc: 'Build reliable accuracy across topics. Review every miss — that is where gains live.',
       pct: totalQ < 200 ? Math.round(totalQ / 200 * 100) : Math.round(acc * 100),
-      next: 'Reach 200+ questions at â‰¥70% accuracy to unlock Speed.'
+      next: 'Reach 200+ questions at ≥70% accuracy to unlock Speed.'
     };
   }
   return {
     key: 'speed',
     title: 'Speed Phase',
-    icon: 'âš¡',
+    icon: '⚡',
     desc: 'Lock in accuracy against the clock. Focus on pacing and stamina with full-section sets.',
     pct: 100,
-    next: 'Maintain â‰¥70% accuracy while cutting time per question.'
+    next: 'Maintain ≥70% accuracy while cutting time per question.'
   };
 }
 
@@ -815,7 +815,7 @@ const PACE_TARGETS = {
 function paceClass(secs, target) {
   if (!target) return 'pace-ok';
   const r = secs / target;
-  if (r < 0.5) return secs < 10 ? 'pace-ok' : 'pace-fast';     // too fast â†’ maybe guessed
+  if (r < 0.5) return secs < 10 ? 'pace-ok' : 'pace-fast';     // too fast → maybe guessed
   if (r <= 1.2) return 'pace-ok';
   return 'pace-slow';
 }
@@ -881,7 +881,7 @@ var Q_TOPIC_LABELS = {
 };
 function qTopicLabel(tag) { return Q_TOPIC_LABELS[tag] || String(tag); }
 
-/* Section lookup built from the bank arrays â€” authoritative idâ†’section map. */
+/* Section lookup built from the bank arrays — authoritative id→section map. */
 var __qSectionIdx = null;
 function bankSectionOf(q) {
   if (!__qSectionIdx) {
@@ -895,7 +895,7 @@ function bankSectionOf(q) {
   return __qSectionIdx[q.id] || 'quant';
 }
 
-/* Non-mutating Fisherâ€“Yates: returns a shuffled copy. */
+/* Non-mutating Fisher–Yates: returns a shuffled copy. */
 function shuffleArr(arr) {
   var out = arr.slice();
   for (var i = out.length - 1; i > 0; i--) {
@@ -1018,12 +1018,12 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.14.0';
+const APP_VERSION = '1.15.0';
 
 const SECTION_META = {
-  quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: 'ðŸ”¢', count: 21, time: 2700 },
-  verbal: { key: 'verbal', name: 'Verbal Reasoning', short: 'Verbal', icon: 'ðŸ“–', count: 23, time: 2700 },
-  dataInsights: { key: 'dataInsights', name: 'Data Insights', short: 'Data Insights', icon: 'ðŸ“Š', count: 20, time: 2700 }
+  quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: '🔢', count: 21, time: 2700 },
+  verbal: { key: 'verbal', name: 'Verbal Reasoning', short: 'Verbal', icon: '📖', count: 23, time: 2700 },
+  dataInsights: { key: 'dataInsights', name: 'Data Insights', short: 'Data Insights', icon: '📊', count: 20, time: 2700 }
 };
 
 /* ---------------------------------------------------------------------

@@ -898,7 +898,7 @@ table.di-table {
 }
 
 /* =====================================================================
-   Lessons v1.1 â€” study-optimized layout, structure & typography
+   Lessons v1.1 — study-optimized layout, structure & typography
    All new rules are additive; shared classes (example-*, lesson-box-*,
    formula-table) used by practice/simulator/analytics are tuned only
    under the .lesson-container scope.
