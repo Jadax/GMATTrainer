@@ -707,7 +707,10 @@ const curriculum = (function () {
       { term: 'Odd power sign', def: 'a negative base raised to an odd power stays negative' },
       { term: 'Function evaluation', def: 'f(input) replaces every occurrence of the variable in the rule' },
       { term: 'Additive linearity', def: 'f(a + b) = f(a) + f(b) ⟺ f(x) = cx for some constant c (no constant term)' },
-      { term: 'Last-digit cycle', def: 'powers of 7 cycle 7, 9, 3, 1 every 4 steps; reduce the exponent mod 4' }
+      { term: 'Last-digit cycle', def: 'powers of 7 cycle 7, 9, 3, 1 every 4 steps; reduce the exponent mod 4' },
+      { term: 'Radical rules', def: '√(ab) = √a·√b and √(a/b) = √a/√b, but √(a + b) ≠ √a + √b; simplify radicals by extracting perfect-square factors (√72 = 6√2)' },
+      { term: 'Composition', def: 'f(g(x)) feeds the OUTPUT of g into f; f∘g ≠ g∘f in general — check order before substituting' },
+      { term: 'Radicand domain', def: 'even roots require non-negative inputs: √f(x) defined ⟺ f(x) ≥ 0; x^(m/n) as a real number additionally demands x > 0 when n is even' }
     ],
     strategies: [
       'Reduce every base to a prime power before doing anything else; this makes comparisons mechanical.',
@@ -735,7 +738,11 @@ const curriculum = (function () {
       'Asserting f(x) = 2x + 3 satisfies additivity — the +3 doubles in f(a) + f(b).',
       'Mistaking 16^(3/4) for 16 × (3/4) instead of (⁴√16)³ = 2³ = 8.',
       'In exponent systems, erroring on which difference attaches to which variable pair.',
-      'Reducing a cycle by 4 but mis-indexing the remainder: exponent 2023 ≡ 3 mod 4 hits the THIRD cycle entry, not the first.'
+      'Reducing a cycle by 4 but mis-indexing the remainder: exponent 2023 ≡ 3 mod 4 hits the THIRD cycle entry, not the first.',
+      'Breaking radicals across addition (√(9+16) tried as 3 + 4) — radical rules cover products and quotients only.',
+      'Forgetting perfect-square extraction: leaving √72 unsimplified or wrongly writing it as 36·√2 minus the √.',
+      'Evaluating f(g(x)) backwards: to find f∘g(3), compute g(3) first — substituting into f first poisons every later step.',
+      'Ignoring the domain: √(x−4) is real only for x ≥ 4, and answer choices testing x < 4 must be rejected even if they solve the squared equation.'
     ],
     examples: examplesFor([
       { q: 'What is 2⁵ × 2³ ÷ 2⁴?',
@@ -812,7 +819,10 @@ const curriculum = (function () {
       { term: 'Head start', def: 'gap = first_speed × (time before the second starts)' },
       { term: 'Unit conversion', def: 'mph × hours = miles; convert minutes to hours (÷ 60) before multiplying' },
       { term: 'Two-segment travel', def: 't₁ + t₂ = (d₁/r₁) + (d₂/r₂) = total time' },
-      { term: 'Net pump rate', def: 'fill rate minus empty rate; 1/4 − 1/6 = 1/12 tank per hour → 12 hours' }
+      { term: 'Net pump rate', def: 'fill rate minus empty rate; 1/4 − 1/6 = 1/12 tank per hour → 12 hours' },
+      { term: 'Age translation', def: 'anchor every age to a NOW variable: "in k years" adds k to every person; "k years ago" subtracts k; translate age ratios into two equations (now, and at the shifted time)' },
+      { term: 'Commission', def: 'earnings = base + rate × sales; with a cutoff, commission applies to (sales − cutoff) only; blended rate = total commission ÷ total sales' },
+      { term: 'Successive salary change', def: 'apply multipliers in order: +10% then −10% multiplies 1.10 × 0.90 = 0.99, a net −1% in either order' }
     ],
     strategies: [
       'Convert every work statement into a rate (fraction of job per unit time) before combining.',
@@ -826,7 +836,9 @@ const curriculum = (function () {
       'For mixture strength, sanity-check the target concentration sits between the two source concentrations.',
       'Set the shared unknown to the total job = 1 (or to the LCM of the times) to avoid fractions.',
       'Re-read the question for the exact requested quantity: distance traveled by which car, time until meeting, or quantity of pure acid added.',
-      'Reject negative or absurdings (negative times, speeds over 2× typical) immediately and re-solve.'
+      'Reject negative or absurdings (negative times, speeds over 2× typical) immediately and re-solve.',
+      'Age setups use one NOW anchor: name today\'s ages x and y; then "in k years" rewrites the future condition as x + k relative to y + k. Verify with the constant difference (x − y never changes).',
+      'Commission setups need the rate EXPLICITLY attached to its base (total sales vs. sales above the cutoff); write earnings = base + rate × applicable sales before any arithmetic.'
     ],
     traps: [
       'Adding the TIMES to combine work: two workers at 4 h and 6 h do NOT finish in 10 h — add the rates (1/4 + 1/6 = 5/12) and then invert: 12/5 = 2.4 hours for the pair.',
@@ -840,7 +852,12 @@ const curriculum = (function () {
       'Using the full-job time on a partial-job question: the remaining 2/3 of a job done at 1/10 per hour takes 20/3 h, not the full 10 h.',
       'Setting the head-start window backwards — the gap is covered only after the second traveler departs.',
       'Sign slips on fill-versus-empty pumps: a hose that empties the tank must reduce the fill rate, not increase it.',
-      'For two travelers to a shared meeting point, adding both total trip distances instead of the initial separation.'
+      'For two travelers to a shared meeting point, adding both total trip distances instead of the initial separation.',
+      'In age problems, shifting only ONE person across "in k years": the time shift multiplies every person in the relation, so x + m = k(y + m) needs both sides shifted.',
+      'Solving age RATIO setups without converting ratios to an anchor variable (e.g., 5:3 becomes 5t and 3t), which produces the classic wrong-base slip.',
+      'Forgetting that age DIFFERENCES are constant while age RATIOS change every year — a difference anchors the check of any age solution.',
+      'In commission problems, applying the rate to the FULL sales amount even though a stated cutoff (or a graduated second rate) restricts it to the excess.',
+      'Ignoring the base salary as part of "total earnings" or confusing total commission with the blended rate: blended rate = commission ÷ sales, always below the marginal rate when a base exists.'
     ],
     examples: examplesFor([
       { q: 'A pump fills a tank in 4 hours; a hose empties it in 6 hours. With both running, how long does it take to fill the tank?',
@@ -879,6 +896,21 @@ const curriculum = (function () {
         o: ['6⅔ h', '6 h', '5 h', '7 h', '8 h'],
         a: 'A',
         r: 'Combined rate = 1/10 + 1/15 = 3/30 + 2/30 = 5/30 = 1/6. In 2 hours they complete 2 × 1/6 = 1/3, leaving 2/3. A alone needs (2/3) ÷ (1/10) = (2/3) × 10 = 20/3 = 6⅔ hours. Answer 20/3 ≈ 6.67 → 6⅔ h. The 6 h option ignores the ⅔.'
+      },
+      { q: 'Maria is 12 years older than her brother Luis. In 4 years, Maria will be twice as old as Luis. How old is Luis today?',
+        o: ['4', '8', '12', '14', '16'],
+        a: 'B',
+        r: 'Let Luis = L now, Maria = L + 12. In 4 years: L + 12 + 4 = 2(L + 4) → L + 16 = 2L + 8 → L = 8. Verify: today 8 and 20 (difference 12 ✓); in 4 years 12 and 24 — twice ✓. The 16 option shifts the anchor the wrong direction; 4 forgets to shift BOTH ages.'
+      },
+      { q: 'A salesperson earns a base of $1,200 per month plus 8% commission on the portion of sales above $10,000. Last month she earned $4,000. What were her total sales?',
+        o: ['$35,000', '$40,000', '$45,000', '$50,000', '$32,500'],
+        a: 'C',
+        r: 'Commission = 4,000 − 1,200 = 2,800, which is 8% of the amount ABOVE the cutoff: excess = 2,800 ÷ 0.08 = 35,000. Total sales = 10,000 + 35,000 = $45,000. Choosing $35,000 (A) reports only the over-cutoff portion — the exact planted trap.'
+      },
+      { q: 'A broker\'s pay is 6% on the first $50,000 of a month\'s sales and 10% on everything above that. On sales of $80,000, what is the total commission?',
+        o: ['$4,800', '$5,000', '$5,400', '$6,000', '$7,200'],
+        a: 'D',
+        r: 'First tier: 0.06 × 50,000 = 3,000. Excess tier: 0.10 × (80,000 − 50,000) = 3,000. Total = $6,000. Blended-rate check: 6,000 ÷ 80,000 = 7.5%, between 6% and 10% ✓. $4,800 applies 6% to everything; $7,200 applies 10% to the entire amount (ignoring the cheaper first tier).'
       }
     ]),
     check: [
@@ -886,7 +918,10 @@ const curriculum = (function () {
       { q: 'A does a job in 2 h, B in 2 h. Combined rate (jobs per hour) = ?', o: ['1/4', '1/2', '1', '2', '4'], a: 2 },
       { q: '10 L of 50% solution mixed with 10 L of 30% solution → final concentration?', o: ['30%', '38%', '40%', '45%', '50%'], a: 2 },
       { q: 'Travelers moving toward each other at 30 and 50 mph, 160 miles apart → meet in?', o: ['2 h', '3 h', '4 h', '5 h', '8 h'], a: 0 },
-      { q: 'Speeds are in the ratio 3:4 over the same time. Distances are in the ratio?', o: ['4:3', '3:4', '1:1', '9:16', '16:9'], a: 1 }
+      { q: 'Speeds are in the ratio 3:4 over the same time. Distances are in the ratio?', o: ['4:3', '3:4', '1:1', '9:16', '16:9'], a: 1 },
+      { q: 'A father is 30 when his son is 5. Their age DIFFERENCE in 10 years will be?', o: ['35', '25', '40', '15', '30'], a: 1 },
+      { q: 'Base $500 + 5% of all sales; sales $20,000 → total pay?', o: ['$1,000', '$1,500', '$2,000', '$1,250', '$500'], a: 1 },
+      { q: 'In an age equation "in 6 years," you add 6 to:', o: ['the older person only', 'the younger only', 'both sides\' ages', 'the difference', 'none'], a: 2 }
     ]
   }),
 
@@ -1102,6 +1137,122 @@ const curriculum = (function () {
       { q: 'Range of {5, 9, 3, 12} = ?', o: ['6', '7', '8', '9', '12'], a: 3 },
       { q: 'Two fair coins are flipped. P(at least one heads) = ?', o: ['1/4', '1/2', '3/4', '1/3', '2/3'], a: 2 },
       { q: 'If the total of 25 values is 200, the mean = ?', o: ['4', '6', '8', '10', '12'], a: 2 }
+    ]
+  }),
+
+  /* ================================================================
+     10b. COMBINATORICS & COUNTING (intermediate)
+     ================================================================ */
+  topic('quant-counting', 'Combinatorics & Counting', 'quant', 'intermediate', {
+    overview: [
+      'Counting questions ask "how many ways..." and reward a calm, systematic approach over memorized formulas. Almost every item reduces to one of three ideas: the multiplication principle, permutations (order matters), or combinations (order does not).',
+      'The multiplication principle is the foundation: if a task can be done in a independent stages with b choices per stage, there are a × b total outcomes. A menu with 4 mains and 3 sides gives 12 meals; a 6-character code where each slot has 10 options gives 10⁶ codes.',
+      'Permutations count arrangements of n distinct things taken r at a time: nPr = n!/(n−r)!. Ask "how many 3-person committees have a distinct president, secretary, and treasurer?" — the roles make order matter, so 8 people give 8P3 = 336.',
+      'Combinations ignore order: nCr = n!/(r!(n−r)!). "How many 5-player teams from 12 players?" — a lineup with no roles has no order, so 12C5 = 792. Every permutation of the same selected people collapses to one combination, which is why nCr = nPr/r!.',
+      'The GMAT loves the overlap blend: count arrangements of items where some are identical (see "arrange the letters of BOOK" items), or selections "with at least one X" — usually best counted as total minus none-X.',
+      'Complement counting is the greatest single time-saver: "probability of at least one girl" = 1 − P(all boys). Enumerating the direct cases invites errors; the complement usually needs one clean calculation.',
+      'Circular arrangements fix one person to anchor the rotation: n people around a table give (n−1)! arrangements, not n!, because rotations of the same seating are identical. It appears rarely, but when it appears, the anchor idea is the whole question.',
+      'Constraints are handled by slotting: seat people "not adjacent" by arranging the gap-makers first, then choose positions. "Two specific people do NOT sit next to each other" = total − adjacent; compute the adjacent count directly rather than logic-ing around it.',
+      'Because factorials explode, always simplify nCr/nPr before full evaluation: 10C3 = (10 × 9 × 8)/(3 × 2 × 1) = 120 never needs the 10!−7! dividing. Reducibility is how you avoid arithmetic slips under time pressure.'
+    ],
+    formulas: [
+      { term: 'Multiplication principle', def: 'Stages multiply: n stages with k₁, k₂, … kₙ options give k₁ × k₂ × … × kₙ outcomes.' },
+      { term: 'Permutation', def: 'nPr = n!/(n−r)! — order matters (roles, positions, sequences).' },
+      { term: 'Combination', def: 'nCr = n!/(r!·(n−r)!) — order does not matter (teams, committees without roles).' },
+      { term: 'Relation', def: 'nPr = r! × nCr; every unrordered selection has r! orderings.' },
+      { term: 'Complement rule', def: 'P(at least one success) = 1 − P(no successes); count "at least one" as total minus zero-case.' },
+      { term: 'Identical items', def: 'Arrangements of n items with repeated kinds: n!/(a!·b!·…) divides out swaps of identical items.' },
+      { term: 'Circular arrangements', def: '(n−1)! seatings for n people around a round table (fix one person as the anchor).' },
+      { term: 'Factorial', def: 'n! = n × (n−1) × … × 1, with 0! = 1. 5! = 120, 6! = 720, 7! = 5,040.' }
+    ],
+    strategies: [
+      'Ask the deciding question first: does swapping any two selected items produce a different outcome? Yes → permutation or role-slotting; No → combination.',
+      'Slot method for roles: fill each role one at a time (ID president first, then any others) and multiply.'
+    ],
+    traps: [
+      'Multiplying stages that are NOT independent (picking first changes what the second stage can be) — e.g. "draw two balls from a pool without replacement" shrinks the second stage.',
+      'Using nCr where roles exist: a "committee of 2 with exactly 1 president" is NOT a plain 8C2 question.',
+      'Dividing when combining complementary cases instead of adding: "exactly one pair" counts every pairing twice if you just multiply.'
+    ],
+    examples: examplesFor([
+      { q: 'In how many different ways can the letters of the word GAME be arranged?',
+        o: ['12', '16', '24', '18', '32'],
+        a: 'C',
+        r: '4 distinct letters: 4! = 4 × 3 × 2 × 1 = 24. The 12 option confuses with a circular structure; the 16 option multiplies 2⁴ instead of factorial.' },
+      { q: 'From a club of 9 members, how many ways can a president and a separate treasurer be chosen?',
+        o: ['64', '72', '81', '36', '144'],
+        a: 'B',
+        r: 'Distinct roles → order matters → permutation: 9 × 8 = 72. The 36 option is 9C2 (order ignored); 81 (9²) assumes the same member can hold both roles.' },
+      { q: 'A lock-CODE consists of exactly 3 letters chosen from A-E with NO repeats, and order matters. How many codes are possible?',
+        o: ['20', '60', '120', '125', '216'],
+        a: 'B',
+        r: 'Permutation without replacement: 5P3 = 5 × 4 × 3 = 60. The 125 and 216 options assume replacement or more letters; 20 is 5C3 (order ignored).' }
+    ]),
+    check: [
+      { q: 'How many 2-person teams can be chosen from 10 people (no roles)?', o: ['90', '45', '100', '20', '80'], a: 1 },
+      { q: 'nPr/nCr equals:', o: ['n!', 'r!', 'n−r', 'n/r', 'r/n'], a: 1 },
+      { q: 'P(at least one 6 in 2 dice rolls) =', o: ['1/12', '11/36', '1/36', '1/6', '5/36'], a: 1 },
+      { q: '3 people around a round table (rotations same) can sit in:', o: ['6', '3', '2', '9', '12'], a: 2 },
+      { q: 'Arrangements of BOOK letters (2 O identical):', o: ['24', '12', '16', '8', '96'], a: 1 }
+    ]
+  }),
+
+  /* ================================================================
+     10c. SETS & VENN DIAGRAMS (intermediate)
+     ================================================================ */
+  topic('quant-sets', 'Sets, Venn Diagrams & Groups', 'quant', 'intermediate', {
+    overview: [
+      'Set questions sort a universe into overlapping groups. The Venn formula for two groups is the whole lesson in miniature: |A ∪ B| = |A| + |B| − |A ∩ B| — the union count double-counts overlap, so you subtract the intersection once.',
+      'The three-group formula adds and subtracts pairwise overlaps twice over, forcing a second add-back: |A ∪ B ∪ C| = A + B + C − (AB + BC + CA) + ABC. Memorize the SAWBCC shape: minus all three pair-sums, plus the triple.',
+      'Preferred workflow on hard items: build a region-visited map, not one number. For 2 sets draw exactly 4 regions (both, only-A, only-B, neither) and write an equation per region; confusing "in A and B" with "in BOTH only" is the #1 trap.',
+      '"Only A" versus "in A" is the critical distinction. |A| counts everyone including the both-region. If a question says "exactly one of the two hobbies," your count must exclude the community region; the sum-formula needs the overlapping count instead.',
+      'Complement and quotient phrasing shrouds easy numbers: "20% fail both tests" is the neither-region; "three-fifths of the non-smokers exercise" must be rewritten so exercises-in-and-out is isolated before any formula is applied.',
+      'Dictionary conversions pay: a ratio 3:2:1 split across regions total 120 → regions 60/40/20; "X exceeds twice Y by 4" → X = 2Y + 4; "every student who plays soccer also plays tennis" → soccer ⊆ tennis (soccer-alone region is empty).',
+      'Two-Statement Venn strategy: if statements define only totals + overlap of two groups, the formula finishes in one line; if they define only-X and only-Y counts and neither, use the 4-region system of linear equations. The right representation INSTANTLY collapses the algebra.',
+      'Word problems love the mixture of sets with percentages: normalize by taking the total population to 100 so every percentage becomes a headcount, then place everyone in exactly one region before solving.',
+      'Hard versions plant an impossible constraint: sometimes "the set total equals 30" cannot coexist with "overlap is 12 and neither is 8" — recognizing the inconsistency (union too big) ends the question in 20 seconds and guards against Data-Insights-style dead ends.'
+    ],
+    formulas: [
+      { term: 'Two-set union', def: '|A ∪ B| = |A| + |B| − |A ∩ B|. Overlap is double-counted by the sum, so subtract it once.' },
+      { term: 'Three-set union', def: '|A ∪ B ∪ C| = |A| + |B| + |C| − |AB| − |BC| − |CA| + |ABC|.' },
+      { term: 'Exactly two', def: '(only AB) + (only BC) + (only CA) — where summing pairwise intersections counts the triple-overlap people three times.' },
+      { term: 'Diff formula', def: '|A only| = |A| − |A ∩ B| (two sets); |A only| = |A| − |AB| − |CA| + |ABC| (three sets).' },
+      { term: 'De Morgan', def: 'not(A ∪ B) = NOT-A ∩ NOT-B and not(A ∩ B) = NOT-A ∪ NOT-B — his rules flip AND/OR under negation.' },
+      { term: 'Complement', def: 'Neither = Total − |A ∪ B|; a region count can never be negative — a negative result proves an assumption wrong.' },
+      { term: 'Region equation skeleton (2 sets)', def: 'Total = OnlyA + OnlyB + Both + Neither; each |A| = OnlyA + Both, etc.' }
+    ],
+    strategies: [
+      'Draw the map, not the formula: label every · region-count, then convert each sentence into one equation. The formula shortcut applies only when totals + overlaps are the ONLY given numbers.',
+      'Set the population to 100 when the question speaks in percentages; convert to headcounts first and place servants in exactly one region.'
+    ],
+    traps: [
+      'Using the plain union formula for an "exactly one" or "only X" count — the double-count corrections differ.',
+      'Assuming |A ∩ B| ≥ anything from the statement pic: for two sets |A| + |B| − Total is the MINIMUM possible overlap, not the given one.',
+      'Counting the triple-overlap people three times when using pairwise given counts — the "+ ABC" term in the three-set formula exists precisely to correct this.',
+      'Letting "not both" mean the same as "neither": NOT(A AND B) still includes people in exactly one group.',
+      'Substituting percentages once when they are of DIFFERENT bases (percent of members who swim vs percent of non-swimmers who swim).',
+      'Assuming disjoint groups in a forced problem structure: unless the sentence says mutually exclusive, leave room for overlap.'
+    ],
+    examples: examplesFor([
+      { q: 'In a class of 30, 18 study Spanish, 12 study French, and 6 study BOTH. How many study NEITHER language?',
+        o: ['0', '2', '4', '6', '8'],
+        a: 'D',
+        r: 'Union = 18 + 12 − 6 = 24, so neither = 30 − 24 = 6. Option (C) 4 subtracts the overlap twice; (E) 8 forgets to subtract the overlap at all (30 − 18 − 12 = 0 → not listed).' },
+      { q: 'Every member plays at least one of chess (C), bridge (B). If 40% play C, 55% play B, and 15% play both, what percent play exactly one?',
+        o: ['55%', '65%', '80%', '95%', '70%'],
+        a: 'B',
+        r: 'Exactly one = union − both = (40 + 55 − 15) − 15 = 80 − 15 = 65%. 60 counts the union MINUS only-one of the groups; 95 wrongly adds without subtracting overlap; 70 treats 15 as 25.' },
+      { q: 'A survey of 100 people: 60 own a phone, 70 own a laptop, 20 own NEITHER. How many own BOTH?',
+        o: ['10', '20', '30', '40', '50'],
+        a: 'E',
+        r: 'Union = 100 − 20 = 80, so both = 60 + 70 − 80 = 50. Picking the neither-20 (B) or phone-laptop diff (C/D) misses that the both-region feeds every formula.' }
+    ]),
+    check: [
+      { q: '|A ∪ B| with |A|=15, |B|=10, |A∩B|=4 is:', o: ['21', '25', '19', '29', '18'], a: 0 },
+      { q: '"Exactly one of A or B" equals:', o: ['|A∪B| + |A∩B|', '|A∪B| − |A∩B|', '|A| + |B|', '|A∩B|', 'Total − |A∪B|'], a: 1 },
+      { q: 'Neither-region formula:', o: ['Total + union', 'Total − union', 'union − total', 'Total − intersection', 'intersection'], a: 1 },
+      { q: 'If |A| + |B| − Total = 3, the overlap is:', o: ['at most 3', 'at least 3', 'exactly 3', '0', 'cannot tell'], a: 1 },
+      { q: 'Three-set union needs the +|ABC| term because:', o: ['unions shrink', 'pairwise sums triple-count the core', 'sets are disjoint', 'complements add', 'no reason'], a: 1 }
     ]
   }),
 
@@ -1893,6 +2044,61 @@ const curriculum = (function () {
       { q: '"Event B occurred after event A, therefore A caused B" exemplifies the:', o: ['circular reasoning flaw', 'post hoc (after this, therefore because of this) flaw', 'false dilemma flaw', 'sample-size flaw', 'appeal to authority flaw'], a: 1 },
       { q: 'Ninety percent of golf-club members favor a tax, so the author concludes the whole public favors it. The flaw is:', o: ['generalizing from an unrepresentative sample', 'reversing cause and effect', 'posing a false either-or', 'relying on a vague authority', 'attacking the author'], a: 0 },
       { q: 'Rather than naming the logical error, a weak flaw answer tends to:', o: ['be unusually precise', 'restate the conclusion or merely echo the topic', 'supply new evidence', 'define the terms', 'shorten the argument'], a: 1 }
+    ]
+  }),
+
+  /* CR: Explain the Paradox / Resolve the Discrepancy */
+  topic('verbal-cr-paradox', 'Critical Reasoning: Explain the Paradox & Resolve Discrepancies', 'verbal', 'intermediate', {
+    overview: [
+      'Paradox questions hand you two facts that appear to contradict each other — "sales of premium tea doubled while coffee consumption crashed, yet TeaHouse revenues fell." Your job is not the usual argument anatomy: there is often no conclusion to find. The task is to pick the answer that makes BOTH facts simultaneously true.',
+      'The right answer never disputes a given fact. Paradox answers are outside knowledge or a mechanism, and they must be compatible with every stated premise. An option that explains away one fact by denying the other is by definition wrong on this question type.',
+      'Vocabulary flags are constant: "which of the following, if true, would help EXPLAIN this result," "RESOLVES the apparent paradox," "most helps to account for the discrepancy." When you see them, shift modes immediately — no evidence-weighing, no assumption-negation, just reconciliation.',
+      'The percentage-versus-absolute-number mechanism is the single most common paradox key on the GMAT. A percentage can collapse while the absolute quantity grows: "new members tripled, yet the share of dissenting members rose from 10% to 25%" can coexist with the dissent count rising — or falling — because the base moved.',
+      'Another heavy-rotation mechanism is population or sample composition shift: the buyers changed, the price point changed, the geographic mix changed. A new average can rise or fall without any individual behavior changing if the mix behind the average changed.',
+      'Time-lag and definitional mismatches explain many apparent contradictions: revenues counted in one fiscal year versus shipments booked in another; "workers" versus "full-time workers"; units produced versus units sold. Scan the wording of BOTH facts for definitions that do not meet in the middle.',
+      'The elimination standard is unusually severe here. Any answer that (a) denies one of the two facts, (b) makes the paradox worse, or (c) is irrelevant to the gap between them is out — and the correct answer often looks boring: a low-key logistics, accounting, or definitional detail.',
+      'Strength calibration: "most helps to explain" needs the mechanism that explains the WHOLE gap, not merely a fraction of it. If two candidates both resolve the contradiction, favor the one that precisely covers the direction and size of both facts.'
+    ],
+    formulas: [
+      { term: 'Reconciliation test', def: 'The winning answer, inserted as true, must keep Fact 1 true, keep Fact 2 true, and dissolve the surprise between them.' },
+      { term: 'Percent vs. count', def: 'A rising share and a falling count (or vice versa) coexist when the base changes. Never treat "% of X" and "number of X" as the same fact.' },
+      { term: 'Composition shift', def: 'Averages and rates reflect mix: if the group behind the measure changed, every aggregate can move while individuals stand still.' },
+      { term: 'Two definitions', def: 'Surfacing a mismatch — booked vs. delivered, catalog price vs. selling price — frequently resolves unit-based paradoxes.' },
+      { term: 'Timing gap', def: 'Cause and effect measured in different periods can appear contradictory; a lag closes the loop.' }
+    ],
+    strategies: [
+      'Say the two facts to yourself in one sentence: "Y, and yet Z." The gap word is your target; the answer must attack exactly that hinge.',
+      'Reject any answer whose first clause concedes or denies one fact — the paradox format freezes the premises; a reconciling answer works AROUND them.',
+      'Prefer concrete world mechanisms (supply schedules, definitions, lags, mixed populations) over "management was clever" style answers that do no causal work.'
+    ],
+    traps: [
+      'Choosing the answer that strengthens the NARRATIVE of one fact while quietly contradicting the other.',
+      'Solving a conclusion question by habit: hunting for flaws or assumptions when the question simply asks how both facts can be true.',
+      'Picking an explanation with the right topic words but the wrong direction — discounting resolves "low sales," not "high sales," scenarios.',
+      'Falling for answers that explain a DIFFERENT measure than the one in the facts (explains profit when the paradox is about unit sales).',
+      'Assuming paradox answers need to be surprising themselves: the winning mechanism is usually mundane.',
+      'Over-applying one mechanism to both facts and creating a new contradiction in the answer.'
+    ],
+    examples: examplesFor([
+      { q: 'TrendCo sells only online. Last quarter, TrendCo cut its advertising budget by 40 percent, yet TrendCo\'s unit sales rose. Which of the following, if true, most helps to explain this result?',
+        o: ['A competitor running print ads left the market.', 'TrendCo\'s products won a national innovation award.', 'Online ad prices rose 5 percent.', 'A rival launched a cheaper product.', 'TrendCo hired two new designers.'],
+        a: 'B',
+        r: 'The award is free publicity — demand can rise with less paid advertising. Option (A) mentions a competitor leaving the market but names print ads, irrelevant to an online-only seller; (C) and (E) do not touch demand direction; (D) should depress TrendCo sales.' },
+      { q: 'The number of magazine subscribers fell 10 percent, yet the magazine\'s subscription revenue rose. Which one most helps to RESOLVE the discrepancy?',
+        o: ['The magazine raised annual rates by 30 percent.', 'Paper costs rose.', 'Two rival magazines failed.', 'The magazine gave away free copies.', 'Staff expenses fell.'],
+        a: 'A',
+        r: 'A 30% price increase against a 10% customer drop yields higher revenue (1.3 × 0.9 = 1.17 of the old base). Costs and rivals do not explain SUBSCRIPTION revenue; free copies reduce revenue.' },
+      { q: 'In Carland, the number of traffic accidents fell this year even though the number of licensed drivers and total miles driven both rose. Which of the following, if true, LEAST helps to explain the drop in accidents?',
+        o: ['Speed cameras were installed on major corridors.', 'All new cars must include automatic braking this year.', 'Emergency-response times to accidents improved sharply.', 'The number of days with severe weather fell sharply.', 'Completion rates for driver-education courses doubled.'],
+        a: 'C',
+        r: 'Better emergency response reduces deaths and injuries AFTER a crash, but it does nothing to prevent the accident itself — so it leaves the accident COUNT untouched. All other options plausibly reduce how many collisions occur: camera deterrence, braking assists, less-icy roads, and better-trained drivers.' }
+    ]),
+    check: [
+      { q: 'In paradox questions the correct answer must:', o: ['deny one fact', 'keep both facts true', 'find the conclusion', 'name an assumption', 'strengthen the conclusion'], a: 1 },
+      { q: '"Unit sales fell although the company cut its prices" is best resolved by:', o: ['demand soared', 'competitors cut prices further and the whole market shrank', 'costs fell', 'quality fell', 'customers vanished'], a: 1 },
+      { q: 'A rising share with a falling count is possible when:', o: ['the population shrank enough', 'rounding', 'impossible', 'definitions match', 'the sample grew'], a: 0 },
+      { q: 'Which most weakens a paradox answer?', o: ['mundane detail', 'helps only one fact', 'outside knowledge', 'composition change', 'definitional fix'], a: 1 },
+      { q: 'Paradox stems typically say:', o: ['"if true, most seriously weakens "', '"most helps to explain the result"', '"find the assumption"', '"parallels the reasoning"', '"Most strongly supports"'], a: 1 }
     ]
   }),
 
@@ -3368,12 +3574,14 @@ const curriculum = (function () {
     'quant-alg': 'algebra', 'quant-ineq': 'algebra',
     'quant-exponents': 'algebra', 'quant-wordprobs': 'wordproblems',
     'quant-mixavg': 'wordproblems', 'quant-statprob': 'stats',
+    'quant-counting': 'counting', 'quant-sets': 'sets',
     'quant-dstonly': 'ds',
     // verbal
     'verbal-rc-main': 'rc', 'verbal-rc-detail': 'rc',
     'verbal-rc-structure': 'rc', 'verbal-rc-advanced': 'rc',
     'verbal-cr-basics': 'cr', 'verbal-cr-strengthen': 'cr',
     'verbal-cr-other': 'cr', 'verbal-cr-advanced': 'cr',
+    'verbal-cr-paradox': 'cr',
     // data insights
     'di-ds': 'ds', 'di-msr': 'ms', 'di-table': 'ta',
     'di-graphics': 'gi', 'di-twopart': 'tp'

@@ -1018,7 +1018,7 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.13.0';
+const APP_VERSION = '1.14.0';
 
 const SECTION_META = {
   quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: 'ðŸ”¢', count: 21, time: 2700 },
