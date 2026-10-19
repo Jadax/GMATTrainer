@@ -47,13 +47,14 @@ function renderAnalytics(el) {
   }
   const barData = days.slice(0, 14); // two weeks fits better
 
-  // Accuracy trend: last ~10 practice sets
+  // Accuracy trend: last ~10 practice sets + current line
   const trend = [];
   const recent = stats.history.filter(h => h.text && h.text.indexOf('practice set') !== -1).slice(0, 10).reverse().map(h => {
     const m = h.text.match(/\((\d+)%\)/);
     return m ? +m[1] : 50;
   });
-  trend.push({ value: acc });
+  recent.forEach(v => trend.push(v));
+  trend.push(acc);
 
   // Section accuracy
   const secColors = { quant: '#0D47A1', verbal: '#6A1B9A', dataInsights: '#FF6F00' };
@@ -192,17 +193,12 @@ function renderAnalytics(el) {
 }
 
 function tipLabel(t) {
-  const map = {
-    arithmetic: 'Arithmetic', algebra: 'Algebra', wordproblems: 'Word Problems',
-    numbers: 'Number Properties', stats: 'Statistics', rc: 'Reading Comp',
-    cr: 'Critical Reasoning', ds: 'Data Sufficiency', ms: 'Multi-Source',
-    ta: 'Table Analysis', gi: 'Graphics Interp', tp: 'Two-Part Analysis'
-  };
-  return map[t] || t;
+  return qTopicLabel(t);
 }
 
 function trendBarLine(values, cur) {
-  const avg = values.length ? Math.round(values.reduce((s, v) => s + v, 0) / values.length) : 0;
+  const nums = values.filter(v => typeof v === 'number');
+  const avg = nums.length ? Math.round(nums.reduce((s, v) => s + v, 0) / nums.length) : 0;
   return `
     <div class="row row-wrap" style="gap:.75rem;align-items:center">
       <div class="text-center">

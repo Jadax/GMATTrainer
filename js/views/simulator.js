@@ -124,10 +124,10 @@ function renderSimulatorHub(el) {
               <td>${new Date(s.ts).toLocaleDateString()}</td>
               <td>${s.mode === 'full' ? 'Full' : s.mode}</td>
               <td><strong>${s.total}</strong></td>
-              <td>${s.sectionScores.quant || '—'}</td>
-              <td>${s.sectionScores.verbal || '—'}</td>
-              <td>${s.sectionScores.dataInsights || '—'}</td>
-              <td>${Math.round(s.accuracy * 100)}%</td>
+              <td>${(s.sectionScores && s.sectionScores.quant) || '—'}</td>
+              <td>${(s.sectionScores && s.sectionScores.verbal) || '—'}</td>
+              <td>${(s.sectionScores && s.sectionScores.dataInsights) || '—'}</td>
+              <td>${Math.round((s.accuracy || 0) * 100)}%</td>
             </tr>`).join('')}
           </tbody>
         </table>
@@ -139,11 +139,7 @@ function renderSimulatorHub(el) {
    Session builders
    --------------------------------------------------------------------- */
 function shuffleQuestions(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
+  return shuffleArr(arr);
 }
 
 function buildSimSection(key) {
@@ -876,23 +872,6 @@ function renderSimReviewDetail(el, row) {
       <div class="example-reason" style="margin-top:.5rem">${esc(q.explanation || '')}</div>
       <button class="btn btn-sm btn-ghost" type="button" onclick="document.getElementById('simReviewDetail').innerHTML=''">✕ Close review</button>
     </div>`;
-}
-
-/* ---------------------------------------------------------------------
-   Answer changes: hook into review actions (used by renderReview handlers)
-   --------------------------------------------------------------------- */
-function simChangeAnswer(questionIdx, choice) {
-  const sec = sim.sections[sim.sectionIdx];
-  const prev = sec.answers[questionIdx];
-  if (prev !== null && prev !== choice && sec.changesLeft > 0) {
-    sec.changesLeft -= 1;
-  } else if (prev === choice) {
-    // same answer, no change consumed
-  } else if (sec.answers[questionIdx] === null) {
-    // first answer in review doesn't consume a "change"
-  }
-  sec.answers[questionIdx] = choice;
-  simSave();
 }
 
 // expose globally used by inline handlers

@@ -33,8 +33,7 @@ function buildDefaultDeck() {
 }
 
 function topicTagName(t) {
-  const map = { arithmetic: 'Arithmetic', algebra: 'Algebra', wordproblems: 'Word Problems', numbers: 'Number Properties', stats: 'Statistics', rc: 'Reading Comp', cr: 'Critical Reasoning', ds: 'Data Sufficiency', ms: 'Multi-Source', ta: 'Table Analysis', gi: 'Graphics Interpretation', tp: 'Two-Part Analysis' };
-  return map[t] || t;
+  return qTopicLabel(t);
 }
 
 /* ---------------------------------------------------------------------
@@ -112,13 +111,7 @@ function startFlashSession() {
 }
 
 function shuffleIdx(n) {
-  const a = [];
-  for (let i = 0; i < n; i++) a.push(i);
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+  return shuffledIdx(n);
 }
 
 function flashcardView() {
@@ -188,7 +181,6 @@ function flashGrade(grade) {
     if (target) {
       ['ef', 'reps', 'streak', 'lapses', 'interval', 'reviews', 'due'].forEach(k => { if (cardSnapshot[k] !== undefined) target[k] = cardSnapshot[k]; });
     }
-    st._flashInRun = (st._flashInRun || 0) + 1;
   });
   flashState.idx += 1;
   if (flashState.idx >= flashState.total) {

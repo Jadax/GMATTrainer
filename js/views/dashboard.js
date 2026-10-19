@@ -23,14 +23,7 @@ function computeTopicStats() {
 }
 
 function topicTagLabel(tag) {
-  const map = {
-    arithmetic: 'Arithmetic', algebra: 'Algebra', wordproblems: 'Word Problems',
-    numbers: 'Number Properties', stats: 'Statistics',
-    rc: 'Reading Comp', cr: 'Critical Reasoning',
-    ds: 'Data Sufficiency', ms: 'Multi-Source', ta: 'Table Analysis',
-    gi: 'Graphics Interp', tp: 'Two-Part Analysis'
-  };
-  return map[tag] || tag;
+  return qTopicLabel(tag);
 }
 
 /** Points between the projected total and the user's target (0+). */
@@ -51,19 +44,9 @@ function bankUnusedCount() {
   return n;
 }
 
-/** Live / reviewed / healed split for the error-log teaser (self-contained). */
+/** Live / reviewed / healed split for the error-log teaser (canonical in errors.js). */
 function errorSummaryNow() {
-  const st = loadState();
-  const out = { total: 0, live: 0, reviewed: 0, healed: 0 };
-  st.practice.errorLog.forEach(e => {
-    const rec = st.practice.review[e.questionId];
-    const healed = !!rec && rec.attempts.length > 0 && rec.attempts[rec.attempts.length - 1].correct;
-    out.total += 1;
-    if (healed) out.healed += 1;
-    else if (e.reviewed) out.reviewed += 1;
-    else out.live += 1;
-  });
-  return out;
+  return errCounts();
 }
 
 /* ---------------------------------------------------------------------
@@ -133,8 +116,6 @@ function renderDashboard(el) {
 
   const quote = gamification.quotes[Math.floor(Math.random() * gamification.quotes.length)];
   const q = parseInt(st.stats.totalCorrect / Math.max(1, st.stats.totalAnswered) * 100) || 0;
-  const monthAgo = Date.now() - 30 * 86400000;
-  const monthQuestions = st.stats.history.filter(h => h.ts > monthAgo).length;
   const dueCount = questionDueCount();
   const phase = studyPhase();
 

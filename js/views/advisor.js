@@ -15,18 +15,11 @@ var ADVISOR_TOPIC_PACE = {
   rc: 105, cr: 120, ds: 120, ms: 360, ta: 150, gi: 150, tp: 180
 };
 
-var ADVISOR_TOPIC_LABELS = {
-  arithmetic: 'Arithmetic', algebra: 'Algebra', wordproblems: 'Word Problems',
-  numbers: 'Number Properties', stats: 'Statistics & Sets', rc: 'Reading Comp',
-  cr: 'Critical Reasoning', ds: 'Data Sufficiency', ms: 'Multi-Source',
-  ta: 'Table Analysis', gi: 'Graphics Interp', tp: 'Two-Part Analysis'
-};
-
 /* Reference-accuracy bars top teachers hold students to (per difficulty). */
 var ADVISOR_DIFF_TARGETS = { easy: 0.72, medium: 0.60, hard: 0.45 };
 
 function advisorLabel(tag) {
-  return ADVISOR_TOPIC_LABELS[tag] || tag;
+  return qTopicLabel(tag);
 }
 
 /* ---------------------------------------------------------------------
@@ -169,8 +162,8 @@ function advisorRead(A) {
     lines.push('You have ' + A.dueCount + ' spaced-review question' + (A.dueCount === 1 ? '' : 's') + ' due. That queue is the highest-ROI 10 minutes of your day - recall before forgetting is how a solid 70% becomes a permanent 80%.');
   }
 
-  if (A.lastSim && A.lastSim.totalScore) {
-    lines.push('Your last simulator scored ' + A.lastSim.totalScore + '. Treat that number as data, not judgement - it is telling us which section to attack next, and it\'s already better than guessing.');
+  if (A.lastSim && A.lastSim.total) {
+    lines.push('Your last simulator scored ' + A.lastSim.total + '. Treat that number as data, not judgement - it is telling us which section to attack next, and it\'s already better than guessing.');
   }
 
   if (A.daysLeft !== null) {
@@ -356,13 +349,7 @@ function exportAdvisorReport() {
   advisorCadence(A).forEach(function (t) { L.push(' - ' + t.tip); });
   L.push('');
   L.push('Score projections are heuristic estimates; GMAC\'s adaptive algorithm means no off-app number is exact.');
-  var blob = new Blob([L.join('\n')], { type: 'text/plain' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'gmat750-advisor-report-' + todayKey() + '.txt';
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadTextFile('gmat750-advisor-report-' + todayKey() + '.txt', 'text/plain', L.join('\n'));
 }
 
 function setAdvisorTargetDate(val) {
@@ -470,7 +457,7 @@ function renderAdvisor(appEl) {
           '<span><strong>' + esc(f.label) + '</strong>' + (f.paceAvg !== null && f.paceAvg > f.paceTarget * 1.4 ? ' 🤨' : '') + '</span>' +
           advisorAccBar(f.acc, f.attempts) +
           '<span style="text-align:right" class="text-muted">' + f.attempts + '</span>' +
-          '<span style="text-align:right">' + (f.paceAvg === null ? '—' : '<span class="' + (paceClass(f.paceAvg, f.paceTarget) === 'slow' ? 'text-danger' : paceClass(f.paceAvg, f.paceTarget) === 'fast' ? 'text-success' : 'text-muted') + '" title="target ' + fmtShort(f.paceTarget) + '">' + fmtShort(f.paceAvg) + '</span>') + '</span>' +
+          '<span style="text-align:right">' + (f.paceAvg === null ? '—' : '<span class="' + (paceClass(f.paceAvg, f.paceTarget) === 'pace-slow' ? 'text-danger' : paceClass(f.paceAvg, f.paceTarget) === 'pace-fast' ? 'text-success' : 'text-muted') + '" title="target ' + fmtShort(f.paceTarget) + '">' + fmtShort(f.paceAvg) + '</span>') + '</span>' +
         '</div>';
       }).join('')
     : '<div class="empty-state"><span class="empty-icon">📊</span><p>No practice data yet — answer questions to populate your format-by-format diagnostic.</p></div>';

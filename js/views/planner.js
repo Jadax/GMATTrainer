@@ -73,7 +73,7 @@ function renderPlanner(el) {
         <div class="field">
           <label for="plHours">Study hours per week</label>
           <select id="plHours">
-            ${[3, 5, 8, 10, 15, 20].map(h => `<option value="${h}" ${(h === (st.planner && st.planner.hoursPerWeek) || 8) ? 'selected' : ''}>${h} h/week</option>`).join('')}
+            ${[3, 5, 8, 10, 15, 20].map(h => `<option value="${h}" ${(h === ((st.planner && st.planner.hoursPerWeek) || 8)) ? 'selected' : ''}>${h} h/week</option>`).join('')}
           </select>
         </div>
       </div>
@@ -146,13 +146,7 @@ function exportPlan() {
     lines.push('Week ' + w.week + ' (focus: ' + w.focusedTopic.name + ')');
     w.days.forEach(d => lines.push('  ' + d.label + ': ' + d.minutes + ' min — ' + d.category));
   });
-  const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'gmat750-plan.txt';
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadTextFile('gmat750-plan.txt', 'text/plain', lines.join('\n'));
 }
 
 window.renderPlanner = renderPlanner;

@@ -15,9 +15,7 @@ if (typeof questionBank === 'undefined') {
 
 var BANK_SECTION_NAMES = { quant: 'Quantitative', verbal: 'Verbal', dataInsights: 'Data Insights', foundations: 'Foundations' };
 var BANK_SECTION_ICONS = { quant: '🔢', verbal: '🗣️', dataInsights: '📊', foundations: '🧱' };
-var BANK_BLUEPRINT = { quant: { n: 21, label: '21 questions per exam' }, verbal: { n: 23, label: '23 questions per exam' }, dataInsights: { n: 20, label: '20 questions per exam' }, foundations: { n: 0, label: 'Foundations track' } };
-
-var BANK_TOPIC_LABELS = {
+var BANK_BLUEPRINT = { quant: { n: 21, label: '21 questions per exam' }, verbal: { n: 23, label: '23 questions per exam' }, dataInsights: { n: 20, label: '20 questions per exam' }, foundations: { n: 0, label: 'Foundations track' } };var BANK_TOPIC_LABELS = {
   arithmetic: 'Arithmetic', algebra: 'Algebra', wordproblems: 'Word Problems', numbers: 'Number Properties', stats: 'Statistics & Sets',
   rc: 'Reading Comp', cr: 'Critical Reasoning',
   ds: 'Data Sufficiency', ms: 'Multi-Source', ta: 'Table', gi: 'Graphics', tp: 'Two-Part',
@@ -42,18 +40,7 @@ var BANK = {
 /* ---------------------------------------------------------------------
    Question classification helpers
    --------------------------------------------------------------------- */
-var __bankSecIdx = null;
-function bankSectionOf(q) {
-  if (!__bankSecIdx) {
-    var idx = {};
-    questionBank.quant.forEach(function (x) { idx[x.id] = 'quant'; });
-    questionBank.verbal.forEach(function (x) { idx[x.id] = 'verbal'; });
-    questionBank.dataInsights.forEach(function (x) { idx[x.id] = 'dataInsights'; });
-    questionBank.foundations.forEach(function (x) { idx[x.id] = 'foundations'; });
-    __bankSecIdx = idx;
-  }
-  return __bankSecIdx[q.id] || 'quant';
-}
+/* bankSectionOf lives in core.js (authoritative id→section map). */
 
 function bankFormatOf(q) {
   var sec = bankSectionOf(q);
@@ -687,17 +674,10 @@ function bankExportCsv() {
       qs.last === null ? 'unattempted' : (qs.last ? 'correct' : 'miss'),
       dueSet[q.id] ? 'due' : '', qs.flagged ? 'yes' : '', qs.note
     ];
-    rows.push(row.map(function (cell) { return typeof cell === 'string' ? '"' + cell.replace(/"/g, '""') + '"' : cell; }).join(','));
+    rows.push(row.map(function (cell) { return csvEscape(cell); }).join(','));
   });
   var csv = rows[0].join(',') + '\n' + rows.slice(1).join('\n');
-  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'gmat750-bank-' + new Date().toISOString().slice(0, 10) + '.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  downloadTextFile('gmat750-bank-' + new Date().toISOString().slice(0, 10) + '.csv', 'text/csv;charset=utf-8', csv);
   toast('Bank export saved (' + pool.length + ' rows).', 'success');
 }
 

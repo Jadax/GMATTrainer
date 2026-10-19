@@ -628,16 +628,9 @@ function errExportCsv() {
     ]);
   });
   var csv = rows[0].join(',') + '\n' + rows.slice(1).map(function (row) {
-    return row.map(function (cell) { return typeof cell === 'string' ? '"' + cell.replace(/"/g, '""') + '"' : cell; }).join(',');
+    return row.map(function (cell) { return csvEscape(cell); }).join(',');
   }).join('\n');
-  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'gmat750-error-log-' + new Date().toISOString().slice(0, 10) + '.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  downloadTextFile('gmat750-error-log-' + new Date().toISOString().slice(0, 10) + '.csv', 'text/csv;charset=utf-8', csv);
   toast('Error log exported (' + list.length + ' rows).', 'success');
 }
 

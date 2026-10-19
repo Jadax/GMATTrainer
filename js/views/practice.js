@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    GMAT 750+ Trainer - Practice view
    Hub (#/practice), set composer, question-by-question session,
    error-log review and flagged-question review.
@@ -80,7 +80,7 @@ function composeQuestions(config) {
       if (diffPool.length >= Math.min(want, 4)) {
         pool = diffPool;
       } else if (diffPool.length > 0) {
-        // too thin at this difficulty — top up from the rest of the topic
+        // too thin at this difficulty â€” top up from the rest of the topic
         const extra = shuffle(pool.filter(q => q.difficulty !== config.difficulty));
         pool = diffPool.concat(extra).slice(0, want);
       }
@@ -146,7 +146,7 @@ function composeQuestions(config) {
    as you improve (adaptiveDifficultyFor / updateAdaptiveFromAnswer). */
 function composeAdaptiveSession(config) {
   const qb = questionBank;
-  // Honor an explicit section filter (custom form) — else interleave all three.
+  // Honor an explicit section filter (custom form) â€” else interleave all three.
   const explicit = config.section && ['quant', 'verbal', 'dataInsights'].indexOf(config.section) >= 0;
   const strands = explicit ? [config.section] : ['quant', 'verbal', 'dataInsights'];
   const perStrand = Math.max(1, Math.min(8, Math.ceil((config.count || 12) / strands.length)));
@@ -194,11 +194,7 @@ function composeCumulativeReview(config) {
 }
 
 function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
+  return shuffleArr(arr);
 }
 function sample(arr, n) {
   return shuffle(arr.slice()).slice(0, n);
@@ -242,42 +238,42 @@ function renderPracticeHub(el) {
     <h2 class="section-title">Quick Start</h2>
     <div class="mode-grid">
       <button class="mode-card" onclick="startQuick()">
-        <span class="mode-icon">🔀</span>
+        <span class="mode-icon">ðŸ”€</span>
         <span class="mode-title">Mixed Practice</span>
-        <span class="mode-desc">10 random questions, Focus format only (Quant PS · Verbal RC/CR · DI). Great for daily volume.</span>
+        <span class="mode-desc">10 random questions, Focus format only (Quant PS Â· Verbal RC/CR Â· DI). Great for daily volume.</span>
       </button>
       <button class="mode-card" onclick="startAdaptive()">
-        <span class="mode-icon">⚡</span>
+        <span class="mode-icon">âš¡</span>
         <span class="mode-title">Adaptive Session</span>
         <span class="mode-desc">Rotates Quant / Verbal / DI and ramps difficulty to your accuracy, TTP-style.</span>
       </button>
-      <button class="mode-card" onclick="startDiagnostic()">
-        <span class="mode-icon">🩺</span>
+      <button class="mode-card" onclick="startQuickDiag()">
+        <span class="mode-icon">ðŸ©º</span>
         <span class="mode-title">Diagnostic (9Q)</span>
         <span class="mode-desc">3-quant / 3-verbal / 3-DI baseline. See where you stand.</span>
       </button>
       <button class="mode-card" onclick="startDue()">
-        <span class="mode-icon">🔁</span>
+        <span class="mode-icon">ðŸ”</span>
         <span class="mode-title">Spaced Review ${dueCount ? `<span class="badge badge-primary">${dueCount}</span>` : ''}</span>
-        <span class="mode-desc">Questions due today from your SM-2 spaced-repetition schedule — retrieval practice is the highest-yield habit.</span>
+        <span class="mode-desc">Questions due today from your SM-2 spaced-repetition schedule â€” retrieval practice is the highest-yield habit.</span>
       </button>
       <button class="mode-card" onclick="startWeak()">
-        <span class="mode-icon">🎯</span>
+        <span class="mode-icon">ðŸŽ¯</span>
         <span class="mode-title">Weak Areas</span>
         <span class="mode-desc">Your two lowest-accuracy topics. Drilling these moves your score fastest.</span>
       </button>
       <button class="mode-card" onclick="startReview()">
-        <span class="mode-icon">🗓️</span>
+        <span class="mode-icon">ðŸ—“ï¸</span>
         <span class="mode-title">Cumulative Review</span>
         <span class="mode-desc">Weekly sweep of everything you've practiced, prioritized by what's due. Interleaved across all sections.</span>
       </button>
       <button class="mode-card" onclick="location.hash='#/practice/error'">
-        <span class="mode-icon">🔍</span>
+        <span class="mode-icon">ðŸ”</span>
         <span class="mode-title">Error Review ${errCount ? `<span class="badge badge-danger">${errCount}</span>` : ''}</span>
         <span class="mode-desc">Re-do the questions you missed. This is where real gains happen.</span>
       </button>
       <button class="mode-card" onclick="location.hash='#/practice/flagged'">
-        <span class="mode-icon">🚩</span>
+        <span class="mode-icon">ðŸš©</span>
         <span class="mode-title">Flagged Review ${flagCount ? `<span class="badge badge-accent">${flagCount}</span>` : ''}</span>
         <span class="mode-desc">Revisit the questions you flagged during practice.</span>
       </button>
@@ -294,7 +290,7 @@ function renderPracticeHub(el) {
             <div class="card card-hover topic-card" style="cursor:pointer" onclick="location.hash='#/practice/topic/${t.id}'">
               <div class="topic-name">${esc(t.name)}</div>
               <div class="topic-meta">${t.count} questions</div>
-              <button class="btn btn-sm btn-outline mt-1" type="button">Start →</button>
+              <button class="btn btn-sm btn-outline mt-1" type="button">Start â†’</button>
             </div>`).join('')}
         </div>
       </div>`).join('')}
@@ -341,7 +337,7 @@ function renderPracticeHub(el) {
           </select>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="startCustom()">Build Set →</button>
+      <button class="btn btn-primary" onclick="startCustom()">Build Set â†’</button>
     </section>`;
 
   el.querySelectorAll('#secTabs .section-tab-btn').forEach(btn => {
@@ -386,7 +382,7 @@ function beginSession(config) {
 function startQuick() {
   beginSession({ mode: 'practice', difficulty: 'any', count: 10, perQSeconds: 0 });
 }
-function startDiagnostic() {
+function startQuickDiag() {
   beginSession({ mode: 'diagnostic', difficulty: 'any', count: 9, perQSeconds: 0 });
 }
 function startDue() {
@@ -399,7 +395,7 @@ function startWeak() {
 function startFocused(topicId, difficulty) {
   beginSession({ mode: 'topic', topic: topicId, difficulty: difficulty || 'any', count: 5, perQSeconds: 0 });
 }
-/** TTP-style chapter test with unlock gating (Quick Check → Easy → Medium → Hard). */
+/** TTP-style chapter test with unlock gating (Quick Check â†’ Easy â†’ Medium â†’ Hard). */
 function startChapterTest(topicId, difficulty) {
   const d = difficulty || 'easy';
   const ctp = chapterTestProgress(topicId);
@@ -438,12 +434,12 @@ function startReview() {
    --------------------------------------------------------------------- */
 function renderPracticeSession(el) {
   if (!loadSession()) {
-    toast('No active session — start one from the hub.', 'error');
+    toast('No active session â€” start one from the hub.', 'error');
     location.hash = '#/practice';
     return;
   }
   const current = ps.questions[ps.idx];
-  if (!current) { renderSummary(el); return; }
+  if (!current) { showResults(); return; }
 
   const qn = ps.idx + 1;
   const total = ps.questions.length;
@@ -454,14 +450,14 @@ function renderPracticeSession(el) {
   const ctDiffLabel = isCT && ps.config.difficulty ? ps.config.difficulty.charAt(0).toUpperCase() + ps.config.difficulty.slice(1) : '';
   const ctName = isCT ? (curriculum.topics.find(t => t.id === ps.config.topic) || {}).name : '';
   const ctBanner = isCT ? `<div class="ct-banner">
-      <div class="ct-banner-title">🏁 Chapter Test · ${esc(ctName)} · ${ctDiffLabel}</div>
-      <div class="ct-banner-meta">Question ${qn} of ${total} · Pass at ${Math.round(CHAPTER_TEST_PASS * 100)}% or higher</div>
+      <div class="ct-banner-title">ðŸ Chapter Test Â· ${esc(ctName)} Â· ${ctDiffLabel}</div>
+      <div class="ct-banner-meta">Question ${qn} of ${total} Â· Pass at ${Math.round(CHAPTER_TEST_PASS * 100)}% or higher</div>
     </div>` : '';
 
   let passageHtml = '';
   if (current.passage) {
     passageHtml = `<div class="clue-box" style="margin-bottom:1rem">
-      <div style="font-weight:700;margin-bottom:.5rem">📄 ${esc(current.passageTitle || 'Passage')}</div>
+      <div style="font-weight:700;margin-bottom:.5rem">ðŸ“„ ${esc(current.passageTitle || 'Passage')}</div>
       <div class="passage-text" style="white-space:pre-line">${esc(current.passage)}</div>
     </div>`;
   }
@@ -474,11 +470,11 @@ function renderPracticeSession(el) {
           <span class="badge badge-secondary">Question ${qn}/${total}</span>
           <span class="badge ${difficultyClass(current.difficulty)}">${difficultyLabel(current.difficulty)}</span>
           <span class="badge badge-ghost">${topicTagName(current.topic)}</span>
-          <span class="badge badge-ghost pace-target-chip" title="Recommended time for this question">⏱ ~${fmtShort(paceTarget)}</span>
+          <span class="badge badge-ghost pace-target-chip" title="Recommended time for this question">â± ~${fmtShort(paceTarget)}</span>
         </div>
         <div class="row" style="align-items:center;gap:.75rem">
           ${ps.config && ps.config.perQSeconds ? `<span class="timer-display" id="qTimer">${fmtClockForTimer(ps.config.perQSeconds)}</span>` : `<span class="timer-display" id="qTimer">${fmtClockForTimer(0)}</span>`}
-          <button class="btn btn-sm btn-ghost ${isFlagged(current.id) ? 'flagged-active' : ''}" id="flagBtn" title="Flag for later review (F)">🚩</button>
+          <button class="btn btn-sm btn-ghost ${isFlagged(current.id) ? 'flagged-active' : ''}" id="flagBtn" title="Flag for later review (F)">ðŸš©</button>
           <button class="btn btn-sm btn-outline" onclick="quitSession()">Exit</button>
         </div>
       </div>
@@ -501,8 +497,8 @@ function renderPracticeSession(el) {
       </div>
 
       <div class="practice-actions-row">
-        ${current.hint ? `<button class="btn btn-sm btn-ghost" id="hintBtn" title="Show a nudge (H)">💡 Hint</button>` : ''}
-        <span class="kbd-hint">1–5 select · Enter next · N next · S skip · F flag ${current.hint ? '· H hint' : ''} · ? help</span>
+        ${current.hint ? `<button class="btn btn-sm btn-ghost" id="hintBtn" title="Show a nudge (H)">ðŸ’¡ Hint</button>` : ''}
+        <span class="kbd-hint">1â€“5 select Â· Enter next Â· N next Â· S skip Â· F flag ${current.hint ? 'Â· H hint' : ''} Â· ? help</span>
       </div>
       <div id="hintPanel" style="display:none" class="hint-panel"></div>
 
@@ -568,10 +564,10 @@ function renderPracticeSession(el) {
     });
   }
 
-  // MSR tab panes live above the options box — bind them on the session root
+  // MSR tab panes live above the options box â€” bind them on the session root
   if (current.format === 'msr') diBindMsr(el, current);
 
-  // Hint reveal (graded — never spoils the answer letter)
+  // Hint reveal (graded â€” never spoils the answer letter)
   const hintBtn = el.querySelector('#hintBtn');
   if (hintBtn) {
     hintBtn.addEventListener('click', revealHint);
@@ -582,7 +578,7 @@ function renderPracticeSession(el) {
     playSound('select');
     const panel = el.querySelector('#hintPanel');
     panel.style.display = 'block';
-    panel.innerHTML = `<div class="hint-icon">💡</div>
+    panel.innerHTML = `<div class="hint-icon">ðŸ’¡</div>
       <div class="hint-text">${esc(current.hint)}</div>
       <button class="btn btn-sm btn-ghost" type="button" onclick="document.getElementById('hintPanel').style.display='none'">Hide</button>`;
   }
@@ -603,7 +599,7 @@ function renderPracticeSession(el) {
     if (k === 'h') { e.preventDefault(); if (hintBtn && !qAnswered) revealHint(); return; }
     if (k === '?') {
       e.preventDefault();
-      toast('1–5 / A–E select · Enter or N next · S skip · F flag · H hint', 'info');
+      toast('1â€“5 / Aâ€“E select Â· Enter or N next Â· S skip Â· F flag Â· H hint', 'info');
       return;
     }
     if (!qAnswered && /^[1-5a-e]$/.test(k)) {
@@ -669,8 +665,8 @@ function submitAnswer(chosen, timedOut) {
   const expl = esc(q.explanation || '');
   const target = paceTargetFor(q);
   const pc = paceClass(secs, target);
-  const paceMsg = secs < 15 ? 'Blink answer — under 15s. Make sure you solved it, not pattern-matched.'
-    : pc === 'pace-fast' ? 'Faster than recommended — good, but slow down if it means guessing.'
+  const paceMsg = secs < 15 ? 'Blink answer â€” under 15s. Make sure you solved it, not pattern-matched.'
+    : pc === 'pace-fast' ? 'Faster than recommended â€” good, but slow down if it means guessing.'
     : pc === 'pace-slow' ? 'Over the ~target. Before answering, name the approach: which concept, which formula.'
     : 'Right pace for this question.';
   const topicKey = curriculum.topicKeyForQTopic(q.topic);
@@ -682,55 +678,55 @@ function submitAnswer(chosen, timedOut) {
   fb.innerHTML = `
     <div class="clue-box ${correct ? 'lesson-box-success' : 'lesson-box-danger'}" style="margin:1rem 0">
       <div class="verdict-row">
-        ${timedOut ? '⏰ Time up!' : correct ? '✅ Correct — well done!' : '❌ Incorrect.'}
+        ${timedOut ? 'â° Time up!' : correct ? 'âœ… Correct â€” well done!' : 'âŒ Incorrect.'}
         ${!correct && !timedOut ? ' Correct answer: <span class="example-answer">' + correctLetter + '</span>' : ''}
       </div>
-      <div class="pace-line pace-${pc}">⏱ You took ${fmtShort(secs)} · recommended ~${fmtShort(target)} — ${esc(paceMsg)}</div>
+      <div class="pace-line pace-${pc}">â± You took ${fmtShort(secs)} Â· recommended ~${fmtShort(target)} â€” ${esc(paceMsg)}</div>
       <div class="explanation-body">${expl}</div>
     </div>
 
     ${!correct ? `
     <div class="meta-tag-row" id="errTagRow">
       <span class="meta-label">Why wrong?</span>
-      <button class="meta-btn mt-careless" data-err="careless" title="Silly/rushed mistake">😅 Careless</button>
-      <button class="meta-btn mt-conceptual" data-err="conceptual" title="Didn't know the concept">📚 Conceptual</button>
-      <button class="meta-btn mt-timing" data-err="timing" title="Ran out of time">⏱ Timing</button>
-      <button class="meta-btn mt-misread" data-err="misread" title="Misunderstood the question">🔍 Misread</button>
+      <button class="meta-btn mt-careless" data-err="careless" title="Silly/rushed mistake">ðŸ˜… Careless</button>
+      <button class="meta-btn mt-conceptual" data-err="conceptual" title="Didn't know the concept">ðŸ“š Conceptual</button>
+      <button class="meta-btn mt-timing" data-err="timing" title="Ran out of time">â± Timing</button>
+      <button class="meta-btn mt-misread" data-err="misread" title="Misunderstood the question">ðŸ” Misread</button>
     </div>` : ''}
 
     <div class="meta-tag-row">
       <span class="meta-label">Felt difficulty</span>
-      <button class="meta-btn" data-felt="1" title="Very easy">😊</button>
-      <button class="meta-btn" data-felt="2" title="Easy">🙂</button>
-      <button class="meta-btn" data-felt="3" title="Medium">😐</button>
-      <button class="meta-btn" data-felt="4" title="Hard">😤</button>
-      <button class="meta-btn" data-felt="5" title="Very hard">🥵</button>
+      <button class="meta-btn" data-felt="1" title="Very easy">ðŸ˜Š</button>
+      <button class="meta-btn" data-felt="2" title="Easy">ðŸ™‚</button>
+      <button class="meta-btn" data-felt="3" title="Medium">ðŸ˜</button>
+      <button class="meta-btn" data-felt="4" title="Hard">ðŸ˜¤</button>
+      <button class="meta-btn" data-felt="5" title="Very hard">ðŸ¥µ</button>
     </div>
 
     <div class="meta-tag-row">
       <span class="meta-label">Confidence</span>
-      <button class="meta-btn" data-conf="sure">✓ Sure</button>
+      <button class="meta-btn" data-conf="sure">âœ“ Sure</button>
       <button class="meta-btn" data-conf="unsure">~ Unsure</button>
       <button class="meta-btn" data-conf="guessed">? Guessed</button>
     </div>
 
     <div class="note-row">
-      <textarea id="qNote" maxlength="500" rows="2" placeholder="Note to self — strategy, trap, formula (helps your Error Journal)"></textarea>
+      <textarea id="qNote" maxlength="500" rows="2" placeholder="Note to self â€” strategy, trap, formula (helps your Error Journal)"></textarea>
       <button class="btn btn-sm btn-outline" id="noteSave">Save note</button>
     </div>
 
     <div class="row feedback-actions">
       ${ps.idx < ps.questions.length - 1
-        ? `<button class="btn btn-primary" id="fbNext">Next →</button>`
-        : `<button class="btn btn-primary" id="fbResults">See Results 🏁</button>`}
-      <button class="btn btn-sm btn-ghost" data-act="theory">📚 Theory</button>
-      ${topicKey ? `<button class="btn btn-sm btn-ghost" data-act="topic">↺ Practice topic</button>` : ''}
-      <button class="btn btn-sm btn-ghost" data-act="hard" ${!topicKey ? 'disabled' : ''}>↑ Harder</button>
-      <button class="btn btn-sm btn-ghost" data-act="easy" ${!topicKey ? 'disabled' : ''}>↓ Easier</button>
+        ? `<button class="btn btn-primary" id="fbNext">Next â†’</button>`
+        : `<button class="btn btn-primary" id="fbResults">See Results ðŸ</button>`}
+      <button class="btn btn-sm btn-ghost" data-act="theory">ðŸ“š Theory</button>
+      ${topicKey ? `<button class="btn btn-sm btn-ghost" data-act="topic">â†º Practice topic</button>` : ''}
+      <button class="btn btn-sm btn-ghost" data-act="hard" ${!topicKey ? 'disabled' : ''}>â†‘ Harder</button>
+      <button class="btn btn-sm btn-ghost" data-act="easy" ${!topicKey ? 'disabled' : ''}>â†“ Easier</button>
       ${isFlagged(q.id) ? `<button class="btn btn-sm btn-ghost" id="fbUnflag">Unflag</button>` : ''}
     </div>`;
 
-  // Wire meta-tag interactions (persist immediately — feeds the SR + error journal)
+  // Wire meta-tag interactions (persist immediately â€” feeds the SR + error journal)
   fb.querySelectorAll('[data-err]').forEach(b => {
     b.addEventListener('click', function () {
       fb.querySelectorAll('[data-err]').forEach(x => x.classList.remove('active'));
@@ -760,7 +756,7 @@ function submitAnswer(chosen, timedOut) {
     noteBtn.addEventListener('click', function () {
       const v = fb.querySelector('#qNote').value.trim();
       updateReviewMeta(q.id, { note: v });
-      this.textContent = v ? '✓ Note saved' : 'Save note';
+      this.textContent = v ? 'âœ“ Note saved' : 'Save note';
       playSound('type');
     });
   }
@@ -828,10 +824,10 @@ function recordSessionStats() {
   });
   Object.keys(bySec).forEach(k => addStudySession(bySec[k].attempts, bySec[k].seconds, k));
 
-  // XP is granted per-answer inside recordAnswer; here we only add the
+  // XP is granted per-answer via recordAnswerScheduled; here we only add the
   // session feed line + badges so there is no double-granting.
   const pct = total ? Math.round(correct / total * 100) : 0;
-  addFeed('📝', 'Completed a ' + total + '-question practice set (' + pct + '%).');
+  addFeed('ðŸ“', 'Completed a ' + total + '-question practice set (' + pct + '%).');
   checkBadges();
 }
 
@@ -881,10 +877,10 @@ function showResults() {
     const ctp = chapterTestProgress(ps.config.topic);
     const nextDiff = ps.config.difficulty === 'easy' ? (ctp.medium.unlocked ? 'medium' : null) : ps.config.difficulty === 'medium' ? (ctp.hard.unlocked ? 'hard' : null) : null;
     ctPassBanner = ctOutcome.passed
-      ? `<div class="ct-result ${ctOutcome.passed ? 'pass' : ''}">${nextDiff ? `🎉 Passed! The <b>${nextDiff}</b> chapter test is now unlocked.` : '🎉 Passed! Chapter test ladder complete.'}</div>`
-      : `<div class="ct-result fail">Keep going — you need ${Math.ceil(CHAPTER_TEST_PASS * total) - correct} more correct answers to pass (${Math.round(CHAPTER_TEST_PASS * 100)}% required). Review the explanations below, then retry.</div>`;
+      ? `<div class="ct-result ${ctOutcome.passed ? 'pass' : ''}">${nextDiff ? `ðŸŽ‰ Passed! The <b>${nextDiff}</b> chapter test is now unlocked.` : 'ðŸŽ‰ Passed! Chapter test ladder complete.'}</div>`
+      : `<div class="ct-result fail">Keep going â€” you need ${Math.ceil(CHAPTER_TEST_PASS * total) - correct} more correct answers to pass (${Math.round(CHAPTER_TEST_PASS * 100)}% required). Review the explanations below, then retry.</div>`;
     if (nextDiff) { ctNextLabel = nextDiff.charAt(0).toUpperCase() + nextDiff.slice(1); }
-    if (nextDiff) { ctNextBtn = `<button class="btn btn-primary" onclick="startChapterTest('${ps.config.topic}', '${nextDiff}')">Start ${ctNextLabel} Test →</button>`; }
+    if (nextDiff) { ctNextBtn = `<button class="btn btn-primary" onclick="startChapterTest('${ps.config.topic}', '${nextDiff}')">Start ${ctNextLabel} Test â†’</button>`; }
   }
 
   // section pacing vs official targets (answered-only)
@@ -902,7 +898,7 @@ function showResults() {
       const avg = secs[k] / cnt[k];
       const target = PACE_TARGETS[k];
       const pc = paceClass(avg, target);
-      const verdict = pc === 'pace-ok' ? 'On target' : pc === 'pace-fast' ? 'Too fast — check if you guessed' : 'Needs work — shave time';
+      const verdict = pc === 'pace-ok' ? 'On target' : pc === 'pace-fast' ? 'Too fast â€” check if you guessed' : 'Needs work â€” shave time';
       return { k, avg, target, pc, verdict };
     }).filter(Boolean);
   })();
@@ -910,7 +906,7 @@ function showResults() {
   const el = document.getElementById('app');
   el.innerHTML = `
     <div class="practice-summary question-view">
-      <h1>${isCT ? 'Chapter Test Complete 🏁' : 'Set Complete 🏁'}</h1>
+      <h1>${isCT ? 'Chapter Test Complete ðŸ' : 'Set Complete ðŸ'}</h1>
       ${ctPassBanner}
       <div class="grid grid-2" style="margin-top:.5rem">
         <div class="card text-center">
@@ -940,7 +936,7 @@ function showResults() {
             <span>${fmtShort(Math.round(r.avg))} avg / ${fmtShort(r.target)} target</span>
             <span class="pace-verdict">${r.verdict}</span>
           </div>`).join('')}
-        <div class="text-muted mt-1" style="margin-top:.5rem;font-size:.85rem">Targets: Quant 21q/45min · Verbal 23q/45min · DI 20q/45min</div>
+        <div class="text-muted mt-1" style="margin-top:.5rem;font-size:.85rem">Targets: Quant 21q/45min Â· Verbal 23q/45min Â· DI 20q/45min</div>
       </div>` : ''}
       <div class="row mt-2" style="margin-top:1rem;justify-content:center">
         ${isCT
@@ -964,8 +960,8 @@ function showResults() {
     const ok = a && a.correct;
     review.insertAdjacentHTML('beforeend', `
       <div class="feed-item">
-        <span class="feed-icon">${ok ? '✅' : '❌'}</span>
-        <span style="cursor:pointer;text-decoration:underline;color:var(--color-secondary)" onclick="reviewQuestion(${idx})">${esc(q.text.slice(0, 80))}${q.text.length > 80 ? '…' : ''}</span>
+        <span class="feed-icon">${ok ? 'âœ…' : 'âŒ'}</span>
+        <span style="cursor:pointer;text-decoration:underline;color:var(--color-secondary)" onclick="reviewQuestion(${idx})">${esc(q.text.slice(0, 80))}${q.text.length > 80 ? 'â€¦' : ''}</span>
         <span class="feed-time ${ok ? 'text-success' : 'text-danger'}">${ok ? 'Correct' : 'Missed'}</span>
       </div>`);
   });
@@ -986,15 +982,15 @@ function reviewQuestion(idx) {
   const el = document.getElementById('app');
   el.querySelector('#setReview').innerHTML = `
     <div class="example-block">
-      <span onclick="render()" style="cursor:pointer;color:var(--color-secondary)">← Back to summary</span>
+      <span onclick="render()" style="cursor:pointer;color:var(--color-secondary)">â† Back to summary</span>
       <div class="example-question mt-1">${esc(q.text)}</div>
       ${q.options ? q.options.map((o, i) => `
         <div class="option ${i === q.correct ? 'correct' : ''} ${a && a.chosen === i && i !== q.correct ? 'incorrect' : ''} disabled">
           <span class="option-letter">${String.fromCharCode(65 + i)}</span><span>${esc(o)}</span>
         </div>`).join('') : `
         <div class="clue-box" style="margin:.75rem 0">
-          <b>Your answer:</b> ${(a && a.chosen !== undefined && a.chosen !== null) ? diAnswerDisplay(q, a.chosen) : '—'}
-          &nbsp;·&nbsp; <b>Correct:</b> ${diCorrectDisplay(q)}
+          <b>Your answer:</b> ${(a && a.chosen !== undefined && a.chosen !== null) ? diAnswerDisplay(q, a.chosen) : 'â€”'}
+          &nbsp;Â·&nbsp; <b>Correct:</b> ${diCorrectDisplay(q)}
         </div>`}
       <div class="example-reason">${esc(q.explanation || '')}</div>
     </div>`;
@@ -1024,7 +1020,7 @@ function renderErrorReview(el) {
   const log = st.practice.errorLog;
   if (!log.length) {
     el.innerHTML = `<div class="page-header"><h1>Error Review</h1></div>
-      <div class="empty-state"><span class="empty-icon">🎉</span><p>Nothing in the error log yet. Miss a question in practice and it shows up here.</p>
+      <div class="empty-state"><span class="empty-icon">ðŸŽ‰</span><p>Nothing in the error log yet. Miss a question in practice and it shows up here.</p>
       <button class="btn btn-outline" onclick="location.hash='#/practice'">Back to Practice</button></div>`;
     return;
   }
@@ -1043,8 +1039,8 @@ function renderErrorReview(el) {
         if (!q) return '';
         return `<div class="card">
           <div class="feed-item"><span class="badge badge-secondary">${topicTagName(q.topic)}</span><span class="feed-time">${new Date(e.ts).toLocaleDateString()}</span></div>
-          <div class="example-question mt-1">${esc(q.text.slice(0, 140))}${q.text.length > 140 ? '…' : ''}</div>
-          <div class="text-muted fs-small">You chose ${e.youChose === null || e.youChose === undefined ? '—' : diIsStructured(q) ? diAnswerDisplay(q, e.youChose) : String.fromCharCode(65 + e.youChose)} · Correct: ${diIsStructured(q) ? diCorrectDisplay(q) : String.fromCharCode(65 + q.correct)}</div>
+          <div class="example-question mt-1">${esc(q.text.slice(0, 140))}${q.text.length > 140 ? 'â€¦' : ''}</div>
+          <div class="text-muted fs-small">You chose ${e.youChose === null || e.youChose === undefined ? 'â€”' : diIsStructured(q) ? diAnswerDisplay(q, e.youChose) : String.fromCharCode(65 + e.youChose)} Â· Correct: ${diIsStructured(q) ? diCorrectDisplay(q) : String.fromCharCode(65 + q.correct)}</div>
           <button class="btn btn-sm btn-outline mt-1" onclick="location.hash='#/practice/topic/${curriculum.topicKeyForQTopic(q.topic)}'">Practice this topic</button>
         </div>`;
       }).join('')}
@@ -1072,7 +1068,7 @@ function renderFlaggedReview(el) {
   const flags = st.practice.flagged;
   if (!flags.length) {
     el.innerHTML = `<div class="page-header"><h1>Flagged Questions</h1></div>
-      <div class="empty-state"><span class="empty-icon">🚩</span><p>You have not flagged any questions.</p>
+      <div class="empty-state"><span class="empty-icon">ðŸš©</span><p>You have not flagged any questions.</p>
       <button class="btn btn-outline" onclick="location.hash='#/practice'">Back to Practice</button></div>`;
     return;
   }
@@ -1091,7 +1087,7 @@ function renderFlaggedReview(el) {
             <span class="badge badge-ghost">${topicTagName(q.topic)}</span>
             <button class="btn btn-sm btn-ghost ml-auto" onclick="unflagQuestion('${q.id}')">Unflag</button>
           </div>
-          <div class="example-question">${esc(q.text.slice(0, 160))}${q.text.length > 160 ? '…' : ''}</div>
+          <div class="example-question">${esc(q.text.slice(0, 160))}${q.text.length > 160 ? 'â€¦' : ''}</div>
           <button class="btn btn-sm btn-outline mt-1" onclick="location.hash='#/practice/topic/${curriculum.topicKeyForQTopic(q.topic)}'">Practice this topic</button>
         </div>`;
       }).join('')}
@@ -1106,7 +1102,7 @@ function unflagQuestion(id) {
 }
 
 window.startQuick = startQuick;
-window.startDiagnostic = startDiagnostic;
+window.startQuickDiag = startQuickDiag;
 window.startCustom = startCustom;
 window.startAdaptive = startAdaptive;
 window.startReview = startReview;
