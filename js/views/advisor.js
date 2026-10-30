@@ -404,6 +404,7 @@ function renderAdvisor(appEl) {
         '<input type="date" class="advisor-date-input" id="advisorDate" value="' + esc(A.st.user.targetDate || '') + '">' +
         '<button class="btn btn-sm btn-primary" id="advisorDateSave">Set date</button>' +
       '</div>' +
+      '<a class="fs-small" href="#/planner" style="display:inline-block;margin-top:.5rem">📅 Week-by-week plan with official mock milestones →</a>' +
     '</div>';
 
   var directiveHtml = actions.length
