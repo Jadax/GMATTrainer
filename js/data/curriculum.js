@@ -352,7 +352,7 @@ const curriculum = (function () {
         r: '0.6666… equals exactly 2/3. And 0.125 = 1/8. Sum: 2/3 + 1/8 = 16/24 + 3/24 = 19/24. The option 5/6 = 20/24 is temptingly close and is wrong by exactly the 3/24 term; 3/4 would be the sum of 2/3 and 1/12, a misread decimal.' }
     ]),
     check: [
-      { q: '1/3 + 1/9 = ?', o: ['1/12', '2/9', '4/9', '4/12', '3/9'], a: 2 },
+      { q: '1/3 + 1/9 = ?', o: ['1/12', '2/9', '4/9', '2/12', '5/9'], a: 2 },
       { q: '(2/5) × (15/4) = ?', o: ['1/2', '3/2', '5/3', '2', '3/4'], a: 1 },
       { q: '5/6 − 1/2 = ?', o: ['1/3', '1/2', '2/3', '5/12', '7/12'], a: 0 },
       { q: '0.75 + 0.125 = ?', o: ['0.800', '0.825', '0.865', '0.875', '0.885'], a: 3 },
@@ -638,7 +638,7 @@ const curriculum = (function () {
       { q: 'What are the solutions to |x − 2| = 5?',
         o: ['{3, 7}', '{−3, 7}', '{−7, 3}', '{−7, −3}', '{2, 5}'],
         a: 'B',
-        r: 'Split into two cases: x − 2 = 5 → x = 7, and x − 2 = −5 → x = −3. So the solution set is {−3, 7}. The {3, 7} set solves |x − 4| = 3; {−7, 3} flips the assignment.' },
+        r: 'Split into two cases: x − 2 = 5 → x = 7, and x − 2 = −5 → x = −3. So the solution set is {−3, 7}. The {3, 7} set solves |x − 5| = 2; {−7, 3} flips the signs.' },
       { q: '|x| ≥ 3 is equivalent to which statement?',
         o: ['−3 ≤ x ≤ 3', 'x ≥ 3', 'x ≤ −3', 'x ≤ −3 or x ≥ 3', 'x > 3 or x < −3'],
         a: 'D',
@@ -658,7 +658,7 @@ const curriculum = (function () {
       { q: 'How many integers n satisfy |2n − 6| ≤ 4?',
         o: ['3', '4', '5', '6', '7'],
         a: 'C',
-        r: '|2n − 6| ≤ 4 means −4 ≤ 2n − 6 ≤ 4. Add 6: 2 ≤ 2n ≤ 10. Divide by 2: 1 ≤ n ≤ 5. The integers 1, 2, 3, 4, 5 = five values. The 6 and 7 counts include cusp values that fail 2n − 6 strictly at 2n = 10 edge cases misread as < .' },
+        r: '|2n − 6| ≤ 4 means −4 ≤ 2n − 6 ≤ 4. Add 6: 2 ≤ 2n ≤ 10. Divide by 2: 1 ≤ n ≤ 5. The integers 1, 2, 3, 4, 5 = five values. Counting 6 or 7 values comes from including 0 or 6, which give |2n − 6| = 6 > 4.' },
       { q: 'If −3 ≤ 2x − 1 ≤ 9, what is the range of x?',
         o: ['−1 ≤ x ≤ 5', '−2 ≤ x ≤ 8', '−3 ≤ x ≤ 9', '0 ≤ x ≤ 5', '1 ≤ x ≤ 4'],
         a: 'A',
@@ -891,7 +891,7 @@ const curriculum = (function () {
       { q: 'A and B together can complete a job in 4 hours. A alone can complete it in 6 hours. How many hours does B alone take?',
         o: ['6 h', '8 h', '12 h', '18 h', '24 h'],
         a: 'C',
-        r: 'Combined rate = 1/4, A\'s rate = 1/6, so B\'s rate = 1/4 − 1/6 = 3/12 − 2/12 = 1/12. B alone takes 1 ÷ (1/12) = 12 hours. The 2-hour option is the difference 6 − 4 of the times; 24 multiplies the rates wrong.' },
+        r: 'Combined rate = 1/4, A\'s rate = 1/6, so B\'s rate = 1/4 − 1/6 = 3/12 − 2/12 = 1/12. B alone takes 1 ÷ (1/12) = 12 hours. The 6 h option copies A\'s time; 24 multiplies the two times; 8 adds them.' },
       { q: 'Worker A can do a job in 10 hours and worker B in 15 hours. They start together; after 2 hours B stops. How many more hours does A need alone to finish?',
         o: ['6⅔ h', '6 h', '5 h', '7 h', '8 h'],
         a: 'A',
@@ -1237,11 +1237,11 @@ const curriculum = (function () {
       { q: 'In a class of 30, 18 study Spanish, 12 study French, and 6 study BOTH. How many study NEITHER language?',
         o: ['0', '2', '4', '6', '8'],
         a: 'D',
-        r: 'Union = 18 + 12 − 6 = 24, so neither = 30 − 24 = 6. Option (C) 4 subtracts the overlap twice; (E) 8 forgets to subtract the overlap at all (30 − 18 − 12 = 0 → not listed).' },
-      { q: 'Every member plays at least one of chess (C), bridge (B). If 40% play C, 55% play B, and 15% play both, what percent play exactly one?',
+        r: 'Union = 18 + 12 − 6 = 24, so neither = 30 − 24 = 6. Subtracting both groups without adding back the overlap gives 30 − 18 − 12 = 0, the trap answer; always use Total − (A + B − Both).' },
+      { q: 'In a club, 40% of members play chess, 55% play bridge, and 15% play both. What percent play exactly one of the two games?',
         o: ['55%', '65%', '80%', '95%', '70%'],
         a: 'B',
-        r: 'Exactly one = union − both = (40 + 55 − 15) − 15 = 80 − 15 = 65%. 60 counts the union MINUS only-one of the groups; 95 wrongly adds without subtracting overlap; 70 treats 15 as 25.' },
+        r: 'Exactly one = union − both = (40 + 55 − 15) − 15 = 80 − 15 = 65% (equivalently chess-only 25% + bridge-only 40%). 80% is the union (at least one); 95% adds without removing the overlap; 55% subtracts the overlap from the larger group only.' },
       { q: 'A survey of 100 people: 60 own a phone, 70 own a laptop, 20 own NEITHER. How many own BOTH?',
         o: ['10', '20', '30', '40', '50'],
         a: 'E',
@@ -1332,7 +1332,7 @@ const curriculum = (function () {
       { q: 'DS: Is k > 10?\n(1) k > 0\n(2) k < 5',
         o: ['A', 'B', 'C', 'D', 'E'],
         a: 'B',
-        r: '(1) alone: k > 0 allows k = 3 (> 10? NO) and k = 20 (> 10? YES) — the answer differs → insufficient. (2) alone: k < 5 forces k ≤ 4 always, so the answer is a uniform NO — a definite NO is sufficient. (1) not, (2) yes → B.' },
+        r: '(1) alone: k > 0 allows k = 3 (> 10? NO) and k = 20 (> 10? YES) — the answer differs → insufficient. (2) alone: every k < 5 is below 10, so the answer is a uniform NO — a definite NO is sufficient. (1) not, (2) yes → B.' },
       { q: 'DS: Is x = 0?\n(1) x² = 0\n(2) x³ = 0',
         o: ['A', 'B', 'C', 'D', 'E'],
         a: 'D',
@@ -1429,7 +1429,7 @@ const curriculum = (function () {
     ]),
     check: [
       { q: 'On the GMAT Focus, the Quantitative Reasoning section allows a calculator:', o: ['on every question', 'on data-sufficiency items only', 'never', 'only on word problems', 'on half the section'], a: 2 },
-      { q: 'A stem says "x is a positive integer and x² < 30." The number of possible values of x is:', o: ['2', '3', '4', '5', '6'], a: 4 },
+      { q: 'A stem says "x is a positive integer and x² < 30." The number of possible values of x is:', o: ['2', '3', '4', '5', '6'], a: 3 },
       { q: 'A 10% solution is blended with a 30% solution in equal amounts. The blend is closest to:', o: ['10%', '30%', '20%', '40%', '15%'], a: 2 },
       { q: 'Adding the same constant to every value in a data set:', o: ['raises the standard deviation', 'lowers the standard deviation', 'leaves the standard deviation unchanged', 'doubles the standard deviation', 'halves the standard deviation'], a: 2 },
       { q: 'The best twenty-second verification for a solved linear equation is:', o: ['memorizing the steps', 'substituting the solution back into the original equation', 'redrawing the diagram', 'guessing a new value', 'consulting the answer key'], a: 1 }
@@ -2081,9 +2081,9 @@ const curriculum = (function () {
     ],
     examples: examplesFor([
       { q: 'TrendCo sells only online. Last quarter, TrendCo cut its advertising budget by 40 percent, yet TrendCo\'s unit sales rose. Which of the following, if true, most helps to explain this result?',
-        o: ['A competitor running print ads left the market.', 'TrendCo\'s products won a national innovation award.', 'Online ad prices rose 5 percent.', 'A rival launched a cheaper product.', 'TrendCo hired two new designers.'],
+        o: ['Several of TrendCo\'s online competitors increased their advertising budgets.', 'TrendCo\'s products won a national innovation award.', 'Online ad prices rose 5 percent.', 'A rival launched a cheaper product.', 'TrendCo hired two new designers.'],
         a: 'B',
-        r: 'The award is free publicity — demand can rise with less paid advertising. Option (A) mentions a competitor leaving the market but names print ads, irrelevant to an online-only seller; (C) and (E) do not touch demand direction; (D) should depress TrendCo sales.' },
+        r: 'The award is free publicity — demand can rise with less paid advertising. Option (A) makes the result harder to explain, since rivals advertising more should draw buyers away; (C) and (E) do not touch demand direction; (D) should depress TrendCo sales.' },
       { q: 'The number of magazine subscribers fell 10 percent, yet the magazine\'s subscription revenue rose. Which one most helps to RESOLVE the discrepancy?',
         o: ['The magazine raised annual rates by 30 percent.', 'Paper costs rose.', 'Two rival magazines failed.', 'The magazine gave away free copies.', 'Staff expenses fell.'],
         a: 'A',
@@ -2156,10 +2156,10 @@ const curriculum = (function () {
       'Ignoring strength words: "may," "likely," and "most" are load-bearing.'
     ],
     examples: examplesFor([
-      { q: 'All engineers enrolled in the training program passed the licensure exam, and every graduate of the program is an engineer. The dean concludes that all graduates passed the licensure exam.\n\nWhich of the following must be true for the conclusion to hold?',
-        o: ['Every graduate of the program is an engineer enrolled in the program.', 'Every engineer in the program is a graduate of the program.', 'All graduates of the program passed the exam.', 'The exam is the only way to earn an engineering credential.', 'Some engineers in the program are not graduates.'],
+      { q: 'All engineers enrolled in the training program passed the licensure exam, and every graduate of the program is an engineer. The dean concludes that all graduates passed the licensure exam.\n\nWhich of the following is an assumption on which the dean\'s conclusion depends?',
+        o: ['Every graduate of the program is an engineer enrolled in the program.', 'Every engineer in the program is a graduate of the program.', 'Every engineer who passed the exam graduated from the program.', 'The exam is the only way to earn an engineering credential.', 'Some engineers in the program are not graduates.'],
         a: 'A',
-        r: 'The premises chain only to engineers enrolled in the program (enrolled → passed). Graduates are engineers, but not stated to be enrolled, so the dean needs the bridge "every graduate is an engineer enrolled in the program." Option B is the converse and does not complete the chain; C restates the conclusion.' },
+        r: 'The premises chain only to engineers enrolled in the program (enrolled → passed). Graduates are engineers, but not stated to be enrolled, so the dean needs the bridge "every graduate is an engineer enrolled in the program." Option B is the converse and does not complete the chain; C reverses the direction of the conclusion.' },
       { q: 'Critics charge that the tax breaks failed because districts did not prosper as predicted. But the prediction assumed a matching interest-rate environment that never arrived; where rates behaved as assumed, districts did attract investment.\n\nThe argument proceeds by:',
         o: ['citing an expert who endorses the critics', 'conceding the outcome but showing the prediction was conditional on an absent condition', 'denying that the tax breaks were ever enacted', 'appealing to the popularity of the policy', 'tracing the historical origin of the policy'],
         a: 'B',
@@ -2236,10 +2236,10 @@ const curriculum = (function () {
         o: ['Cities with unchanged zoning but rapid population growth showed the steepest price rises.', 'Cities with relaxed zoning but static populations showed steep price rises.', 'Rents rose most in cities that enacted new zoning restrictions.', 'Developer costs rose with materials prices everywhere.', 'Housing supply grew fastest in the fastest-growing cities.'],
         a: 'A',
         r: 'B\'s position is population → prices. An outcome where population grew while zoning was unchanged, yet prices still rose, isolates population growth as the driver and weakens A\'s zoning-specific claim. Option C weakly supports A; D introduces a third factor; E is ambiguous.' },
-      { q: 'All wildfires require fuel, and grasslands provide fuel only during the dry season. Fires occur only when an ignition source meets fuel. Last Wednesday a wildfire burned in the region.\n\nWhich of the following MUST be true?',
+      { q: 'All wildfires require fuel. In this region the only fuel is grassland, and grasslands provide fuel only during the dry season. Fires occur only when an ignition source meets fuel. Last Wednesday a wildfire burned in the region.\n\nWhich of the following MUST be true?',
         o: ['Last Wednesday fell inside the dry season.', 'The fire was started deliberately.', 'No rain fell on Tuesday.', 'The region has no fire-suppression crews.', 'All wildfires are started by lightning.'],
         a: 'A',
-        r: 'Fire → fuel was present → grassland fuel existed → the dry season was active. This two-step inference is forced by the text. Options B, C, D, and E import facts the passage never states — the classic over-reach at hard difficulty.' },
+        r: 'Fire → fuel was present → the only fuel is grassland, so grassland fuel existed → the dry season was active. This two-step inference is forced by the text. Options B, C, D, and E import facts the passage never states — the classic over-reach at hard difficulty.' },
       { q: 'The author first presents the standard model of neutral pricing, then lists three market failures it cannot explain, then notes the model survives because it is convenient rather than because it fits the data, and closes by sketching a behavioral alternative.\n\nThe primary purpose of the passage is to:',
         o: ['endorse the standard model without reservation', 'replace the standard model with permanent laws', 'contrast observed failures with the model\'s convenient survival and sketch a behavioral alternative', 'prove that prices are random', 'recount the history of pricing theory'],
         a: 'C',
@@ -2429,7 +2429,7 @@ const curriculum = (function () {
       { q: 'Tab 1 — Expense policy: purchases under $500 need only a manager\'s sign-off; purchases of $500 or more need the finance director\'s approval.\nTab 2 — Finance email: effective immediately, any order placed after the 25th of the month must also be approved by the CFO.\nQuestion: A $400 order placed on the 26th carries a manager\'s sign-off. Which approval is still missing?',
         o: ['None — fully approved', 'The manager\'s sign-off', 'The finance director\'s approval', 'The CFO\'s approval', 'Both the finance director and the CFO'],
         a: 'D',
-        r: 'Tab 1: $400 is under $500, so only the manager\'s sign-off is needed — present. Tab 2: placed on the 26th, after the 25th, so the CEO\'s CFO approval is additionally required — missing. Answer D.' },
+        r: 'Tab 1: $400 is under $500, so only the manager\'s sign-off is needed — present. Tab 2: placed on the 26th, after the 25th, so the CFO\'s approval is additionally required — missing. Answer D.' },
       { q: 'Tab 1 — Network memo: daily retail demand is 15 crates in the North and 10 crates in the South.\nTab 2 — Dispatch email: Alpha depot can ship at most 20 crates/day; Beta depot can ship at most 20 crates/day.\nProposal: Alpha ships 12 crates North and 6 crates South daily; Beta ships 3 crates North and 4 crates South daily.\nQuestion: Which statement is true about the proposal?',
         o: ['Feasible — every demand and every capacity is met', 'Fails to meet North demand', 'Fails to meet South demand', 'Exceeds Alpha\'s capacity', 'Exceeds Beta\'s capacity'],
         a: 'A',
@@ -2447,7 +2447,7 @@ const curriculum = (function () {
         a: 'C',
         r: 'The stay ended before July 1, so the old $120 no-receipt cap applies. Filing date: July 15 minus June 20 = 25 days, within the 30-day window, so the claim is timely. $140 > $120 → reimbursement $120. Answer C.' },
       { q: 'Tab 1 — Grant rules: travel grants fund domestic trips of at least 3 days; international trips need 8 or more days.\nTab 2 — Budget note: total grant budget is $9,000; the daily rate is $300 for domestic and $400 for international, applied to every full day.\nScenario: a domestic trip of 4 days applied for $1,400.\nQuestion: Which statement is fully supported?',
-        o: ['Approved — $1,200 is the correct grant', 'Approved — $1,400 as requested', 'Rejected — domestic trips need at least 3 days and 4 qualifies', 'Not fully supported — 4 days at $300 = $1,200, below the $1,400 request', 'Approved — $1,400 is within the $9,000 budget'],
+        o: ['Rejected — domestic trips need at least 5 days', 'Approved — $1,400 as requested', 'Rejected — domestic trips need at least 3 days and 4 qualifies', 'Not fully supported — 4 days at $300 = $1,200, below the $1,400 request', 'Approved — $1,400 is within the $9,000 budget'],
         a: 'D',
         r: 'Tab 1: 4 days ≥ 3 days, so the trip qualifies. Tab 2: the correct grant is 4 × $300 = $1,200, which contradicts the $1,400 request. The request as stated is not supported by the documents. Answer D.' },
       { q: 'Tab 1 — Vendor contract: suppliers must deliver within 10 business days of an order.\nTab 2 — Operations email: any order above $50,000 ships in two batches, and each batch separately counts against the 10-day window.\nScenario: a $60,000 order placed on a Monday; batch 1 arrived 9 business days later; batch 2 arrived 12 business days later.\nQuestion: Which statement correctly describes the vendor\'s performance?',
@@ -2652,7 +2652,7 @@ const curriculum = (function () {
         a: 'C',
         r: 'The truncated axis makes the bars look wildly different, but the labeled values give the truth: (100 - 90)/90 = 10/90 ≈ 11.1%. Answer C.' },
       { q: 'Line graph — monthly shipments: Jan 50, Feb 60, Mar 72, Apr 60.\nQuestion: The overall percent change in shipments from Jan to Mar is:',
-        o: ['22%', '44%', '50%', '60%', '44.4%'],
+        o: ['22%', '44%', '50%', '60%', '36%'],
         a: 'B',
         r: 'Use endpoints only: (72 - 50)/50 = 22/50 = 44%. The interim month figures do not affect the overall change. Answer B.' }
     ]),
@@ -2773,7 +2773,7 @@ const curriculum = (function () {
       'Data Sufficiency questions are never about truth, only about the uniqueness of the answer. The expert disciplines every yes/no and value stem with the same reflex: re-pose the question as a yes or a value, test each statement alone, then test them together — and name the would-be answer before peeking at the choices.',
       'The weighted format is the corner of DI that punishes good students: two side-by-side tracks with ~55% of your attention on the harder one. The expert reads both headers, answers the track whose logic is shorter first, and returns to the other with the remaining time. Leaving one track strategically blank is a valid tactic on a weighted question.',
       'Graphics interpretation is reading with the eyes and the hands: axis units (thousands, millions, percents) are the entire skill. A chart labeled in $ thousands hides a factor of a thousand behind every graceful line. The expert names the axis unit before reading a single point.',
-      'Table analysis and MSR are rule-matching disciplines: the prompt states criteria, the table or tabs store the data, and every answer choice is a test of one rule against one row or a synthesis across tabs. Cross-tab answers — judgments that blend two sources into a claim neither source makes — are the format\'s signature trap.',
+      'Table analysis and MSR are rule-matching disciplines: the prompt states criteria, the table or tabs store the data, and every answer choice is a test of one rule against one row or a synthesis across tabs. Over-reaching synthesis — combining two sources into a claim that goes beyond what they jointly state — is the format\'s signature trap. Combining tabs itself is normal and often required.',
       'Pacing targets: DS items run about 1:30–2:30 (longer than the section average), graphics and tables 1:30–2:00, and MSR up to 2:30 for a cluster of three questions tied to one tab set. The expert carries a mental ledger: after the first stretch of the section, the next ten-second decision is always "skip, guess, or proceed on this one."',
       'Test-day arc: the section front-loads the weighted items; the expert starts with the more-laden track, stays on pace through the pure DS stretch, and treats the final third — ta tables, short graphics, quick MSR — as the scoring zone where seconds turn into points.'
     ],
@@ -2783,13 +2783,13 @@ const curriculum = (function () {
       { term: 'Yes/no discipline', def: 're-pose a yes/no stem as the exact yes or no to test; a statement yields one result to be sufficient' },
       { term: 'Weighted-track split', def: 'spend ~55% of the time on the harder track; the other track alone can draw too long' },
       { term: 'Axis-unit rule', def: 'name the chart\'s unit (thousands, millions, percent) before reading a single point; unit errors beat math errors in value' },
-      { term: 'MSR authority', def: 'each tab governs a specific domain; blending tabs invents authority no source possesses' },
+      { term: 'MSR authority', def: 'each tab governs its own domain; when two tabs conflict, the more specific or more recent source controls' },
       { term: 'Table rule test', def: 'mentally run each rule across the row before touching the options; three criteria is the common recipe' },
       { term: 'IR pace ledger', def: 'DS 1:30–2:30; graphics and tables 1:30–2:00; MSR up to 2:30 per cluster' },
       { term: 'Eliminate-then-solve', def: 'in graphics and tables, rate and unit constraints eliminate options before calculation' },
       { term: 'Cluster strategy', def: 'treat an MSR tab set as one investment: read tabs once, answer three questions off the same map' },
       { term: 'Calculator as a tool', def: 'use the on-screen calculator for long division, percents, and table sums — never for reading the problem' },
-      { term: 'Cross-tab rule', def: 'a claim that needs facts from two tabs is unsupported unless one tab explicitly licenses it' }
+      { term: 'Cross-tab rule', def: 'combining facts from several tabs is legitimate (and often required); a claim fails only if it goes beyond what the combined facts state' }
     ],
     strategies: [
       'Sort each item into a lane in the first ten seconds: DS logic, estimation-plus-navigation, or rule-matching.',
@@ -2810,7 +2810,7 @@ const curriculum = (function () {
       'Testing the statements in the wrong order: read each alone before combining.',
       'Reversing the verdict map (C/D confusion when both statements work alone).',
       'Ignoring axis units: treating a $ thousands chart as dollars.',
-      'Cross-tab judgments that blend two sources into a claim neither makes.',
+      'Over-reaching synthesis: combining two tabs into a conclusion that neither tab, nor both together, actually support.',
       'Over-investing in the first table before checking the criteria.',
       'Watching the clock per question instead of per block.',
       'Leaving a weighted track completely unread while grinding the other.',
@@ -2835,8 +2835,8 @@ const curriculum = (function () {
     ]),
     check: [
       { q: 'Data Sufficiency questions are fundamentally about:', o: ['whether a statement is true', 'whether a statement yields a unique answer', 'how the numbers look', 'which statement is longer', 'calculator output'], a: 1 },
-      { q: 'On MSR, cross-tab answers are nearly always wrong because:', o: ['tabs are long', 'each source governs a specific domain and blending sources invents authority', 'the calculator cannot read tabs', 'colors differ between tabs', 'tabs are optional'], a: 1 },
-      { q: 'The GMAT Focus Data Insights section provides:', o: ['a paper and pencil only', 'a full scientific calculator on every question', 'calculators only on data-sufficiency items', 'a stopwatch instead of tools', 'no tools at all'], a: 1 },
+      { q: 'On MSR, combining facts from two different tabs is:', o: ['never allowed', 'often required, as long as every fact comes from a tab and later updates override earlier rules', 'allowed only for numeric facts', 'a sure sign of a trap answer', 'allowed only on yes/no items'], a: 1 },
+      { q: 'The GMAT Focus Data Insights section provides:', o: ['a paper and pencil only', 'an on-screen basic calculator on every question', 'calculators only on data-sufficiency items', 'a stopwatch instead of tools', 'no tools at all'], a: 1 },
       { q: 'A yes/no DS question is answered definitively when the statements yield:', o: ['a specific number in each statement', 'two different answers', 'a definitive yes or no', 'the same numeric value twice', 'a percentage only'], a: 2 },
       { q: 'The most important pacing move in DI after ninety seconds on a stuck item is:', o: ['open the calculator', 're-read every tab', 'guess from constraints, flag, and move on', 'restart at question one', 'expand every row'], a: 2 }
     ]
@@ -3017,8 +3017,8 @@ const curriculum = (function () {
         r: '20% = 1/5, and 1/5 × 30 = 6. Check with a benchmark: 10% of 30 is 3, so 20% is double that, 6. The 10 option is 33⅓%; the 8 option is two-off from a miscount.' }
     ]),
     check: [
-      { q: 'Which fraction is equivalent to 2/3?', o: ['4/6', '3/4', '5/9', '6/9', '3/5'], a: 0 },
-      { q: 'What is 1/2 + 1/4?', o: ['1/6', '2/6', '3/4', '1/8', '1/3'], a: 2 },
+      { q: 'Which fraction is equivalent to 2/3?', o: ['4/6', '3/4', '5/9', '6/12', '3/5'], a: 0 },
+      { q: 'What is 1/2 + 1/4?', o: ['1/6', '2/6', '3/4', '1/8', '2/4'], a: 2 },
       { q: '1/4 as a decimal is:', o: ['0.4', '0.25', '0.14', '0.45', '2.5'], a: 1 },
       { q: 'What is 25% of 80?', o: ['10', '15', '20', '25', '30'], a: 2 },
       { q: 'A price of $60 increases by 10%. New price?', o: ['$61', '$66', '$70', '$54', '$72'], a: 1 }
@@ -3344,7 +3344,7 @@ const curriculum = (function () {
         o: ['Due to the fact that it rained, the game was cancelled.', 'Because it rained, the game was cancelled.', 'The game was cancelled due to the fact that it rained.', 'On account of the fact that it rained, the game was cancelled.', 'The game, because it rained, was cancelled by officials.'],
         a: 'B',
         r: '"Because it rained, the game was cancelled." says it in the fewest words with no meaning lost. The "due to the fact that" and "on account of the fact that" versions are the wordy impostors.' },
-      { q: 'Which article is formally correct?',
+      { q: 'Which sentence is idiomatically correct?',
         o: ['I prefer coffee than tea.', 'I prefer coffee to tea.', 'I prefer coffee over tea more than.', 'I prefer coffee as opposed to tea.', 'Coffee is preferred than tea by me.'],
         a: 'B',
         r: 'The idiom is "prefer X to Y." "Prefer X than Y" is the classic error; the extra-word options are just padded versions of the same mistake.' }
@@ -3491,9 +3491,9 @@ const curriculum = (function () {
     ],
     examples: examplesFor([
       { q: 'Choose the word closest in meaning to "compelling" as used in "She made a compelling argument."',
-        o: ['Confusing', 'Convincing', 'Comedy', 'Lengthy', 'Obvious'],
+        o: ['Confusing', 'Convincing', 'Comical', 'Lengthy', 'Obvious'],
         a: 'B',
-        r: 'A "compelling argument" is one that wins agreement — convincing. "Interesting" is a tempting near-miss that misses the persuasive force, and the rest are off-base.' },
+        r: 'A "compelling argument" is one that wins agreement — convincing. "Obvious" is a tempting near-miss, but an argument can be obvious without persuading anyone; "confusing," "comical," and "lengthy" do not fit at all.' },
       { q: 'In "The report was concise and to the point," the word "concise" most nearly means:',
         o: ['Long-winded', 'Detailed', 'Brief and exact', 'Important', 'Difficult'],
         a: 'C',
@@ -3562,6 +3562,26 @@ const curriculum = (function () {
 
   const allTopics = foundationTopics.concat(quantTopics, verbalTopics, diTopics);
 
+  /* Data Sufficiency items are authored with bare letter choices (A–E).
+     Spell out the official answer-choice wording so learners see what each
+     letter means, exactly as on the exam. */
+  const DS_CHOICES = [
+    'A: Statement (1) ALONE is sufficient, but statement (2) alone is not',
+    'B: Statement (2) ALONE is sufficient, but statement (1) alone is not',
+    'C: BOTH statements TOGETHER are sufficient, but NEITHER alone is',
+    'D: EACH statement ALONE is sufficient',
+    'E: Statements (1) and (2) TOGETHER are NOT sufficient'
+  ];
+  function isBareDsLetters(opts) { return !!opts && opts.join('|') === 'A|B|C|D|E'; }
+  allTopics.forEach(function (t) {
+    t.examples.forEach(function (e) {
+      if (isBareDsLetters(e.options) && /\(1\)/.test(e.question)) e.options = DS_CHOICES.slice();
+    });
+    t.check.forEach(function (c) {
+      if (isBareDsLetters(c.o) && /\(1\)/.test(c.q)) c.o = DS_CHOICES.slice();
+    });
+  });
+
   /* Map each topic to the practice questions that share its tag */
   const topicIdByQuestionTopic = {
     // foundations
@@ -3610,6 +3630,11 @@ const curriculum = (function () {
     topics: allTopics,
     questionsForTopic: questionsForTopic,
     topicKeyForQTopic: function (qTopic) {
+      // Several lessons share a question tag; send learners to the core GMAT
+      // lesson rather than the first match (e.g. rc -> RC main idea, not the
+      // foundations reading primer).
+      var canonical = { rc: 'verbal-rc-main', cr: 'verbal-cr-basics', ds: 'di-ds' };
+      if (canonical[qTopic]) return canonical[qTopic];
       for (var t in topicIdByQuestionTopic) {
         if (topicIdByQuestionTopic[t] === qTopic) return t;
       }

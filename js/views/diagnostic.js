@@ -90,7 +90,7 @@ function renderDiagnosticIntro(el) {
       <div class="grid grid-3" style="margin-top:.75rem">
         <div class="card">
           <div class="topic-name">🔢 Quant strand</div>
-          <p class="text-muted fs-small">8 questions · arithmetic, algebra, number properties, word problems, statistics</p>
+          <p class="text-muted fs-small">8 questions · arithmetic, algebra, number properties, word problems, statistics, counting &amp; sets</p>
         </div>
         <div class="card">
           <div class="topic-name">📖 Verbal strand</div>

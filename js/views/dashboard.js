@@ -37,7 +37,7 @@ function advisorGapNow(stats) {
 function bankUnusedCount() {
   const st = loadState();
   let n = 0;
-  (window.questionBank ? questionBank.all : []).forEach(q => {
+  (typeof questionBank !== 'undefined' ? questionBank.all : []).forEach(q => {
     const rec = st.practice.review[q.id];
     if (!rec || !rec.attempts || !rec.attempts.length) n += 1;
   });
@@ -57,8 +57,10 @@ function recommendedAction() {
   const topicStats = computeTopicStats();
 
   // 1) An unmastered lesson in the weakest topic
+  // Only steer to a lesson when the weakest topic is genuinely weak; a
+  // "weakest" topic sitting at 100% is not a reason to relearn it.
   const weakTopic = topicStats.length ? topicStats[0] : null;
-  if (weakTopic) {
+  if (weakTopic && weakTopic.pct < 0.8) {
     const curriculumTopic = curriculum.topicKeyForQTopic(weakTopic.tag);
     if (curriculumTopic) {
       const status = learningStatus(curriculumTopic).status;
@@ -66,7 +68,7 @@ function recommendedAction() {
         return {
           icon: '📘',
           title: 'Learn ' + curriculum.topics.find(t => t.id === curriculumTopic).name,
-          text: 'Your accuracy in ' + topicTagLabel(weakTopic.tag) + ' is only ' + Math.round(weakTopic.pct * 100) + '%. Master this topic first.',
+          text: 'Your accuracy in ' + topicTagLabel(weakTopic.tag) + ' is ' + Math.round(weakTopic.pct * 100) + '%. Rebuild it with the lesson before drilling more questions.',
           href: '#/learn/' + curriculumTopic
         };
       }

@@ -684,7 +684,7 @@ function sectionForQuest(q) {
 function simFinish() {
   const st = loadState();
   const sectionScores = {};
-  const totals = { attempts: 0, correct: 0 };
+  const totals = { attempts: 0, correct: 0, questions: 0 };
   const reviewRows = [];
 
   sim.sections.forEach(sec => {
@@ -706,13 +706,16 @@ function simFinish() {
         secs: (sec.qTime && sec.qTime[i]) || 0
       });
     });
-    const acc = att ? cor / att : 0;
+    // Unanswered items count as misses: on the real exam an unfinished
+    // section is penalized at least as hard as a wrong answer.
+    const acc = sec.questions.length ? cor / sec.questions.length : 0;
     sectionScores[sec.key] = gamification.sectionScoreFromAccuracy(acc);
     totals.attempts += att;
     totals.correct += cor;
+    totals.questions += sec.questions.length;
   });
 
-  const accuracy = totals.attempts ? totals.correct / totals.attempts : 0;
+  const accuracy = totals.questions ? totals.correct / totals.questions : 0;
   let total, basis;
   if (sim.mode === 'full') {
     // Official endpoints: 60+60+60 → 205, 90+90+90 → 805, monotonic in between.

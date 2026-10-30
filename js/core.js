@@ -196,7 +196,7 @@ function addStudySession(questions, seconds, sectionKey) {
     day.questions += questions;
     day.seconds += seconds;
     st.stats.totalSeconds += seconds;
-    st.stats.totalAnswered += questions;
+    // totalAnswered is counted per answer in _aggregateAnswer, not here.
     const sec = st.stats.bySection[sectionKey];
     if (sec) { sec.seconds += seconds; }
     // Notify daily goal
@@ -229,6 +229,7 @@ function _aggregateAnswer(st, question, correct, secs, sectionKey) {
   const sec = st.stats.bySection[sectionKey];
   if (sec) { sec.attempts += 1; if (correct) sec.correct += 1; }
 
+  st.stats.totalAnswered += 1;
   st.stats.totalCorrect += (correct ? 1 : 0);
 
   if (question.difficulty === 'hard' && correct) st.stats.hardCorrect += 1;
@@ -413,6 +414,15 @@ function flashcardDueCount() {
    Migration pass for state written by older versions
    --------------------------------------------------------------------- */
 function migrateState(st) {
+  // v1.16: totalAnswered moved from per-session to per-answer counting. Older
+  // saves under-counted it (diagnostic, quit sets), which could push overall
+  // accuracy past 100%; rebuild it once from the per-topic attempt tallies.
+  if (st.stats && !st.stats.perAnswerTotals) {
+    const byTopic = st.stats.byTopic || {};
+    const attempts = Object.keys(byTopic).reduce((n, k) => n + ((byTopic[k] && byTopic[k].attempts) || 0), 0);
+    st.stats.totalAnswered = Math.max(attempts, st.stats.totalCorrect || 0);
+    st.stats.perAnswerTotals = true;
+  }
   if (st.practice && st.practice.review) {
     Object.keys(st.practice.review).forEach(id => {
       const r = st.practice.review[id];
@@ -873,7 +883,8 @@ function topicName(topicId) {
    --------------------------------------------------------------------- */
 var Q_TOPIC_LABELS = {
   arithmetic: 'Arithmetic', algebra: 'Algebra', wordproblems: 'Word Problems',
-  numbers: 'Number Properties', stats: 'Statistics & Sets', rc: 'Reading Comp',
+  numbers: 'Number Properties', stats: 'Statistics & Probability', rc: 'Reading Comp',
+  counting: 'Counting & Probability', sets: 'Sets & Venn Diagrams',
   cr: 'Critical Reasoning', ds: 'Data Sufficiency', ms: 'Multi-Source',
   ta: 'Table Analysis', gi: 'Graphics Interpretation', tp: 'Two-Part Analysis',
   fops: 'Order of Ops', ffrac: 'Fractions & Decimals', falg: 'Algebra Basics',
@@ -1018,7 +1029,7 @@ function difficultyLabel(d) { return d.charAt(0).toUpperCase() + d.slice(1); }
 /* ---------------------------------------------------------------------
    Section meta helpers
    --------------------------------------------------------------------- */
-const APP_VERSION = '1.15.0';
+const APP_VERSION = '1.16.0';
 
 const SECTION_META = {
   quant: { key: 'quant', name: 'Quantitative Reasoning', short: 'Quant', icon: '🔢', count: 21, time: 2700 },
@@ -1041,7 +1052,7 @@ function importBackup(file, onDone) {
     try {
       const parsed = JSON.parse(ev.target.result);
       if (!parsed.state || !parsed.state.stats) { toast('Invalid backup file.', 'error'); onDone && onDone(false); return; }
-      __state = deepMerge(buildDefaultState(), parsed.state);
+      __state = migrateState(deepMerge(buildDefaultState(), parsed.state));
       __state.stats.imports = (__state.stats.imports || 0) + 1;
       saveState();
       App.emit('state', loadState());

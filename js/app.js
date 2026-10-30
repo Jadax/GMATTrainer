@@ -51,13 +51,13 @@
     openModal(`
       <h3 style="margin:0 0 .75rem">Quick Help</h3>
       <ul style="margin:0;padding-left:1.2rem;line-height:1.7">
-        <li><strong>Diagnostic</strong> — a 16-question placement test that pins your recommended starting point.</li>
-        <li><strong>Learn</strong> — ${(window.curriculum && curriculum.sections.reduce ? curriculum.sections.reduce((n, s) => n + s.topics.length, 0) : 22)} topics, zero→mastery, with TTP-style chapter tests (Easy → Medium → Hard).</li>
-        <li><strong>Practice</strong> — ${(window.questionBank && questionBank.all ? questionBank.all.length : '300+')} questions in real GMAT Focus format, with spaced review (SM-2), adaptive sessions, error log + flagging.</li>
+        <li><strong>Diagnostic</strong> — a 22-question placement test that pins your recommended starting point.</li>
+        <li><strong>Learn</strong> — ${(typeof curriculum !== 'undefined' ? curriculum.sections.reduce((n, s) => n + s.topics.length, 0) : 22)} topics, zero→mastery, with TTP-style chapter tests (Easy → Medium → Hard).</li>
+        <li><strong>Practice</strong> — ${(typeof questionBank !== 'undefined' ? questionBank.all.length : '400+')} questions in real GMAT Focus format, with spaced review (SM-2), adaptive sessions, error log + flagging.</li>
         <li><strong>Simulator</strong> — timed full exam (2h15m) or single sections, Focus Edition blueprint.</li>
         <li><strong>Analytics</strong> — projected score, section & topic accuracy.</li>
         <li><strong>Advisor</strong> — a top-teacher read of your data: score projection, format-by-format gap & pace audit, a priority queue, and weekly cadence advice.</li>
-        <li><strong>Bank</strong> — browse every one of the ${(window.questionBank && questionBank.all ? questionBank.all.length : '300+')} questions against the real Focus blueprint: filter by section/topic/format/difficulty/status, read full text + explanations, keep per-question notes, and launch a practice set straight from the list.</li>
+        <li><strong>Bank</strong> — browse every one of the ${(typeof questionBank !== 'undefined' ? questionBank.all.length : '400+')} questions against the real Focus blueprint: filter by section/topic/format/difficulty/status, read full text + explanations, keep per-question notes, and launch a practice set straight from the list.</li>
         <li><strong>Error Log</strong> — a recovery workflow for every miss: leak patterns by mistake type/topic/format, tag why each one happened, mark reviewed, auto-healed when you answer correctly, and re-drill from the list.</li>
         <li><strong>Progress</strong> — XP, levels, badges, heatmap, backups.</li>
         <li>Your data lives in this browser (localStorage). Export backups from Progress.</li>

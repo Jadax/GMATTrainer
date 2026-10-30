@@ -13,6 +13,7 @@ const SESSION_TTL = 4 * 3600 * 1000; // 4 hours
 let ps = null; // current practice session
 let lastConfig = null;   // config of most recently finished set (for "do it again")
 let lastSnapshot = null; // {questions, answers} for post-set review
+let lastSummaryHtml = ''; // review list markup, restored by restoreSetSummary()
 
 /* ---------------------------------------------------------------------
    Session model
@@ -643,7 +644,7 @@ function submitAnswer(chosen, timedOut) {
     updateState(st => updateAdaptiveFromAnswer(st, q, correct));
   }
 
-  ps.answers.push({ chosen: chosen, correct: correct, secs: secs, ts: Date.now(), hintUsed: hintUsed });
+  ps.answers[ps.idx] = { chosen: chosen, correct: correct, secs: secs, ts: Date.now(), hintUsed: hintUsed };
   ps.thinkStart = Date.now();
   persistSession();
 
@@ -810,8 +811,8 @@ function recordSessionStats() {
   // Aggregates attempts + seconds by section and updates day/total stats,
   // then grants set XP + feed + badges.
   const total = ps.questions.length;
-  const answered = ps.answers.length;
-  const correct = ps.answers.filter(a => a.correct).length;
+  const answered = ps.answers.filter(Boolean).length;
+  const correct = ps.answers.filter(a => a && a.correct).length;
 
   const bySec = {};
   ps.questions.forEach((q, i) => {
@@ -833,7 +834,7 @@ function recordSessionStats() {
 
 function quitSession() {
   if (!ps) { location.hash = '#/practice'; return; }
-  if (ps.answers.length > 0) recordSessionStats();
+  if (ps.answers.some(Boolean)) recordSessionStats();
   clearSession();
   __kbdHandler = null;
   render();
@@ -848,8 +849,8 @@ function showResults() {
   recordSetHistory({
     mode: (ps.config && ps.config.mode) || 'practice',
     count: ps.questions.length,
-    correct: ps.answers.filter(a => a.correct).length,
-    seconds: ps.answers.reduce((s, a) => s + (a.secs || 0), 0),
+    correct: ps.answers.filter(a => a && a.correct).length,
+    seconds: ps.answers.reduce((s, a) => s + ((a && a.secs) || 0), 0),
     secsBySection: (function () {
       const m = {};
       ps.questions.forEach((q, i) => {
@@ -863,8 +864,8 @@ function showResults() {
   });
 
   const total = ps.questions.length;
-  const answered = ps.answers.length;
-  const correct = ps.answers.filter(a => a.correct).length;
+  const answered = ps.answers.filter(Boolean).length;
+  const correct = ps.answers.filter(a => a && a.correct).length;
   const pct = total ? Math.round(correct / total * 100) : 0;
   const xpEarned = correct * gamification.xpRules.questionCorrect + (answered - correct) * gamification.xpRules.questionIncorrect;
   const hh = Math.round((Date.now() - ps.startedAt) / 1000);
@@ -960,14 +961,21 @@ function showResults() {
     const ok = a && a.correct;
     review.insertAdjacentHTML('beforeend', `
       <div class="feed-item">
-        <span class="feed-icon">${ok ? '✅' : '❌'}</span>
+        <span class="feed-icon">${ok ? '✅' : a ? '❌' : '⏭️'}</span>
         <span style="cursor:pointer;text-decoration:underline;color:var(--color-secondary)" onclick="reviewQuestion(${idx})">${esc(q.text.slice(0, 80))}${q.text.length > 80 ? '…' : ''}</span>
-        <span class="feed-time ${ok ? 'text-success' : 'text-danger'}">${ok ? 'Correct' : 'Missed'}</span>
+        <span class="feed-time ${ok ? 'text-success' : a ? 'text-danger' : 'text-muted'}">${ok ? 'Correct' : a ? 'Missed' : 'Skipped'}</span>
       </div>`);
   });
 
+  lastSummaryHtml = review.innerHTML;
   clearSession();
   __kbdHandler = null;
+}
+
+/** Restore the set-review list after drilling into one question. */
+function restoreSetSummary() {
+  const box = document.getElementById('setReview');
+  if (box && lastSummaryHtml) box.innerHTML = lastSummaryHtml;
 }
 
 function sameConfigAgain() {
@@ -982,7 +990,7 @@ function reviewQuestion(idx) {
   const el = document.getElementById('app');
   el.querySelector('#setReview').innerHTML = `
     <div class="example-block">
-      <span onclick="render()" style="cursor:pointer;color:var(--color-secondary)">← Back to summary</span>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="restoreSetSummary()">← Back to summary</button>
       <div class="example-question mt-1">${esc(q.text)}</div>
       ${q.options ? q.options.map((o, i) => `
         <div class="option ${i === q.correct ? 'correct' : ''} ${a && a.chosen === i && i !== q.correct ? 'incorrect' : ''} disabled">
@@ -1009,7 +1017,7 @@ function topicTagName(tag) {
     cr: 'Critical Reasoning', ds: 'Data Sufficiency', ms: 'Multi-Source',
     ta: 'Table Analysis', gi: 'Graphics Interpretation', tp: 'Two-Part Analysis'
   };
-  return map[tag] || tag;
+  return map[tag] || qTopicLabel(tag);
 }
 
 /* ---------------------------------------------------------------------
